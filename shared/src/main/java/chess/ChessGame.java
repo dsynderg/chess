@@ -9,6 +9,16 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
+    private TeamColor turnColor = TeamColor.WHITE;
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 
     public ChessGame() {
 
@@ -18,16 +28,24 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+
+        return turnColor;
     }
 
     /**
-     * Set's which teams turn it is
+     * switches which teams turn it is
      *
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+
+        if (getTeamTurn() == TeamColor.WHITE) {
+            team = TeamColor.BLACK;
+
+        }
+        else{
+            team = TeamColor.WHITE;
+        }
     }
 
     /**

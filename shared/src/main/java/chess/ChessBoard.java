@@ -26,12 +26,13 @@ public class ChessBoard {
     /**
      * Gets a chess piece on the chessboard
      *
-     * @param position The position to get the piece from
-     * @return Either the piece at the position, or null if no piece is at that
-     * position
+     * @param pos The pos to get the piece from
+     * @return Either the piece at the pos, or null if no piece is at that
+     * pos
      */
-    public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+    public ChessPiece getPiece(ChessPosition pos) {
+
+        return board[pos.getRow()-1][pos.getColumn()-1];
     }
 
     /**
