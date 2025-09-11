@@ -74,13 +74,24 @@ public class ChessPiece {
          */
         List<ChessMove> knightMoveList = new ArrayList<>();
         //offset is used to cycle left and right, up and down, to make the L shape
+
         int row = pos.getRow();
         int col = pos.getColumn();
         int[] offset = {-1,1};
         int[] onset = {2,-2};
-        for (int i =0; i<offset.length;i++){
-            
+        for (int off : offset){
+            for (int on : onset){
+                ChessPosition endpos = new ChessPosition(row+on,col+off);
+                knightMoveList.add(new ChessMove(pos,endpos,null));
+            }
         }
+        for (int off : offset){
+            for (int on : onset){
+                ChessPosition endpos = new ChessPosition(row+off,col+on);
+                knightMoveList.add(new ChessMove(pos,endpos,null));
+            }
+        }
+        return knightMoveList;
 
     }
     public Collection<ChessMove> rooks_move(ChessPosition pos){
