@@ -1,7 +1,5 @@
 package chess;
 
-import java.util.Collection;
-
 /**
  * Represents moving a chess piece on a chessboard
  * <p>
@@ -10,12 +8,16 @@ import java.util.Collection;
  */
 public class ChessMove {
     private ChessPosition startPosition;
-    public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
-                     ChessPiece.PieceType promotionPiece) {
-        if (promotionPiece != null) {
-            //promote the peice and make a new one
-        }
-        else startPosition = endPosition;
+    private ChessPosition endPosition;
+    private ChessPiece.PieceType promotionPiece;
+    public ChessMove(ChessPosition startPosition,
+                     ChessPosition endPosition,
+                     ChessPiece.PieceType promotionPiece){
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+        this.promotionPiece = promotionPiece;
+
+
     }
 
     /**
@@ -30,7 +32,7 @@ public class ChessMove {
      * @return ChessPosition of ending location
      */
     public ChessPosition getEndPosition() {
-        throw new RuntimeException("Not implemented");
+        return endPosition;
     }
 
     /**
@@ -39,7 +41,7 @@ public class ChessMove {
      *
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
-    public ChessPiece.PieceType getPromotionPiece() {
-        throw new RuntimeException("Not implemented");
+    public ChessPiece.PieceType getPromtionPiece() {
+        return promotionPiece;
     }
 }

@@ -1,8 +1,10 @@
 package chess;
 
 import java.awt.geom.NoninvertibleTransformException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents a single chess piece
@@ -13,9 +15,11 @@ import java.util.Collections;
 public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
     private final ChessPiece.PieceType type;
-    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+    private ChessPosition pos;
+    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type, ChessPosition pos) {
         this.pieceColor = pieceColor;
         this.type = type;
+        this.pos = pos;
     }
 
     /**
@@ -68,6 +72,16 @@ public class ChessPiece {
          * and 1 in an orthoginal direction
          *
          */
+        List<ChessMove> knightMoveList = new ArrayList<>();
+        //offset is used to cycle left and right, up and down, to make the L shape
+        int row = pos.getRow();
+        int col = pos.getColumn();
+        int[] offset = {-1,1};
+        int[] onset = {2,-2};
+        for (int i =0; i<offset.length;i++){
+            
+        }
+
     }
     public Collection<ChessMove> rooks_move(ChessPosition pos){
 
@@ -82,7 +96,7 @@ public class ChessPiece {
 
     }
     public Collection<ChessMove> pawns_move(ChessPosition pos){
-        chess.ChessPosition position = chess.ChessMove.getStartPosition();
+//        chess.ChessPosition position = chess.ChessMove.getStartPosition();
 
     }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
