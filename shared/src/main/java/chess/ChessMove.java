@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Collection;
+
 /**
  * Represents moving a chess piece on a chessboard
  * <p>
@@ -10,13 +12,18 @@ public class ChessMove {
     private ChessPosition startPosition;
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
+        if (promotionPiece != null) {
+            //promote the peice and make a new one
+        }
+        else startPosition = endPosition;
     }
 
     /**
      * @return ChessPosition of starting location
      */
+
     public ChessPosition getStartPosition() {
-        throw new RuntimeException("Not implemented");
+        return startPosition;
     }
 
     /**

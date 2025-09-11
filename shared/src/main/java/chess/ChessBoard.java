@@ -19,8 +19,11 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition pos, ChessPiece piece) {
-
+    //this could also potentially be used to move a piece
         board[pos.getRow()-1][pos.getColumn()-1] = piece;
+    }
+    public void removePiece(ChessPosition pos){
+        board[pos.getRow()-1][pos.getColumn()-1]=null;
     }
 
     /**

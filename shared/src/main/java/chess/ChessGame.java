@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 
+
 /**
  * For a class that can manage a chess game, making moves on a board
  * <p>
@@ -33,21 +34,24 @@ public class ChessGame {
     }
 
     /**
-     * switches which teams turn it is
+     * sets which teams turn it is
      *
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
 
-        if (getTeamTurn() == TeamColor.WHITE) {
-            team = TeamColor.BLACK;
-
+        turnColor = team;
+    }
+    public void switchTurn(){
+        //if the color is white then it switches to black
+        if (turnColor == TeamColor.WHITE){
+           setTeamTurn(TeamColor.BLACK);
         }
-        else{
-            team = TeamColor.WHITE;
+        //if the color is black it switches to white
+        else {
+            setTeamTurn(TeamColor.WHITE);
         }
     }
-
     /**
      * Enum identifying the 2 possible teams in a chess game
      */
@@ -64,6 +68,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+
         throw new RuntimeException("Not implemented");
     }
 
@@ -79,7 +84,7 @@ public class ChessGame {
 
     /**
      * Determines if the given team is in check
-     *
+     * This should be changed if the movement of a pice casues a king to be in check
      * @param teamColor which team to check for check
      * @return True if the specified team is in check
      */
