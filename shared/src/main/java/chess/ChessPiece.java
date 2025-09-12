@@ -38,7 +38,9 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-
+        if (this ==null){
+            return null;
+        }
         return pieceColor;
     }
 
@@ -94,30 +96,73 @@ public class ChessPiece {
         return knightMoveList;
 
     }
-    public Collection<ChessMove> lat_vert_recursion(ChessPosition pos, int direction){
+    public Collection<ChessMove> lat_vert(ChessPosition pos, ChessBoard board){
         //directions 0 is north 1 is east 2 is west and 3 is south
         //This could also be used in some way to test king danger
-        List<ChessMove> knightMoveList = new ArrayList<>();
-        //offset is used to cycle left and right, up and down, to make the L shape
+        List<ChessMove> rookMoveList = new ArrayList<>();
 
+        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
         int row = pos.getRow();
         int moverRow = row;
         int col = pos.getColumn();
-        int moveCol = col;
-        ChessGame.TeamColor square_color = null;
-        //make a while loop, whil the position isn't negative && board position dosn't have a pice on it
+        int moverCol = col;
+        ChessGame.TeamColor square_piece_color = null;
+        //make a while loop, whil the position isn't negative && board position doesn't have a pice on it
         //while right
-        while (moveCol<8 && square_color==null){
-            
-        }
-        //while left
-        //while up
-        //while down
+        while (moverCol<8 && square_piece_color==null){
+            moverCol++;
+            ChessPosition position = new ChessPosition(row,moverCol);
+            if(board.getPiece(position)!=null){
+                square_piece_color = board.getColor(position);
+            }
 
+            if (square_piece_color != pieceColor){
+                rookMoveList.add(new ChessMove(pos,new ChessPosition(row,moverCol),null));
+            }
+        }
+        moverCol = col;
+        square_piece_color = null;
+        //while left
+        while (moverCol>1 && square_piece_color==null){
+            moverCol--;
+            ChessPosition position = new ChessPosition(row,moverCol);
+            if(board.getPiece(position)!=null){
+                square_piece_color = board.getColor(position);
+            }
+
+            if (square_piece_color != pieceColor){
+                rookMoveList.add(new ChessMove(pos,new ChessPosition(row,moverCol),null));
+            }
+        }
+        //while up
+        while (moverRow<8 && square_piece_color==null){
+            moverRow++;
+            ChessPosition position = new ChessPosition(moverRow,col);
+            if(board.getPiece(position)!=null){
+                square_piece_color = board.getColor(position);
+            }
+
+            if (square_piece_color != pieceColor){
+                rookMoveList.add(new ChessMove(pos,new ChessPosition(moverRow,col),null));
+            }
+        }
+        moverRow = row;
+        square_piece_color = null;
+        //while down
+        while (moverRow>1 && square_piece_color==null){
+            moverRow--;
+            ChessPosition position = new ChessPosition(moverRow,col);
+            if(board.getPiece(position)!=null){
+                square_piece_color = board.getColor(position);
+            }
+
+            if (square_piece_color != pieceColor){
+                rookMoveList.add(new ChessMove(pos,new ChessPosition(moverRow,col),null));
+            }
+        }
+        return rookMoveList;
     }
-//    public Collection<ChessMove> rooks_move(ChessPosition pos){
-//
-//    }
+
 //    public Collection<ChessMove> bishops_move(ChessPosition pos){
 //
 //    }
