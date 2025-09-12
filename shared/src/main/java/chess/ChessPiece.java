@@ -164,7 +164,7 @@ public class ChessPiece {
     }
 
 //    public Collection<ChessMove> bishops_move(ChessPosition pos){
-//
+
 //    }
 //    public Collection<ChessMove> queens_move(ChessPosition pos){
 //
