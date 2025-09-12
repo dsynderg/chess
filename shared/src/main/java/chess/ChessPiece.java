@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
-    private final ChessPiece.PieceType type;
+    private final PieceType type;
 //    private ChessPosition pos;
-    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+    public ChessPiece(ChessGame.TeamColor pieceColor, PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
 //        this.pos = pos;
@@ -97,6 +97,23 @@ public class ChessPiece {
     public Collection<ChessMove> lat_vert_recursion(ChessPosition pos, int direction){
         //directions 0 is north 1 is east 2 is west and 3 is south
         //This could also be used in some way to test king danger
+        List<ChessMove> knightMoveList = new ArrayList<>();
+        //offset is used to cycle left and right, up and down, to make the L shape
+
+        int row = pos.getRow();
+        int moverRow = row;
+        int col = pos.getColumn();
+        int moveCol = col;
+        ChessGame.TeamColor square_color = null;
+        //make a while loop, whil the position isn't negative && board position dosn't have a pice on it
+        //while right
+        while (moveCol<8 && square_color==null){
+            
+        }
+        //while left
+        //while up
+        //while down
+
     }
 //    public Collection<ChessMove> rooks_move(ChessPosition pos){
 //

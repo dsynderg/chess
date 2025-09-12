@@ -33,6 +33,10 @@ public class ChessBoard {
      * @return Either the piece at the pos, or null if no piece is at that
      * pos
      */
+    public ChessGame.TeamColor getColor(ChessPosition pos){
+        ChessPiece piece = getPiece(pos);
+        return piece.getTeamColor();
+    }
     public ChessPiece getPiece(ChessPosition pos) {
 
         return board[pos.getRow()-1][pos.getColumn()-1];
