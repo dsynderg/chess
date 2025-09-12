@@ -15,11 +15,11 @@ import java.util.List;
 public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
     private final ChessPiece.PieceType type;
-    private ChessPosition pos;
-    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type, ChessPosition pos) {
+//    private ChessPosition pos;
+    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
-        this.pos = pos;
+//        this.pos = pos;
     }
 
     /**
@@ -57,16 +57,16 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
-    public Collection<ChessMove> valid_moves(){
-        /**
-         * use recursion on all of the peices that can be blocked, check if there is a valid peice
-         * if so, return the list of all possible moves, if not check the next possible square
-         * but for every peice have a set of rules that everything must follow:
-         *  cant move on its own peices
-         *  cant move off the board
-         */
-    }
-    public Collection<ChessMove> knights_move(ChessPosition pos){
+//    public Collection<ChessMove> valid_moves(){
+//        /**
+//         * use recursion on all the peices that can be blocked, check if there is a valid peice
+//         * if so, return the list of all possible moves, if not check the next possible square
+//         * but for every peice have a set of rules that everything must follow:
+//         *  cant move on its own peices
+//         *  cant move off the board
+//         */
+//    }
+    public Collection<ChessMove> knights_move(ChessPosition pos, ChessBoard board){
         /**you need a starting position of the peice this could be on the Chess peice class
          * then it will move 2 in any four directions
          * and 1 in an orthoginal direction
@@ -94,22 +94,26 @@ public class ChessPiece {
         return knightMoveList;
 
     }
-    public Collection<ChessMove> rooks_move(ChessPosition pos){
-
+    public Collection<ChessMove> lat_vert_recursion(ChessPosition pos, int direction){
+        //directions 0 is north 1 is east 2 is west and 3 is south
+        //This could also be used in some way to test king danger
     }
-    public Collection<ChessMove> bishops_move(ChessPosition pos){
-
-    }
-    public Collection<ChessMove> queens_move(ChessPosition pos){
-
-    }
-    public Collection<ChessMove> kings_move(ChessPosition pos){
-
-    }
-    public Collection<ChessMove> pawns_move(ChessPosition pos){
-//        chess.ChessPosition position = chess.ChessMove.getStartPosition();
-
-    }
+//    public Collection<ChessMove> rooks_move(ChessPosition pos){
+//
+//    }
+//    public Collection<ChessMove> bishops_move(ChessPosition pos){
+//
+//    }
+//    public Collection<ChessMove> queens_move(ChessPosition pos){
+//
+//    }
+//    public Collection<ChessMove> kings_move(ChessPosition pos){
+//
+//    }
+//    public Collection<ChessMove> pawns_move(ChessPosition pos){
+////        chess.ChessPosition position = chess.ChessMove.getStartPosition();
+//
+//    }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if (type == PieceType.KING) {
 
