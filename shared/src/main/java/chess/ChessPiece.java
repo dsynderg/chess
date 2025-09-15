@@ -163,9 +163,42 @@ public class ChessPiece {
         return rookMoveList;
     }
 
-//    public Collection<ChessMove> bishops_move(ChessPosition pos){
-//
-//    }
+    public Collection<ChessMove> bishops_move(ChessPosition pos, ChessBoard board){
+        List<ChessMove> moves = new ArrayList<>();
+        int[] northwest = {1,-1};
+        int[] northeast = {1,1};
+        int[] southwest = {-1,-1};
+        int[] southeast = {-1,1};
+        int[][] directions = new int[][]{northwest, northeast, southwest, southeast};
+        int row = pos.getRow();
+        int moverRow = row;
+        int col = pos.getColumn();
+        int moverCol = col;
+        ChessGame.TeamColor square_piece_color=null;
+        for(int[] direction:directions){
+            int up = direction[0];
+            int right = direction[1];
+            while(moverRow<8 && moverRow>1 && moverCol<8 && moverCol>1
+                    && square_piece_color==null){
+                moverRow+=up;
+                moverCol+=right;
+                ChessPosition new_position = new ChessPosition(moverRow,moverCol);
+                if(board.getPiece(new_position)!=null){
+                    square_piece_color = board.getColor((new_position));
+                }
+                if (square_piece_color != pieceColor){
+                    moves.add(new ChessMove(pos,new_position,null));
+                }
+            }
+            moverRow = row;
+            moverCol = col;
+            square_piece_color = null;
+
+        }
+
+
+        return moves;
+    }
 //    public Collection<ChessMove> queens_move(ChessPosition pos){
 //
 //    }

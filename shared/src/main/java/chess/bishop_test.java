@@ -1,14 +1,11 @@
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
+import chess.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public Collection<ChessMove> bishops_move(ChessPosition pos, ChessBoard board){
-    List<ChessMove> moves;
+    List<ChessMove> moves = new ArrayList<>();
     ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
     int[] northwest = {1,-1};
     int[] northeast = {1,1};
@@ -32,9 +29,12 @@ public Collection<ChessMove> bishops_move(ChessPosition pos, ChessBoard board){
                 square_piece_color = board.getColor((new_position));
             }
             if (square_piece_color != pieceColor){
-                moves.add(ChessMove(pos,new_position,null));
+                moves.add(new ChessMove(pos,new_position,null));
             }
         }
+        moverRow = row;
+        moverCol = col;
+        square_piece_color = null;
     }
 
 
@@ -50,8 +50,14 @@ void main() {
     int[] northeast = {1,1};
     int[] southwest = {-1,-1};
     int[] southeast = {-1,1};
-    int[][] directions = new int[][]{northwest, northeast, southwest, southeast};
-    for(int[] direction:directions){
-        System.out.println(direction[0]);
+    ChessPiece enemy = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+    ChessPiece friend = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+    ChessBoard board = new ChessBoard();
+    ChessPosition pos = new ChessPosition(4,4);
+    board.addPiece(new ChessPosition(5,5),friend);
+    Collection<ChessMove> moves = bishops_move(pos,board);
+    for(ChessMove move :moves){
+        System.out.println(move);
     }
+
         }
