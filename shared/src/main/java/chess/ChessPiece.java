@@ -69,32 +69,35 @@ public class ChessPiece {
 //         */
 //    }
     public Collection<ChessMove> knights_move(ChessPosition pos, ChessBoard board){
-        /**you need a starting position of the peice this could be on the Chess peice class
-         * then it will move 2 in any four directions
-         * and 1 in an orthoginal direction
-         *
-         */
         List<ChessMove> knightMoveList = new ArrayList<>();
         //offset is used to cycle left and right, up and down, to make the L shape
 
         int row = pos.getRow();
         int col = pos.getColumn();
+        ChessGame.TeamColor square_piece_color = null;
         int[] offset = {-1,1};
         int[] onset = {2,-2};
         for (int off : offset){
             for (int on : onset){
                 ChessPosition endpos = new ChessPosition(row+on,col+off);
-                knightMoveList.add(new ChessMove(pos,endpos,null));
+                square_piece_color = board.getColor(endpos);
+                if (pieceColor!=square_piece_color) {
+                    knightMoveList.add(new ChessMove(pos, endpos, null));
+                }
+                square_piece_color=null;
             }
         }
         for (int off : offset){
             for (int on : onset){
                 ChessPosition endpos = new ChessPosition(row+off,col+on);
-                knightMoveList.add(new ChessMove(pos,endpos,null));
+                square_piece_color = board.getColor(endpos);
+                if (pieceColor!=square_piece_color) {
+                    knightMoveList.add(new ChessMove(pos, endpos, null));
+                }
+                square_piece_color = null;
             }
         }
         return knightMoveList;
-
     }
     public Collection<ChessMove> lat_vert(ChessPosition pos, ChessBoard board){
         //directions 0 is north 1 is east 2 is west and 3 is south

@@ -34,8 +34,12 @@ public class ChessBoard {
      * pos
      */
     public ChessGame.TeamColor getColor(ChessPosition pos){
+
         ChessPiece piece = getPiece(pos);
-        return piece.getTeamColor();
+        if (piece != null) {
+            return piece.getTeamColor();
+        }
+        return null;
     }
     public ChessPiece getPiece(ChessPosition pos) {
 
