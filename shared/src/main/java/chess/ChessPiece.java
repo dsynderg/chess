@@ -199,12 +199,30 @@ public class ChessPiece {
 
         return moves;
     }
-//    public Collection<ChessMove> queens_move(ChessPosition pos){
-//
-//    }
-//    public Collection<ChessMove> kings_move(ChessPosition pos){
-//
-//    }
+    public Collection<ChessMove> queens_move(ChessPosition pos,ChessBoard board){
+        Collection<ChessMove> latteral_moves = lat_vert(pos,board);
+        Collection<ChessMove> diagonal_moves = bishops_move(pos,board);
+        latteral_moves.addAll(diagonal_moves);
+        return latteral_moves;
+
+    }
+    public Collection<ChessMove> kings_move(ChessPosition pos, ChessBoard board){
+        Collection<ChessMove> moves = new ArrayList<>();
+        int[][] possible_moves = {{-1,1},{0,1},{1,1},{-1,0},{1,0},{-1,-1},{-1,0},{-1,1}};
+        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
+        ChessGame.TeamColor square_piece_color = null;
+        for(int[] move :possible_moves){
+            ChessPosition new_position = new ChessPosition(pos.getRow()+move[0],pos.getColumn()+move[1]);
+            if(board.getPiece(new_position)!=null){
+                square_piece_color = board.getColor(new_position);
+            }
+            if(square_piece_color!=pieceColor){
+                moves.add(new ChessMove(pos,new_position,null));
+            }
+            square_piece_color = null;
+        }
+        return moves;
+    }
 //    public Collection<ChessMove> pawns_move(ChessPosition pos){
 ////        chess.ChessPosition position = chess.ChessMove.getStartPosition();
 //

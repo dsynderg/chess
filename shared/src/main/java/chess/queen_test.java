@@ -1,7 +1,8 @@
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
+import chess.*;
+
+import java.util.Collection;
+import java.util.List;
+import java. util.ArrayList;
 
 public Collection<ChessMove> lat_vert(ChessPosition pos, ChessBoard board){
     //directions 0 is north 1 is east 2 is west and 3 is south
@@ -123,6 +124,14 @@ void main() {
     ChessPosition pos = new ChessPosition(4,4);
     ChessBoard board = new ChessBoard();
     Collection<ChessMove> moves = queen_moves(pos,board);
+    for (ChessMove move : moves){
+        System.out.println(move);
+    }
+    System.out.println("--------");
+    ChessPiece enemy_peice = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.ROOK);
+    board.addPiece(new ChessPosition(5,4),enemy_peice);
+    board.addPiece(new ChessPosition(5,5),enemy_peice);
+    moves = queen_moves(pos,board);
     for (ChessMove move : moves){
         System.out.println(move);
     }
