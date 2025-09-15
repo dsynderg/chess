@@ -101,7 +101,7 @@ public class ChessPiece {
         //This could also be used in some way to test king danger
         List<ChessMove> rookMoveList = new ArrayList<>();
 
-        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
+
         int row = pos.getRow();
         int moverRow = row;
         int col = pos.getColumn();
@@ -164,7 +164,7 @@ public class ChessPiece {
     }
 
 //    public Collection<ChessMove> bishops_move(ChessPosition pos){
-
+//
 //    }
 //    public Collection<ChessMove> queens_move(ChessPosition pos){
 //
