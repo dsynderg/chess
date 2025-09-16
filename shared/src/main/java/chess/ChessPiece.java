@@ -163,6 +163,7 @@ public class ChessPiece {
         int[] northeast = {1,1};
         int[] southwest = {-1,-1};
         int[] southeast = {-1,1};
+
         int[][] directions = new int[][]{northwest, northeast, southwest, southeast};
         int row = pos.getRow();
         int moverRow = row;
@@ -172,7 +173,7 @@ public class ChessPiece {
         for(int[] direction:directions){
             int up = direction[0];
             int right = direction[1];
-            while(moverRow<8 && moverRow>1 && moverCol<8 && moverCol>1
+            while(moverRow+up<9 &&(moverRow+up)>0 && moverCol+right<9 && moverCol+right>0
                     && square_piece_color==null){
                 moverRow+=up;
                 moverCol+=right;

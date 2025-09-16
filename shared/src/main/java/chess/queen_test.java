@@ -87,7 +87,7 @@ public Collection<ChessMove> bishops_move(ChessPosition pos, ChessBoard board){
     for(int[] direction:directions){
         int up = direction[0];
         int right = direction[1];
-        while(moverRow<8 && moverRow>1 && moverCol<8 && moverCol>1
+        while(moverRow+up<8 &&(moverRow+up)>1 && moverCol+right<8 && moverCol+right>1
                 && square_piece_color==null){
             moverRow+=up;
             moverCol+=right;

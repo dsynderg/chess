@@ -20,7 +20,7 @@ public Collection<ChessMove> bishops_move(ChessPosition pos, ChessBoard board){
     for(int[] direction:directions){
         int up = direction[0];
         int right = direction[1];
-        while(moverRow<8 && moverRow>1 && moverCol<8 && moverCol>1
+        while(moverRow+up<9 &&(moverRow+up)>0 && moverCol+right<9 && moverCol+right>0
         && square_piece_color==null){
             moverRow+=up;
             moverCol+=right;
@@ -53,8 +53,10 @@ void main() {
     ChessPiece enemy = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
     ChessPiece friend = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
     ChessBoard board = new ChessBoard();
-    ChessPosition pos = new ChessPosition(4,4);
-    board.addPiece(new ChessPosition(5,5),friend);
+    ChessPosition pos = new ChessPosition(5,2);
+    board.addPiece(new ChessPosition(4,1),friend);
+    board.addPiece(new ChessPosition(7,4),enemy);
+    board.addPiece(new ChessPosition(2,5),friend);
     Collection<ChessMove> moves = bishops_move(pos,board);
     for(ChessMove move :moves){
         System.out.println(move);
