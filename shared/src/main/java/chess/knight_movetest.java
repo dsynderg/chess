@@ -15,30 +15,22 @@ public Collection<ChessMove> knights_move_preview(ChessPosition pos, ChessBoard 
 
     int row = pos.getRow();
     int col = pos.getColumn();
+
     ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
     ChessGame.TeamColor square_piece_color = null;
-    int[] offset = {-1,1};
-    int[] onset = {2,-2};
-    for (int off : offset){
-        for (int on : onset){
-            ChessPosition endpos = new ChessPosition(row+on,col+off);
-            square_piece_color = board.getColor(endpos);
-            if (pieceColor!=square_piece_color) {
-                knightMoveList.add(new ChessMove(pos, endpos, null));
+    int [][] possible_moves = {{-1,2},{1,2},{2,1},{2,-1},{1,-2},{-1,-2},{-2,-1},{-2,1}};
+    for(int[] move : possible_moves){
+        if(row-move[0]>1&&row-move[0]<8&&col - move[1]>1 && col - move[1]<8) {
+            ChessPosition new_pos = new ChessPosition(row - move[0], col - move[1]);
+            square_piece_color = board.getColor(new_pos);
+            if (square_piece_color != pieceColor) {
+                ChessMove new_move = new ChessMove(pos, new_pos, null);
+                knightMoveList.add(new_move);
             }
-            square_piece_color=null;
         }
     }
-    for (int off : offset){
-        for (int on : onset){
-            ChessPosition endpos = new ChessPosition(row+off,col+on);
-            square_piece_color = board.getColor(endpos);
-            if (pieceColor!=square_piece_color) {
-                knightMoveList.add(new ChessMove(pos, endpos, null));
-            }
-            square_piece_color = null;
-        }
-    }
+
+
     return knightMoveList;
 
 }
@@ -49,7 +41,7 @@ public class Main{
 }
 
 void main() {
-    ChessPosition pos = new ChessPosition(4,4);
+    ChessPosition pos = new ChessPosition(1,1);
     ChessPosition enemypos = new ChessPosition(6,3);
     ChessPiece enemy = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
     ChessBoard board = new ChessBoard();

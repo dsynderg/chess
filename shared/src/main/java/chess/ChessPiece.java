@@ -75,28 +75,19 @@ public class ChessPiece {
         int row = pos.getRow();
         int col = pos.getColumn();
         ChessGame.TeamColor square_piece_color = null;
-        int[] offset = {-1,1};
-        int[] onset = {2,-2};
-        for (int off : offset){
-            for (int on : onset){
-                ChessPosition endpos = new ChessPosition(row+on,col+off);
-                square_piece_color = board.getColor(endpos);
-                if (pieceColor!=square_piece_color) {
-                    knightMoveList.add(new ChessMove(pos, endpos, null));
+        int [][] possible_moves = {{-1,2},{1,2},{2,1},{2,-1},{1,-2},{-1,-2},{-2,-1},{-2,1}};
+        for(int[] move : possible_moves){
+            if(row-move[0]>0&&row-move[0]<9&&col - move[1]>0 && col - move[1]<9) {
+                ChessPosition new_pos = new ChessPosition(row - move[0], col - move[1]);
+                square_piece_color = board.getColor(new_pos);
+                if (square_piece_color != pieceColor) {
+                    ChessMove new_move = new ChessMove(pos, new_pos, null);
+                    knightMoveList.add(new_move);
                 }
-                square_piece_color=null;
             }
         }
-        for (int off : offset){
-            for (int on : onset){
-                ChessPosition endpos = new ChessPosition(row+off,col+on);
-                square_piece_color = board.getColor(endpos);
-                if (pieceColor!=square_piece_color) {
-                    knightMoveList.add(new ChessMove(pos, endpos, null));
-                }
-                square_piece_color = null;
-            }
-        }
+
+
         return knightMoveList;
     }
     public Collection<ChessMove> lat_vert(ChessPosition pos, ChessBoard board){
@@ -215,6 +206,7 @@ public class ChessPiece {
         ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
         ChessGame.TeamColor square_piece_color = null;
         for(int[] move :possible_moves){
+            if(pos.getRow()+move[0]>0&&pos.getRow()+move[0]<9&&pos.getColumn()+move[1]>0&&pos.getColumn()+move[1]<9){
             ChessPosition new_position = new ChessPosition(pos.getRow()+move[0],pos.getColumn()+move[1]);
             if(board.getPiece(new_position)!=null){
                 square_piece_color = board.getColor(new_position);
@@ -223,6 +215,7 @@ public class ChessPiece {
                 moves.add(new ChessMove(pos,new_position,null));
             }
             square_piece_color = null;
+        }
         }
         return moves;
     }
