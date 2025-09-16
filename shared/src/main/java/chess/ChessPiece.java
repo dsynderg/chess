@@ -219,17 +219,118 @@ public class ChessPiece {
         }
         return moves;
     }
-//    public Collection<ChessMove> pawns_move(ChessPosition pos){
-////        chess.ChessPosition position = chess.ChessMove.getStartPosition();
-//
-//    }
+    public Collection<ChessMove> white_advance(ChessPosition pos,ChessBoard board){
+        int row = pos.getRow();
+        int moverrow = row;
+        int col = pos.getColumn();
+        int movercol =col;
+        ChessPiece.PieceType promotionPiece=null;
+        ChessGame.TeamColor square_peice_color = null;
+        int[] white_advance = {1,0};
+        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
+        int[] attacks = {-1,2,};
+        List<ChessMove> moves = new ArrayList<>();
+
+        moverrow += white_advance[0];
+        ChessPosition new_position = new ChessPosition(moverrow,movercol);
+        if(board.getColor(new_position)==null){
+            if(new_position.getRow()==8){
+                moves.add(new ChessMove(pos,new_position,promotionPiece));
+            }
+            else{
+                moves.add(new ChessMove(pos,new_position,null));}
+        }
+        if(row == 2){
+            moverrow += white_advance[0];
+            new_position = new ChessPosition(moverrow,movercol);
+            if(board.getColor(new_position)==null){
+                moves.add(new ChessMove(pos,new_position,null));}
+            moverrow -=1;
+        }
+        for(int attack:attacks){
+            movercol+=attack;
+            new_position = new ChessPosition(moverrow,movercol);
+            if(board.getColor(new_position)== ChessGame.TeamColor.BLACK) {
+                if (new_position.getRow() == 8) {
+                    moves.add(new ChessMove(pos, new_position, promotionPiece));
+                } else {
+                    moves.add(new ChessMove(pos, new_position, null));
+
+                }
+            }
+
+
+        }
+        return moves;
+    }
+    public Collection<ChessMove> black_advance(ChessPosition pos,ChessBoard board){
+        int row = pos.getRow();
+        int moverrow = row;
+        int col = pos.getColumn();
+        int movercol =col;
+        ChessPiece.PieceType promotionPiece=null;
+        ChessGame.TeamColor square_peice_color = null;
+        int[] black_advance = {-1,0};
+        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
+        int[] attacks = {-1,2,};
+        List<ChessMove> moves = new ArrayList<>();
+
+        moverrow += black_advance[0];
+        ChessPosition new_position = new ChessPosition(moverrow,movercol);
+        if(board.getColor(new_position)==null){
+            if(new_position.getRow()==1){
+                moves.add(new ChessMove(pos,new_position,promotionPiece));
+            }
+            else{
+                moves.add(new ChessMove(pos,new_position,null));}
+        }
+        if(row == 7){
+            moverrow += black_advance[0];
+            new_position = new ChessPosition(moverrow,movercol);
+            if(board.getColor(new_position)==null){
+                moves.add(new ChessMove(pos,new_position,null));}
+            moverrow -=1;
+        }
+        for(int attack:attacks){
+            movercol+=attack;
+            new_position = new ChessPosition(moverrow,movercol);
+            if(board.getColor(new_position)== ChessGame.TeamColor.WHITE) {
+                if (new_position.getRow() == 1) {
+                    moves.add(new ChessMove(pos, new_position, promotionPiece));
+                } else {
+                    moves.add(new ChessMove(pos, new_position, null));
+
+                }
+            }
+
+        }
+        return moves;
+    }
+    public Collection<ChessMove> pawn_move(ChessPosition pos, ChessBoard board){
+        /**
+         * We need a way to identify the color of the pawn
+         * if its black it has to move down
+         * if white, it has to move up
+         * we need a check to see if the pawn has already moved
+         * check if there are enemys to the left and rigth
+         */
+        if(pieceColor==ChessGame.TeamColor.WHITE){
+            return white_advance(pos,board);
+        }
+        else {
+            return black_advance(pos,board);
+        }
+
+
+
+    }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if (type == PieceType.KING) {return kings_move(myPosition,board);}
         else if (type == PieceType.QUEEN) {return queens_move(myPosition,board);}
         else if (type == PieceType.ROOK) {return lat_vert(myPosition,board);}
         else if (type == PieceType.KNIGHT) {return knights_move(myPosition,board);}
         else if (type == PieceType.BISHOP) {return bishops_move(myPosition,board);}
-        else if (type == PieceType.PAWN) {}
+        else if (type == PieceType.PAWN) {return pawn_move(myPosition,board);}
         return Collections.emptyList();
 
         }
