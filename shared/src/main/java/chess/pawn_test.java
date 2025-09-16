@@ -2,43 +2,59 @@ import chess.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
-public Collection<ChessMove> white_advance(ChessPosition pos,ChessBoard board){
+public Collection<ChessMove> pawn_move(ChessPosition pos,ChessBoard board,ChessGame.TeamColor pieceColor){
     int row = pos.getRow();
     int moverrow = row;
     int col = pos.getColumn();
     int movercol =col;
-    
+
     ChessGame.TeamColor square_peice_color = null;
-    int[] white_advance = {1,0};
-    ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
+    int[] advance;
+    int promotion_rank;
+    int start_rank;
+    if(pieceColor == ChessGame.TeamColor.WHITE){
+        advance = new int[]{1,0};
+        promotion_rank = 8;
+        start_rank = 2;
+
+    }
+    else {
+        advance = new int[]{-1,0};
+        promotion_rank = 1;
+        start_rank = 7;
+    }
+
     int[] attacks = {-1,2,};
     List<ChessMove> moves = new ArrayList<>();
     ChessPiece.PieceType [] possible_promotions = {ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK, ChessPiece.PieceType.QUEEN};
 
-    moverrow += white_advance[0];
+    moverrow += advance[0];
     ChessPosition new_position = new ChessPosition(moverrow,movercol);
     if(board.getColor(new_position)==null){
-        if(new_position.getRow()==8){
+        if(new_position.getRow()==promotion_rank){
             for(ChessPiece.PieceType PromotionPiece: possible_promotions) {
-                moves.add(new ChessMove(pos, new_position, promotionPiece));
+                moves.add(new ChessMove(pos, new_position, PromotionPiece));
             }
         }
         else{
             moves.add(new ChessMove(pos,new_position,null));}
     }
-    if(row == 2){
-        moverrow += white_advance[0];
+    if(row == start_rank){
+        moverrow += advance[0];
+        ChessPosition old_position = new_position;
         new_position = new ChessPosition(moverrow,movercol);
-        if(board.getColor(new_position)==null){
+        if(board.getColor(new_position)==null&&board.getColor(old_position)==null){
             moves.add(new ChessMove(pos,new_position,null));}
         moverrow -=1;
     }
     for(int attack:attacks){
         movercol+=attack;
         new_position = new ChessPosition(moverrow,movercol);
-        if(board.getColor(new_position)== ChessGame.TeamColor.BLACK) {
-            if (new_position.getRow() == 8) {
-                moves.add(new ChessMove(pos, new_position, promotionPiece));
+        if(board.getColor(new_position)!= pieceColor && board.getColor(new_position)!=null) {
+            if (new_position.getRow() == promotion_rank) {
+                for(ChessPiece.PieceType PromotionPiece: possible_promotions) {
+                    moves.add(new ChessMove(pos, new_position, PromotionPiece));
+                }
             } else {
                 moves.add(new ChessMove(pos, new_position, null));
 
@@ -60,12 +76,15 @@ public Collection<ChessMove> black_advance(ChessPosition pos,ChessBoard board){
     ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
     int[] attacks = {-1,2,};
     List<ChessMove> moves = new ArrayList<>();
+    ChessPiece.PieceType [] possible_promotions = {ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK, ChessPiece.PieceType.QUEEN};
 
     moverrow += black_advance[0];
     ChessPosition new_position = new ChessPosition(moverrow,movercol);
     if(board.getColor(new_position)==null){
         if(new_position.getRow()==1){
-            moves.add(new ChessMove(pos,new_position,promotionPiece));
+            for(ChessPiece.PieceType PromotionPiece: possible_promotions) {
+                moves.add(new ChessMove(pos, new_position, PromotionPiece));
+            }
         }
         else{
             moves.add(new ChessMove(pos,new_position,null));}
@@ -82,7 +101,9 @@ public Collection<ChessMove> black_advance(ChessPosition pos,ChessBoard board){
         new_position = new ChessPosition(moverrow,movercol);
         if(board.getColor(new_position)== ChessGame.TeamColor.WHITE) {
             if (new_position.getRow() == 1) {
-                moves.add(new ChessMove(pos, new_position, promotionPiece));
+                for(ChessPiece.PieceType PromotionPiece: possible_promotions) {
+                    moves.add(new ChessMove(pos, new_position, PromotionPiece));
+                }
             } else {
                 moves.add(new ChessMove(pos, new_position, null));
 
@@ -106,12 +127,7 @@ public Collection<ChessMove> pawn_move(ChessPosition pos, ChessBoard board){
 
 
 
-    if(pieceColor==ChessGame.TeamColor.WHITE){
-        return white_advance(pos,board);
-    }
-    else {
-        return black_advance(pos,board);
-    }
+    return pawn_move(pos,board,pieceColor);
 
 
 
