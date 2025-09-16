@@ -202,20 +202,19 @@ public class ChessPiece {
     }
     public Collection<ChessMove> kings_move(ChessPosition pos, ChessBoard board){
         Collection<ChessMove> moves = new ArrayList<>();
-        int[][] possible_moves = {{-1,1},{0,1},{1,1},{-1,0},{1,0},{-1,-1},{-1,0},{-1,1}};
-        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
+        int[][] possible_moves = {{-1,1},{0,1},{1,1},{-1,0},{1,0},{-1,-1},{0,-1},{1,-1}};
         ChessGame.TeamColor square_piece_color = null;
         for(int[] move :possible_moves){
             if(pos.getRow()+move[0]>0&&pos.getRow()+move[0]<9&&pos.getColumn()+move[1]>0&&pos.getColumn()+move[1]<9){
-            ChessPosition new_position = new ChessPosition(pos.getRow()+move[0],pos.getColumn()+move[1]);
-            if(board.getPiece(new_position)!=null){
-                square_piece_color = board.getColor(new_position);
+                ChessPosition new_position = new ChessPosition(pos.getRow()+move[0],pos.getColumn()+move[1]);
+                if(board.getPiece(new_position)!=null){
+                    square_piece_color = board.getColor(new_position);
+                }
+                if(square_piece_color!=pieceColor){
+                    moves.add(new ChessMove(pos,new_position,null));
+                }
+                square_piece_color = null;
             }
-            if(square_piece_color!=pieceColor){
-                moves.add(new ChessMove(pos,new_position,null));
-            }
-            square_piece_color = null;
-        }
         }
         return moves;
     }
@@ -224,9 +223,7 @@ public class ChessPiece {
 //
 //    }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        if (type == PieceType.KING) {
-            return kings_move(myPosition,board);
-        }
+        if (type == PieceType.KING) {return kings_move(myPosition,board);}
         else if (type == PieceType.QUEEN) {return queens_move(myPosition,board);}
         else if (type == PieceType.ROOK) {return lat_vert(myPosition,board);}
         else if (type == PieceType.KNIGHT) {return knights_move(myPosition,board);}

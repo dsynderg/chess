@@ -87,21 +87,20 @@ public Collection<ChessMove> bishops_move(ChessPosition pos, ChessBoard board){
     for(int[] direction:directions){
         int up = direction[0];
         int right = direction[1];
-        while(moverRow<8 && moverRow>1 && moverCol<8 && moverCol>1
-                && square_piece_color==null){
+        while(moverRow<8 && moverRow>1 && moverCol<8 && moverCol>1 && square_piece_color == null){
             moverRow+=up;
             moverCol+=right;
             ChessPosition new_position = new ChessPosition(moverRow,moverCol);
-            if(board.getPiece(new_position)!=null){
-                square_piece_color = board.getColor((new_position));
-            }
+            square_piece_color = board.getColor((new_position));
             if (square_piece_color != pieceColor){
                 moves.add(new ChessMove(pos,new_position,null));
+
             }
         }
         moverRow = row;
         moverCol = col;
         square_piece_color = null;
+
 
     }
 
@@ -109,10 +108,11 @@ public Collection<ChessMove> bishops_move(ChessPosition pos, ChessBoard board){
     return moves;
 }
 public Collection<ChessMove> queen_moves(ChessPosition pos, ChessBoard board){
-    Collection<ChessMove> latteral_moves = lat_vert(pos,board);
+
     Collection<ChessMove> diagonal_moves = bishops_move(pos,board);
-    latteral_moves.addAll(diagonal_moves);
-    return latteral_moves;
+//    Collection<ChessMove> latteral_moves = lat_vert(pos,board);
+//    latteral_moves.addAll(diagonal_moves);
+    return diagonal_moves;
 
 }
 public class Main{
@@ -121,18 +121,19 @@ public class Main{
     }
 }
 void main() {
-    ChessPosition pos = new ChessPosition(4,4);
+    ChessPosition pos = new ChessPosition(4,1);
+    ChessPiece enemy = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+    ChessPiece friend = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
     ChessBoard board = new ChessBoard();
+
+    board.addPiece(new ChessPosition(2,1),friend);
+    board.addPiece(new ChessPosition(6,3),friend);
+    board.addPiece(new ChessPosition(2,3),enemy);
+    board.addPiece(new ChessPosition(4,3),enemy);
+    board.addPiece(new ChessPosition(8,1),enemy);
     Collection<ChessMove> moves = queen_moves(pos,board);
     for (ChessMove move : moves){
         System.out.println(move);
     }
-    System.out.println("--------");
-    ChessPiece enemy_peice = new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.ROOK);
-    board.addPiece(new ChessPosition(5,4),enemy_peice);
-    board.addPiece(new ChessPosition(5,5),enemy_peice);
-    moves = queen_moves(pos,board);
-    for (ChessMove move : moves){
-        System.out.println(move);
-    }
+
 }
