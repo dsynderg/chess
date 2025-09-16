@@ -232,12 +232,12 @@ public class ChessPiece {
 //    }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if (type == PieceType.KING) {
-
+            return kings_move(myPosition,board);
         }
-        else if (type == PieceType.QUEEN) {}
-        else if (type == PieceType.ROOK) {}
-        else if (type == PieceType.KNIGHT) {}
-        else if (type == PieceType.BISHOP) {}
+        else if (type == PieceType.QUEEN) {return queens_move(myPosition,board);}
+        else if (type == PieceType.ROOK) {return lat_vert(myPosition,board);}
+        else if (type == PieceType.KNIGHT) {return knights_move(myPosition,board);}
+        else if (type == PieceType.BISHOP) {return bishops_move(myPosition,board);}
         else if (type == PieceType.PAWN) {}
         return Collections.emptyList();
 
