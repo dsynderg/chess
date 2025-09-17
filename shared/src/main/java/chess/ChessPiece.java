@@ -244,7 +244,7 @@ public class ChessPiece {
         int[] attacks = {-1,2,};
         List<ChessMove> moves = new ArrayList<>();
         ChessPiece.PieceType [] possible_promotions = {ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK, ChessPiece.PieceType.QUEEN};
-
+        //checks forward movement
         moverrow += advance[0];
         ChessPosition new_position = new ChessPosition(moverrow,movercol);
         if(board.getColor(new_position)==null){
@@ -256,6 +256,7 @@ public class ChessPiece {
             else{
                 moves.add(new ChessMove(pos,new_position,null));}
         }
+        //checks latteral moves on first row
         if(row == start_rank){
             moverrow += advance[0];
             ChessPosition old_position = new_position;
@@ -265,20 +266,21 @@ public class ChessPiece {
             moverrow -=1;
         }
         for(int attack:attacks){
-            moverrow = row+1;
+            moverrow = row+advance[0];
             movercol+=attack;
-            new_position = new ChessPosition(moverrow,movercol);
-            if(board.getColor(new_position)!= pieceColor && board.getColor(new_position)!=null) {
-                if (new_position.getRow() == promotion_rank) {
-                    for(ChessPiece.PieceType PromotionPiece: possible_promotions) {
-                        moves.add(new ChessMove(pos, new_position, PromotionPiece));
-                    }
-                } else {
-                    moves.add(new ChessMove(pos, new_position, null));
+            if (movercol>0&&movercol<9) {
+                new_position = new ChessPosition(moverrow, movercol);
+                if (board.getColor(new_position) != pieceColor && board.getColor(new_position) != null) {
+                    if (new_position.getRow() == promotion_rank) {
+                        for (ChessPiece.PieceType PromotionPiece : possible_promotions) {
+                            moves.add(new ChessMove(pos, new_position, PromotionPiece));
+                        }
+                    } else {
+                        moves.add(new ChessMove(pos, new_position, null));
 
+                    }
                 }
             }
-
 
         }
         return moves;
