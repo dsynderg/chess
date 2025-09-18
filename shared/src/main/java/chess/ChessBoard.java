@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -10,6 +13,20 @@ public class ChessBoard {
     final private ChessPiece[][] board = new ChessPiece[8][8];
     public ChessBoard() {
         
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessBoard that = (ChessBoard) o;
+        return Objects.deepEquals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(board);
     }
 
     /**
@@ -51,6 +68,53 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        ChessPiece black_pawn = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+        ChessPiece black_bishop = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+        int[] bishop_columns = {3,6};
+        ChessPiece black_knight = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+        int[] knight_columns = {2,7};
+        ChessPiece black_rook = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+        int[] rook_columns = {1,8};
+        ChessPiece black_king = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
+        ChessPiece black_queen = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN);
+        ChessPiece white_pawn = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        ChessPiece white_bishop = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
+        ChessPiece white_knight = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
+        ChessPiece white_rook = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+        ChessPiece white_king = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING);
+        ChessPiece white_queen = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
+        for(int i=1;i<9;i++){
+            ChessPosition whitepos = new ChessPosition(2,i);
+            ChessPosition blackpos = new ChessPosition(7,i);
+            addPiece(whitepos,white_pawn);
+            addPiece(blackpos,black_pawn);
+       }
+        for(int pos:bishop_columns){
+            ChessPosition whitepos = new ChessPosition(1,pos);
+            ChessPosition blackpos = new ChessPosition(8,pos);
+            addPiece(whitepos,white_bishop);
+            addPiece(blackpos,black_bishop);
+        }
+        for(int pos:rook_columns){
+            ChessPosition whitepos = new ChessPosition(1,pos);
+            ChessPosition blackpos = new ChessPosition(8,pos);
+            addPiece(whitepos,white_rook);
+            addPiece(blackpos,black_rook);
+        }
+        for(int pos:knight_columns){
+            ChessPosition whitepos = new ChessPosition(1,pos);
+            ChessPosition blackpos = new ChessPosition(8,pos);
+            addPiece(whitepos,white_knight);
+            addPiece(blackpos,black_knight);
+        }
+        ChessPosition whitepos = new ChessPosition(1,5);
+        ChessPosition blackpos = new ChessPosition(8,5);
+        addPiece(whitepos,white_king);
+        addPiece(blackpos,black_king);
+        whitepos = new ChessPosition(1,4);
+        blackpos = new ChessPosition(8,4);
+        addPiece(whitepos,white_queen);
+        addPiece(blackpos,black_queen);
     }
-}
+    }
+

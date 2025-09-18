@@ -1,10 +1,7 @@
 package chess;
 
 import java.awt.geom.NoninvertibleTransformException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Represents a single chess piece
@@ -20,6 +17,20 @@ public class ChessPiece {
         this.pieceColor = pieceColor;
         this.type = type;
 //        this.pos = pos;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
     }
 
     /**
