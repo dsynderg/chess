@@ -79,233 +79,152 @@ public class ChessPiece {
 //         *  cant move off the board
 //         */
 //    }
-    public Collection<ChessMove> knights_move(ChessPosition pos, ChessBoard board){
-        List<ChessMove> knightMoveList = new ArrayList<>();
-        //offset is used to cycle left and right, up and down, to make the L shape
-
+    public Collection<ChessMove> Queen_Rook_bishop_move(ChessPosition pos, ChessBoard board, int[][] directions){
         int row = pos.getRow();
+        int moverrow = pos.getRow();
         int col = pos.getColumn();
-        ChessGame.TeamColor square_piece_color = null;
-        int [][] possible_moves = {{-1,2},{1,2},{2,1},{2,-1},{1,-2},{-1,-2},{-2,-1},{-2,1}};
-        for(int[] move : possible_moves){
-            if(row-move[0]>0&&row-move[0]<9&&col - move[1]>0 && col - move[1]<9) {
-                ChessPosition new_pos = new ChessPosition(row - move[0], col - move[1]);
-                square_piece_color = board.getColor(new_pos);
-                if (square_piece_color != pieceColor) {
-                    ChessMove new_move = new ChessMove(pos, new_pos, null);
-                    knightMoveList.add(new_move);
-                }
-            }
-        }
-
-
-        return knightMoveList;
-    }
-    public Collection<ChessMove> lat_vert(ChessPosition pos, ChessBoard board){
-        //directions 0 is north 1 is east 2 is west and 3 is south
-        //This could also be used in some way to test king danger
-        List<ChessMove> rookMoveList = new ArrayList<>();
-
-
-        int row = pos.getRow();
-        int moverRow = row;
-        int col = pos.getColumn();
-        int moverCol = col;
-        ChessGame.TeamColor square_piece_color = null;
-        //make a while loop, whil the position isn't negative && board position doesn't have a pice on it
-        //while right
-        while (moverCol<8 && square_piece_color==null){
-            moverCol++;
-            ChessPosition position = new ChessPosition(row,moverCol);
-            if(board.getPiece(position)!=null){
-                square_piece_color = board.getColor(position);
-            }
-
-            if (square_piece_color != pieceColor){
-                rookMoveList.add(new ChessMove(pos,new ChessPosition(row,moverCol),null));
-            }
-        }
-        moverCol = col;
-        square_piece_color = null;
-        //while left
-        while (moverCol>1 && square_piece_color==null){
-            moverCol--;
-            ChessPosition position = new ChessPosition(row,moverCol);
-            if(board.getPiece(position)!=null){
-                square_piece_color = board.getColor(position);
-            }
-
-            if (square_piece_color != pieceColor){
-                rookMoveList.add(new ChessMove(pos,new ChessPosition(row,moverCol),null));
-            }
-        }
-        //while up
-        while (moverRow<8 && square_piece_color==null){
-            moverRow++;
-            ChessPosition position = new ChessPosition(moverRow,col);
-            if(board.getPiece(position)!=null){
-                square_piece_color = board.getColor(position);
-            }
-
-            if (square_piece_color != pieceColor){
-                rookMoveList.add(new ChessMove(pos,new ChessPosition(moverRow,col),null));
-            }
-        }
-        moverRow = row;
-        square_piece_color = null;
-        //while down
-        while (moverRow>1 && square_piece_color==null){
-            moverRow--;
-            ChessPosition position = new ChessPosition(moverRow,col);
-            if(board.getPiece(position)!=null){
-                square_piece_color = board.getColor(position);
-            }
-
-            if (square_piece_color != pieceColor){
-                rookMoveList.add(new ChessMove(pos,new ChessPosition(moverRow,col),null));
-            }
-        }
-        return rookMoveList;
-    }
-
-    public Collection<ChessMove> bishops_move(ChessPosition pos, ChessBoard board){
-        List<ChessMove> moves = new ArrayList<>();
-        int[] northwest = {1,-1};
-        int[] northeast = {1,1};
-        int[] southwest = {-1,-1};
-        int[] southeast = {-1,1};
-
-        int[][] directions = new int[][]{northwest, northeast, southwest, southeast};
-        int row = pos.getRow();
-        int moverRow = row;
-        int col = pos.getColumn();
-        int moverCol = col;
-        ChessGame.TeamColor square_piece_color=null;
-        for(int[] direction:directions){
-            int up = direction[0];
-            int right = direction[1];
-            while(moverRow+up<9 &&(moverRow+up)>0 && moverCol+right<9 && moverCol+right>0
-                    && square_piece_color==null){
-                moverRow+=up;
-                moverCol+=right;
-                ChessPosition new_position = new ChessPosition(moverRow,moverCol);
-                if(board.getPiece(new_position)!=null){
-                    square_piece_color = board.getColor((new_position));
-                }
-                if (square_piece_color != pieceColor){
-                    moves.add(new ChessMove(pos,new_position,null));
-                }
-            }
-            moverRow = row;
-            moverCol = col;
-            square_piece_color = null;
-
-        }
-
-
-        return moves;
-    }
-    public Collection<ChessMove> queens_move(ChessPosition pos,ChessBoard board){
-        Collection<ChessMove> latteral_moves = lat_vert(pos,board);
-        Collection<ChessMove> diagonal_moves = bishops_move(pos,board);
-        latteral_moves.addAll(diagonal_moves);
-        return latteral_moves;
-
-    }
-    public Collection<ChessMove> kings_move(ChessPosition pos, ChessBoard board){
+        int movercol = pos.getColumn();
         Collection<ChessMove> moves = new ArrayList<>();
-        int[][] possible_moves = {{-1,1},{0,1},{1,1},{-1,0},{1,0},{-1,-1},{0,-1},{1,-1}};
-        ChessGame.TeamColor square_piece_color = null;
-        for(int[] move :possible_moves){
-            if(pos.getRow()+move[0]>0&&pos.getRow()+move[0]<9&&pos.getColumn()+move[1]>0&&pos.getColumn()+move[1]<9){
-                ChessPosition new_position = new ChessPosition(pos.getRow()+move[0],pos.getColumn()+move[1]);
-                if(board.getPiece(new_position)!=null){
-                    square_piece_color = board.getColor(new_position);
+//        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
+        ChessGame.TeamColor square_color = null;
+        for (int[] direction:directions){
+            while(moverrow>=1&&moverrow<=8&&movercol>=1&&movercol<=8&&square_color==null){
+                moverrow += direction[0];
+                movercol += direction[1];
+                if(moverrow>0&&moverrow<9&&movercol>0&&movercol<9) {
+                    ChessPosition new_pos = new ChessPosition(moverrow, movercol);
+                    square_color = board.getColor(new_pos);
+                    if(square_color!=pieceColor){
+                        moves.add(new ChessMove(pos,new_pos,null));
+                    }
                 }
-                if(square_piece_color!=pieceColor){
-                    moves.add(new ChessMove(pos,new_position,null));
-                }
-                square_piece_color = null;
             }
+            moverrow =row;
+            movercol = col;
+            square_color = null;
         }
         return moves;
     }
-    public Collection<ChessMove> pawn_move(ChessPosition pos,ChessBoard board,ChessGame.TeamColor pieceColor){
+    public Collection<ChessMove> knight_king_moves(ChessPosition pos, ChessBoard board, int[][] directions){
         int row = pos.getRow();
-        int moverrow = row;
+        int moverrow = pos.getRow();
         int col = pos.getColumn();
-        int movercol =col;
+        int movercol = pos.getColumn();
+        Collection<ChessMove> moves = new ArrayList<>();
+//        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
+        ChessGame.TeamColor square_color = null;
+        for (int[] direction:directions){
 
-        ChessGame.TeamColor square_peice_color = null;
-        int[] advance;
-        int promotion_rank;
-        int start_rank;
+            moverrow += direction[0];
+            movercol += direction[1];
+            if(moverrow>0&&moverrow<9&&movercol>0&&movercol<9) {
+                ChessPosition new_pos = new ChessPosition(moverrow, movercol);
+                square_color = board.getColor(new_pos);
+                if(square_color!=pieceColor){
+                    moves.add(new ChessMove(pos,new_pos,null));
+                }
+
+            }
+            moverrow =row;
+            movercol = col;
+            square_color = null;
+        }
+        return moves;
+    }
+    public Collection<ChessMove> pawn_moves(ChessPosition pos, ChessBoard board){
+        ChessPiece.PieceType[] promotions = {ChessPiece.PieceType.ROOK, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP};
+        int row = pos.getRow();
+        int moverrow = pos.getRow();
+        int col = pos.getColumn();
+        int movercol = pos.getColumn();
+        Collection<ChessMove> moves = new ArrayList<>();
+//        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
+        int[] attacks = {-1,2};
+        int advance, promo,start;
+        ChessGame.TeamColor enemy_color;
         if(pieceColor == ChessGame.TeamColor.WHITE){
-            advance = new int[]{1,0};
-            promotion_rank = 8;
-            start_rank = 2;
-
+            advance = 1;
+            promo = 8;
+            start = 2;
+            enemy_color= ChessGame.TeamColor.BLACK;
         }
-        else {
-            advance = new int[]{-1,0};
-            promotion_rank = 1;
-            start_rank = 7;
+        else{
+            advance = -1;
+            promo = 1;
+            start = 7;
+            enemy_color= ChessGame.TeamColor.WHITE;
         }
-
-        int[] attacks = {-1,2,};
-        List<ChessMove> moves = new ArrayList<>();
-        ChessPiece.PieceType [] possible_promotions = {ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK, ChessPiece.PieceType.QUEEN};
-        //checks forward movement
-        moverrow += advance[0];
-        ChessPosition new_position = new ChessPosition(moverrow,movercol);
-        if(board.getColor(new_position)==null){
-            if(new_position.getRow()==promotion_rank){
-                for(ChessPiece.PieceType PromotionPiece: possible_promotions) {
-                    moves.add(new ChessMove(pos, new_position, PromotionPiece));
+        ChessGame.TeamColor square_color = null;
+        ChessPosition new_pos = new ChessPosition(row+advance,col);
+        if(board.getColor(new_pos) == null){
+            if( new_pos.getRow()==promo){
+                for (ChessPiece.PieceType promotion: promotions){
+                    moves.add(new ChessMove(pos,new_pos,promotion));
                 }
             }
-            else{
-                moves.add(new ChessMove(pos,new_position,null));}
-        }
-        //checks latteral moves on first row
-        if(row == start_rank){
-            moverrow += advance[0];
-            ChessPosition old_position = new_position;
-            new_position = new ChessPosition(moverrow,movercol);
-            if(board.getColor(new_position)==null&&board.getColor(old_position)==null){
-                moves.add(new ChessMove(pos,new_position,null));}
-            moverrow -=1;
-        }
-        for(int attack:attacks){
-            moverrow = row+advance[0];
-            movercol+=attack;
-            if (movercol>0&&movercol<9) {
-                new_position = new ChessPosition(moverrow, movercol);
-                if (board.getColor(new_position) != pieceColor && board.getColor(new_position) != null) {
-                    if (new_position.getRow() == promotion_rank) {
-                        for (ChessPiece.PieceType PromotionPiece : possible_promotions) {
-                            moves.add(new ChessMove(pos, new_position, PromotionPiece));
-                        }
-                    } else {
-                        moves.add(new ChessMove(pos, new_position, null));
-
+            else {
+                moves.add(new ChessMove(pos,new_pos,null));
+                if(row==start){
+                    ChessPosition double_advance = new ChessPosition(row+advance+advance,col);
+                    if(board.getColor(double_advance)==null){
+                        moves.add(new ChessMove(pos,double_advance,null));
                     }
                 }
             }
 
+
+        }
+        moverrow+=advance;
+        for(int attack: attacks){
+
+            movercol+=attack;
+            if(movercol>=1&&movercol<=8){
+                ChessPosition attack_pos = new ChessPosition(moverrow,movercol);
+
+                if(board.getColor(attack_pos)==enemy_color){
+                    if(moverrow==promo){
+                        for(ChessPiece.PieceType promotion: promotions){
+                            moves.add(new ChessMove(pos,attack_pos,promotion));
+
+                        }
+                    }
+                    else{
+                        moves.add(new ChessMove(pos,attack_pos,null));
+
+                    }
+                }
+            }
         }
         return moves;
     }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        if (type == PieceType.KING) {return kings_move(myPosition,board);}
-        else if (type == PieceType.QUEEN) {return queens_move(myPosition,board);}
-        else if (type == PieceType.ROOK) {return lat_vert(myPosition,board);}
-        else if (type == PieceType.KNIGHT) {return knights_move(myPosition,board);}
-        else if (type == PieceType.BISHOP) {return bishops_move(myPosition,board);}
-        else if (type == PieceType.PAWN) {return pawn_move(myPosition,board,pieceColor);}
-        return Collections.emptyList();
+        Collection<ChessMove> moves = List.of();
+        if(type == PieceType.KING){
+            int[][] directions={{1,0},{1,-1},{0,-1}, {-1, -1},{-1,0},{-1,1},{0,1},{1,1}};
+            return knight_king_moves(myPosition,board,directions);
+        }
+        if(type == PieceType.QUEEN){
+            int[][] directions={{1,-1},{1,1},{-1,-1},{-1,1},{1,0},{0,1},{-1,0},{0,-1}};
+            return Queen_Rook_bishop_move(myPosition,board,directions);
+        }
+        if(type == PieceType.KNIGHT){
+            int[][] directions={{2,-1},{1,-2},{-1,-2}, {-2, -1},{-2,1},{-1,2},{1,2},{2,1}};
+            return knight_king_moves(myPosition,board,directions);
+        }
+        if(type == PieceType.ROOK){
+            int[][] directions={{1,0},{0,1},{-1,0},{0,-1}};
+            return Queen_Rook_bishop_move(myPosition,board,directions);
+        }
+        if(type == PieceType.BISHOP){
+            int[][] directions={{1,-1},{1,1},{-1,-1},{-1,1}};
+            return Queen_Rook_bishop_move(myPosition,board,directions);
 
         }
+        if(type == PieceType.PAWN){
+            return pawn_moves(myPosition,board);
+        }
+        return moves;
     }
+}
 
 
