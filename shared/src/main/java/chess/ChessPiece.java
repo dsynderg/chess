@@ -79,7 +79,42 @@ public class ChessPiece {
 //         *  cant move off the board
 //         */
 //    }
-    public Collection<ChessMove> Queen_Rook_bishop_move(ChessPosition pos, ChessBoard board, int[][] directions){
+    private Boolean king_helper (ChessBoard board,Collection<ChessMove> danger_moves, List<PieceType> danger_pieces){
+        for(ChessMove move: danger_moves){
+            ChessPiece enemy_piece = board.getPiece(move.getEndPosition());
+            if(danger_pieces.contains(enemy_piece.getPieceType())){
+                if(enemy_piece.getTeamColor()!=pieceColor){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Boolean isKingInCheck(ChessBoard board, ChessPosition pos){
+        Collection<ChessMove> danger_moves;
+        int[][] rookdirections={{1,0},{0,1},{-1,0},{0,-1}};
+        int[][] bishopdirections={{1,-1},{1,1},{-1,-1},{-1,1}};
+        int[][] knightdirections={{2,-1},{1,-2},{-1,-2}, {-2, -1},{-2,1},{-1,2},{1,2},{2,1}};
+        danger_moves = Queen_Rook_bishop_move(pos,board,rookdirections);
+        if(king_helper(board,danger_moves,new ArrayList<>(Arrays.asList(PieceType.ROOK,PieceType.QUEEN)))){
+            return true;
+        }
+        danger_moves= Queen_Rook_bishop_move(pos,board,bishopdirections);
+        if(king_helper(board,danger_moves,new ArrayList<>(Arrays.asList(PieceType.BISHOP,PieceType.QUEEN)))){
+            return true;
+        }
+        danger_moves = knight_king_moves(pos,board,knightdirections);
+        if(king_helper(board,danger_moves,new ArrayList<>(Arrays.asList(PieceType.KNIGHT)))){
+            return true;
+        }
+
+
+        //queen and rookcheck;
+
+        return false;
+    }
+    private Collection<ChessMove> Queen_Rook_bishop_move(ChessPosition pos, ChessBoard board, int[][] directions){
         int row = pos.getRow();
         int moverrow = pos.getRow();
         int col = pos.getColumn();
@@ -105,7 +140,7 @@ public class ChessPiece {
         }
         return moves;
     }
-    public Collection<ChessMove> knight_king_moves(ChessPosition pos, ChessBoard board, int[][] directions){
+    private Collection<ChessMove> knight_king_moves(ChessPosition pos, ChessBoard board, int[][] directions){
         int row = pos.getRow();
         int moverrow = pos.getRow();
         int col = pos.getColumn();
@@ -131,7 +166,7 @@ public class ChessPiece {
         }
         return moves;
     }
-    public Collection<ChessMove> pawn_moves(ChessPosition pos, ChessBoard board){
+    private Collection<ChessMove> pawn_moves(ChessPosition pos, ChessBoard board){
         ChessPiece.PieceType[] promotions = {ChessPiece.PieceType.ROOK, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP};
         int row = pos.getRow();
         int moverrow = pos.getRow();
