@@ -1,7 +1,6 @@
 package chess;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -112,8 +111,10 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-//        throw new RuntimeException("Not implemented");
-        return true;
+      ChessPosition king_pos = board.getKingPosition(teamColor);
+      ChessPiece king = board.getPiece(king_pos);
+      return king.isKingInCheck(board,king_pos);
+
     }
 
     /**
