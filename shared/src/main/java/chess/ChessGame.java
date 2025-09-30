@@ -94,7 +94,7 @@ public class ChessGame {
         }
         return return_moves;
     }
-    public Collection<ChessMove> allmoves(ChessGame.TeamColor teamColor){
+    public Collection<ChessMove> allMoves(ChessGame.TeamColor teamColor){
         Collection<ChessMove> moves = new ArrayList<>();
         for (int i =1; i<9; i++){
             for (int j = 1; j<9; j++){
@@ -161,7 +161,7 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor)  {
 
-        return isInCheck(teamColor) && allmoves(teamColor).isEmpty();
+        return isInCheck(teamColor) && allMoves(teamColor).isEmpty();
     }
 
     /**
@@ -174,11 +174,8 @@ public class ChessGame {
     public boolean isInStalemate(TeamColor teamColor)  {
 
 //        throw new RuntimeException("Not implemented");
-            if (!isInCheck(teamColor) && allmoves(teamColor).isEmpty()){
-                return true;
-            }
-            return false;
-        }
+        return !isInCheck(teamColor) && allMoves(teamColor).isEmpty();
+    }
 
 
 
