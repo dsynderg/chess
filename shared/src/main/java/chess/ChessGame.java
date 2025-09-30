@@ -115,9 +115,15 @@ public class ChessGame {
     public void updateBoardState(ChessMove move){
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
+        ChessPiece.PieceType promotion = move.getPromotionPiece();
         ChessPiece movingPiece = board.getPiece(start);
         board.addPiece(start,null);
-        board.addPiece(end,movingPiece);
+        if(promotion==null) {
+            board.addPiece(end, movingPiece);
+        }
+        else{
+            board.addPiece(end, new ChessPiece(movingPiece.getTeamColor(),promotion));
+        }
     }
     /**
      * Makes a move in a chess game
@@ -128,8 +134,8 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
-        Collection<ChessMove> valid = validMoves(start);
-        if(valid.contains(move)){
+//        Collection<ChessMove> valid = validMoves(start);
+        if(validMoves(start).contains(move)&&board.getColor(start)==turnColor){
             updateBoardState(move);
             switchTurn();
         }
