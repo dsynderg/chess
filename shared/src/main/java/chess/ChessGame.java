@@ -81,8 +81,7 @@ public class ChessGame {
         ChessPiece piece = board.getPiece(startPosition);
         Collection<ChessMove> moves = new ArrayList<>();
         Collection<ChessMove> return_moves = new ArrayList<>();
-        ChessBoard tempboard = new ChessBoard();
-        tempboard = board.clone();
+        chess.ChessBoard tempboard = board.clone();
         if (piece != null){
                 moves = piece.pieceMoves(board,startPosition);
             }
