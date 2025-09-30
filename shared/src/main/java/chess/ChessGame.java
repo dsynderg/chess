@@ -166,10 +166,7 @@ public class ChessGame {
 //        throw new RuntimeException("Not implemented");
         Collection<ChessMove> allmoves = allmoves(teamColor);
         boolean kingincheck = isInCheck(teamColor);
-        if (isInCheck(teamColor) && allmoves(teamColor).isEmpty()){
-            return true;
-        }
-        return false;
+        return isInCheck(teamColor) && allmoves(teamColor).isEmpty();
     }
 
     /**
