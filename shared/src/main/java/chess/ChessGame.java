@@ -76,7 +76,7 @@ public class ChessGame {
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
-    public Collection<ChessMove> validMoves(ChessPosition startPosition) throws InvalidMoveException {
+    public Collection<ChessMove> validMoves(ChessPosition startPosition){
 
         ChessPiece piece = board.getPiece(startPosition);
         Collection<ChessMove> moves = new ArrayList<>();
@@ -95,10 +95,10 @@ public class ChessGame {
         }
         return return_moves;
     }
-    public Collection<ChessMove> allmoves(ChessGame.TeamColor teamColor) throws InvalidMoveException {
+    public Collection<ChessMove> allmoves(ChessGame.TeamColor teamColor){
         Collection<ChessMove> moves = new ArrayList<>();
-        for (int i =0; i<8; i++){
-            for (int j = 0; j<8; j++){
+        for (int i =1; i<9; i++){
+            for (int j = 1; j<9; j++){
                 ChessPosition pos = new ChessPosition(i,j);
                 ChessPiece temp_piece = board.getPiece(pos);
                 if(board.getColor(pos)==teamColor){
@@ -133,7 +133,7 @@ public class ChessGame {
             switchTurn();
         }
         else {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException(move.toString());
         }
     }
 
@@ -156,8 +156,10 @@ public class ChessGame {
      * @param teamColor which team to check for checkmate
      * @return True if the specified team is in checkmate
      */
-    public boolean isInCheckmate(TeamColor teamColor) throws InvalidMoveException {
+    public boolean isInCheckmate(TeamColor teamColor)  {
 //        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> allmoves = allmoves(teamColor);
+        boolean kingincheck = isInCheck(teamColor);
         if (isInCheck(teamColor) && allmoves(teamColor).isEmpty()){
             return true;
         }
@@ -171,7 +173,7 @@ public class ChessGame {
      * @param teamColor which team to check for stalemate
      * @return True if the specified team is in stalemate, otherwise false
      */
-    public boolean isInStalemate(TeamColor teamColor) throws InvalidMoveException {
+    public boolean isInStalemate(TeamColor teamColor)  {
 
 //        throw new RuntimeException("Not implemented");
             if (!isInCheck(teamColor) && allmoves(teamColor).isEmpty()){

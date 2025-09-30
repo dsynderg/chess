@@ -82,9 +82,11 @@ public class ChessPiece {
     private Boolean king_helper (ChessBoard board,Collection<ChessMove> danger_moves, List<PieceType> danger_pieces){
         for(ChessMove move: danger_moves){
             ChessPiece enemy_piece = board.getPiece(move.getEndPosition());
-            if(danger_pieces.contains(enemy_piece.getPieceType())){
-                if(enemy_piece.getTeamColor()!=pieceColor){
-                    return true;
+            if(enemy_piece!=null) {
+                if (danger_pieces.contains(enemy_piece.getPieceType())) {
+                    if (enemy_piece.getTeamColor() != pieceColor) {
+                        return true;
+                    }
                 }
             }
         }
@@ -130,8 +132,9 @@ public class ChessPiece {
         for(int attack: attacks){
 
             movercol+=attack;
-            if(movercol>=1&&movercol<=8){
+            if(movercol>=1&&movercol<=8&&moverrow>=1&&moverrow<=8){
                 ChessPosition attack_pos = new ChessPosition(moverrow,movercol);
+//                if(movercol)
                 ChessPiece piece = board.getPiece(attack_pos);
                 if(board.getColor(attack_pos)==enemy_color&&piece.getPieceType()==PieceType.PAWN){
                     return true;
