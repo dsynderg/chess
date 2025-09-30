@@ -81,17 +81,17 @@ public class ChessGame {
         ChessPiece piece = board.getPiece(startPosition);
         Collection<ChessMove> moves = new ArrayList<>();
         Collection<ChessMove> return_moves = new ArrayList<>();
-
-        ChessBoard tempboard = board.clone();
+        ChessBoard tempboard = new ChessBoard();
+        tempboard = board.clone();
         if (piece != null){
                 moves = piece.pieceMoves(board,startPosition);
             }
         for(ChessMove move:moves){
             updateBoardState(move);
-            if(!isInCheck(getTeamTurn())){
+            if(!isInCheck(piece.getTeamColor())){
                 return_moves.add(move);
             }
-            board = tempboard;
+            board = tempboard.clone();
         }
         return return_moves;
     }
@@ -128,7 +128,8 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
-        if(validMoves(start).contains(end)){
+        Collection<ChessMove> valid = validMoves(start);
+        if(valid.contains(move)){
             updateBoardState(move);
             switchTurn();
         }

@@ -10,18 +10,22 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard implements Cloneable{
-    final private ChessPiece[][] board = new ChessPiece[8][8];
+    private ChessPiece[][] board = new ChessPiece[8][8];
     public ChessBoard() {
         
     }
     @Override
     public ChessBoard clone() {
-        try {
-            return (ChessBoard) super.clone(); // shallow copy
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError(); // should never happen
+        ChessBoard copy = new ChessBoard();
+        copy.board = new ChessPiece[8][8];
+        for (int i = 0; i < 8; i++) {
+            System.arraycopy(this.board[i], 0, copy.board[i], 0, 8);
         }
+
+        return copy;
     }
+
+
 
 
     @Override

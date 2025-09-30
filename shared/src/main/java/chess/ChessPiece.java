@@ -98,6 +98,7 @@ public class ChessPiece {
         int[][] rookdirections={{1,0},{0,1},{-1,0},{0,-1}};
         int[][] bishopdirections={{1,-1},{1,1},{-1,-1},{-1,1}};
         int[][] knightdirections={{2,-1},{1,-2},{-1,-2}, {-2, -1},{-2,1},{-1,2},{1,2},{2,1}};
+        int[][] kingdirections={{1,0},{1,-1},{0,-1}, {-1, -1},{-1,0},{-1,1},{0,1},{1,1}};
         danger_moves = Queen_Rook_bishop_move(pos,board,rookdirections);
         if(king_helper(board,danger_moves,new ArrayList<>(Arrays.asList(PieceType.ROOK,PieceType.QUEEN)))){
             return true;
@@ -110,13 +111,14 @@ public class ChessPiece {
         if(king_helper(board,danger_moves,new ArrayList<>(Arrays.asList(PieceType.KNIGHT)))){
             return true;
         }
+        danger_moves = knight_king_moves(pos,board,kingdirections);
+        if(king_helper(board,danger_moves,new ArrayList<>(List.of(PieceType.KING)))){
+            return true;
+        }
         //still need to implement pawn danger
-        int row = pos.getRow();
         int moverrow = pos.getRow();
-        int col = pos.getColumn();
         int movercol = pos.getColumn();
         Collection<ChessMove> moves = new ArrayList<>();
-//        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
         int[] attacks = {-1,2};
         int advance;
         ChessGame.TeamColor enemy_color;
