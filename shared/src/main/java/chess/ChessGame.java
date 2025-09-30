@@ -99,7 +99,6 @@ public class ChessGame {
         for (int i =1; i<9; i++){
             for (int j = 1; j<9; j++){
                 ChessPosition pos = new ChessPosition(i,j);
-                ChessPiece temp_piece = board.getPiece(pos);
                 if(board.getColor(pos)==teamColor){
                     moves.addAll(validMoves(pos));
                 }
@@ -132,8 +131,6 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition start = move.getStartPosition();
-        ChessPosition end = move.getEndPosition();
-//        Collection<ChessMove> valid = validMoves(start);
         if(validMoves(start).contains(move)&&board.getColor(start)==turnColor){
             updateBoardState(move);
             switchTurn();
@@ -163,9 +160,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor)  {
-//        throw new RuntimeException("Not implemented");
-        Collection<ChessMove> allmoves = allmoves(teamColor);
-        boolean kingincheck = isInCheck(teamColor);
+
         return isInCheck(teamColor) && allmoves(teamColor).isEmpty();
     }
 
