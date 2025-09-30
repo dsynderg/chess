@@ -9,11 +9,20 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
+public class ChessBoard implements Cloneable{
     final private ChessPiece[][] board = new ChessPiece[8][8];
     public ChessBoard() {
         
     }
+    @Override
+    public ChessBoard clone() {
+        try {
+            return (ChessBoard) super.clone(); // shallow copy
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // should never happen
+        }
+    }
+
 
     @Override
     public boolean equals(Object o) {

@@ -108,8 +108,36 @@ public class ChessPiece {
         if(king_helper(board,danger_moves,new ArrayList<>(Arrays.asList(PieceType.KNIGHT)))){
             return true;
         }
+        //still need to implement pawn danger
+        int row = pos.getRow();
+        int moverrow = pos.getRow();
+        int col = pos.getColumn();
+        int movercol = pos.getColumn();
+        Collection<ChessMove> moves = new ArrayList<>();
+//        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
+        int[] attacks = {-1,2};
+        int advance;
+        ChessGame.TeamColor enemy_color;
+        if(pieceColor == ChessGame.TeamColor.WHITE){
+            advance = 1;
+            enemy_color= ChessGame.TeamColor.BLACK;
+        }
+        else{
+            advance = -1;
+            enemy_color= ChessGame.TeamColor.WHITE;
+        }
+        moverrow+=advance;
+        for(int attack: attacks){
 
-
+            movercol+=attack;
+            if(movercol>=1&&movercol<=8){
+                ChessPosition attack_pos = new ChessPosition(moverrow,movercol);
+                ChessPiece piece = board.getPiece(attack_pos);
+                if(board.getColor(attack_pos)==enemy_color&&piece.getPieceType()==PieceType.PAWN){
+                    return true;
+                }
+            }
+        }
         //queen and rookcheck;
 
         return false;
