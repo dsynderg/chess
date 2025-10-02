@@ -2,6 +2,9 @@
 
 This project demonstrates mastery of proper software design, client/server architecture, networking using HTTP and WebSocket, database persistence, unit testing, serialization, and security.
 
+## link to my sequence diagram 
+https://sequencediagram.org/index.html#initialData=C4S2BsFMAIGEAtIGcnQMqQI4FdIDsBjGAERAEMBzAJzIFtoAjAT2mMgA9hIr0m8ATbhTJkq-AFDjqAe2wAHaAGImkcOGkB3OFFFLqZJuLIFg0ngFUk3cZe7QAtAD5tIfMABc0KllxJg0MmgCHRpCSBsrKgAee3tYcFc8DwBBJABrVAAzMyDpPEyQKloyUDzxeMT-J3RuADdud28KED9uAApgshQAOTpIAEpxDCp6qmrh2pAidyRpWkhgeBA8CiG6qchq4hKyBi6YYyIUBvF+Hb2raDPgXf3xbZuLg4IjyOrr26t3SXwJSRl5EoGFRNHhoAAlSDNVo8aB6GiGcS-SRSEGAxT6FgAGWkzTBigY4GMaR+AhRAIUim8-GgOIosn8GIRpL+qNklLk2CocigtJa-gA4n1UEyDCzyWjKdRIPg4N4SjAhfN4WKkWT-pKlBollxoAAraTLaDCZWixG-IA
+
 ## 10k Architecture Overview
 
 The application implements a multiplayer chess server and a command line chess client.
