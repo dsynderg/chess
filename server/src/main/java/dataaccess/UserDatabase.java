@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class UserDatabase implements dataBaseAccessor<User>{
     ArrayList<User> database = new ArrayList<>();
-    @Override
+
     public boolean inDatabase(String username) {
         for(User user:database){
             if(user.username()==username){
@@ -33,6 +33,14 @@ public class UserDatabase implements dataBaseAccessor<User>{
             return false;
         }
         database.add(addObject);
+        return true;
+    }
+    @Override
+    public boolean deleteall() {
+        database.clear();
+        if(database.size()>0){
+            return false;
+        }
         return true;
     }
 }

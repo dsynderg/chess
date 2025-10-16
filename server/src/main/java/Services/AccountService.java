@@ -1,20 +1,30 @@
 package Services;
 
+import dataaccess.DatabaseRegistry;
 import dataaccess.UserDatabase;
+import modules.AuthData;
+import dataaccess.AuthDatabase;
 import modules.User;
-
-import java.util.ArrayList;
+import java.util.UUID;
 
 public class AccountService {
-    UserDatabase database = new UserDatabase();
+    UserDatabase userdatabase = DatabaseRegistry.getUserDB();
+    AuthDatabase authdatabase = DatabaseRegistry.getAuthDB();
     public boolean creatAccont(User userdata){
-        return database.addToDatabase(userdata);
+        return userdatabase.addToDatabase(userdata);
 
     }
     public boolean checkUsername(String username){
 
-        return database.inDatabase(username);
+        return userdatabase.inDatabase(username);
     }
-//    public authToken
+    public AuthData authDataGenorator(String username){
+        UUID uuid = UUID.randomUUID();
+        String authToken = uuid.toString();
+        AuthData authdata = new AuthData(authToken,username);
+        authdatabase.addToDatabase(authdata);
+        return authdata;
+
+    }
 
 }

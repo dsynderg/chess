@@ -1,14 +1,12 @@
 package dataaccess;
 
-import modules.User;
-
 import java.util.ArrayList;
-import java.util.Map;
 
 public interface dataBaseAccessor<idStorageType> {
-    ArrayList<idStorageType> database = new ArrayList<>();
+    ArrayList<Object> database = new ArrayList<>();
 
-    boolean inDatabase(String searchKey);
+//    boolean inDatabase(Object searchObject);
     boolean addToDatabase(idStorageType addObject);
     boolean removeFromDatabase(idStorageType removeObject);
+    boolean deleteall();
 }

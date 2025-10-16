@@ -1,9 +1,11 @@
 package server;
 
 import Services.AccountService;
+import Services.DeleteService;
 import com.google.gson.Gson;
 import io.javalin.*;
 import io.javalin.http.Context;
+import modules.AuthData;
 import modules.User;
 
 import java.util.Map;
@@ -15,7 +17,7 @@ public class Server {
 
     public Server() {
         server = Javalin.create(config -> config.staticFiles.add("web"));
-        server.delete("db",ctx -> ctx.result("{}"));
+        server.delete("db",this::deleteall);
         server.post("user",this::register);
         server.post("session",this::login);
         server.delete("session",this::logout);
@@ -24,6 +26,17 @@ public class Server {
 //        server.put("game",this::joinGame);
         // Register your endpoints and exception handlers here.
 
+    }
+    private void deleteall(Context ctx){
+        var serializer = new Gson();
+        boolean deleteSuccess = DeleteService.deleteAll();
+        if(!deleteSuccess){
+            ctx.status(500);
+            ctx.result(serializer.toJson("{ \"message\": \"Error: There was a problem deleting the database\" }"));
+            return;
+        }
+        ctx.status(200);
+        ctx.result("{}");
     }
     private boolean validateAuth(Context ctx){
 
@@ -64,9 +77,16 @@ public class Server {
         var serializer = new Gson();
         var req = serializer.fromJson(ctx.body(), Map.class);
         User userData = new User(req.get("username").toString(),req.get("password").toString(),req.get("email").toString());
-        req.put("authToken","cow");
-        var resp = serializer.toJson(req);
+        if(!accountService.creatAccont(userData)){
+            ctx.status(403);
+            ctx.result(serializer.toJson("{\"message\": \"Error: already taken\"}"));
+            return;
+        }
+        AuthData authToken = accountService.authDataGenorator(userData.username());
+        req.put(authToken.authToken(),authToken.username());
 
+        var resp = serializer.toJson(req);
+        ctx.status(200);
         ctx.result(resp);
     }
     public int run(int desiredPort) {
