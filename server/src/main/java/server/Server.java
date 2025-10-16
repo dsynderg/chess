@@ -76,10 +76,13 @@ public class Server {
     private void register(Context ctx){
         var serializer = new Gson();
         var req = serializer.fromJson(ctx.body(), Map.class);
-        User userData = new User(req.get("username").toString(),req.get("password").toString(),req.get("email").toString());
-        if(userData.username()=="" || userData.password()==""||userData.email()==""){
-            
+        if(req.get("username")==null || req.get("password")==null||req.get("email")==null){
+            ctx.status(400);
+            ctx.result("{ \"message\": \"Error: bad request\" }");
+            return;
         }
+        User userData = new User(req.get("username").toString(),req.get("password").toString(),req.get("email").toString());
+
         if(!accountService.creatAccont(userData)){
             ctx.status(403);
             ctx.result("{\"message\": \"Error: already taken\"}");
