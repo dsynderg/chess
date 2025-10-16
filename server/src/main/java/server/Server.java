@@ -80,7 +80,7 @@ public class Server {
             ctx.result("{ \"message\": \"Error: wrongPassword\" }");
             return;
         }
-
+        AuthData authData = accountService.authDataGenorator(userData.username());
         req.put("authToken","cow");
         var resp = serializer.toJson(req);
         ctx.result(resp);
