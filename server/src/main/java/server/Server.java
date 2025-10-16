@@ -83,9 +83,9 @@ public class Server {
             return;
         }
         AuthData authToken = accountService.authDataGenorator(userData.username());
-        req.put(authToken.authToken(),authToken.username());
 
-        var resp = serializer.toJson(req);
+
+        var resp = serializer.toJson(authToken);
         ctx.status(200);
         ctx.result(resp);
     }

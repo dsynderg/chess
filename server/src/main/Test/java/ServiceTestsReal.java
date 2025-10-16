@@ -9,11 +9,11 @@ public class ServiceTestsReal {
 
     @Test
     @DisplayName("clear database")
-    void main() {
+    void clearAll() {
         User user1 = new User("joe",";alsdkfj","sdfl@sdf");
         assert aS.creatAccont(user1);
+        assert aS.checkUsername(user1.username());
         assert DeleteService.deleteAll();
         assert !aS.checkUsername(user1.username());
-        return;
     }
 }
