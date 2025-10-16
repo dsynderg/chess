@@ -69,6 +69,7 @@ public class Server {
     private void login(Context ctx){
         var serializer = new Gson();
         var req = serializer.fromJson(ctx.body(), Map.class);
+        // if either the username or password is null
         if(req.get("username")==null || req.get("password")==null){
             ctx.status(400);
             ctx.result("{ \"message\": \"Error: bad request\" }");
@@ -76,12 +77,12 @@ public class Server {
         }
         User userData = new User(req.get("username").toString(),req.get("password").toString(),"");
         if(!accountService.checkUsername(userData.username())){
-            ctx.status(400);
+            ctx.status(401);
             ctx.result("{ \"message\": \"Error: bad request\" }");
             return;
         }
         if(!accountService.checkPassword(userData.password(),userData)){
-            ctx.status(400);
+            ctx.status(401);
             ctx.result("{ \"message\": \"Error: wrongPassword\" }");
             return;
         }
