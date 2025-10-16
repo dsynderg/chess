@@ -17,6 +17,14 @@ public class UserDatabase implements dataBaseAccessor<User>{
         }
         return false;
     }
+    public boolean passwordUsernameMatch(String password,String username){
+        for(User user:database){
+            if(Objects.equals(user.username(), username)){
+                return Objects.equals(user.password(), password);
+            }
+        }
+        return false;
+    }
 
     @Override
     public boolean removeFromDatabase(User removeObject) {

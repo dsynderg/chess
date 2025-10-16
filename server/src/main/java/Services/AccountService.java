@@ -26,5 +26,10 @@ public class AccountService {
         return authdata;
 
     }
+    public boolean checkPassword(String password, User userObject){
+        for(User tempUser:userdatabase){
+
+        }
+    }
 
 }

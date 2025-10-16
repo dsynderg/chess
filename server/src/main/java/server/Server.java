@@ -69,6 +69,18 @@ public class Server {
     private void login(Context ctx){
         var serializer = new Gson();
         var req = serializer.fromJson(ctx.body(), Map.class);
+        User userData = new User(req.get("username").toString(),req.get("password").toString(),"");
+        if(!accountService.checkUsername(userData.username())){
+            ctx.status(400);
+            ctx.result("{ \"message\": \"Error: bad request\" }");
+            return;
+        }
+        if(!accountService.checkPassword(userData.password(),userData)){
+            ctx.status(400);
+            ctx.result("{ \"message\": \"Error: wrongPassword\" }");
+            return;
+        }
+
         req.put("authToken","cow");
         var resp = serializer.toJson(req);
         ctx.result(resp);
