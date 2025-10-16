@@ -4,13 +4,14 @@ import modules.User;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 public class UserDatabase implements dataBaseAccessor<User>{
     ArrayList<User> database = new ArrayList<>();
 
     public boolean inDatabase(String username) {
         for(User user:database){
-            if(user.username()==username){
+            if(Objects.equals(user.username(), username)){
                 return true;
             }
         }

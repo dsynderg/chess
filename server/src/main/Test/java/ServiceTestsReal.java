@@ -16,4 +16,11 @@ public class ServiceTestsReal {
         assert DeleteService.deleteAll();
         assert !aS.checkUsername(user1.username());
     }
+    @Test
+    void repeteAccounts(){
+        User dummyUser = new User("asdf","a;sdfl","sldjflsdj");
+        assert !aS.checkUsername(dummyUser.username());
+        assert aS.creatAccont(dummyUser);
+        assert !aS.creatAccont(dummyUser);
+    }
 }

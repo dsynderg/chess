@@ -77,9 +77,12 @@ public class Server {
         var serializer = new Gson();
         var req = serializer.fromJson(ctx.body(), Map.class);
         User userData = new User(req.get("username").toString(),req.get("password").toString(),req.get("email").toString());
+        if(userData.username()=="" || userData.password()==""||userData.email()==""){
+            
+        }
         if(!accountService.creatAccont(userData)){
             ctx.status(403);
-            ctx.result(serializer.toJson("{\"message\": \"Error: already taken\"}"));
+            ctx.result("{\"message\": \"Error: already taken\"}");
             return;
         }
         AuthData authToken = accountService.authDataGenorator(userData.username());
