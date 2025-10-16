@@ -1,0 +1,6 @@
+package modules;
+
+import chess.ChessGame;
+
+public record GameData(int gameID, String whiteUsername, String blackUsername, String GameName, ChessGame game) {
+}

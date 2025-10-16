@@ -1,14 +1,17 @@
 package server;
 
+import Services.AccountService;
 import com.google.gson.Gson;
 import io.javalin.*;
 import io.javalin.http.Context;
+import modules.User;
 
 import java.util.Map;
 
 public class Server {
 
     private final Javalin server;
+    AccountService accountService = new AccountService();
 
     public Server() {
         server = Javalin.create(config -> config.staticFiles.add("web"));
@@ -60,6 +63,7 @@ public class Server {
     private void register(Context ctx){
         var serializer = new Gson();
         var req = serializer.fromJson(ctx.body(), Map.class);
+        User userData = new User(req.get("username").toString(),req.get("password").toString(),req.get("email").toString());
         req.put("authToken","cow");
         var resp = serializer.toJson(req);
 
