@@ -69,6 +69,11 @@ public class Server {
     private void login(Context ctx){
         var serializer = new Gson();
         var req = serializer.fromJson(ctx.body(), Map.class);
+        if(req.get("username")==null || req.get("password")==null){
+            ctx.status(400);
+            ctx.result("{ \"message\": \"Error: bad request\" }");
+            return;
+        }
         User userData = new User(req.get("username").toString(),req.get("password").toString(),"");
         if(!accountService.checkUsername(userData.username())){
             ctx.status(400);
@@ -81,8 +86,9 @@ public class Server {
             return;
         }
         AuthData authData = accountService.authDataGenorator(userData.username());
-        req.put("authToken","cow");
-        var resp = serializer.toJson(req);
+
+        var resp = serializer.toJson(authData);
+        ctx.status(200);
         ctx.result(resp);
     }
     private void register(Context ctx){

@@ -27,9 +27,7 @@ public class AccountService {
 
     }
     public boolean checkPassword(String password, User userObject){
-        for(User tempUser:userdatabase){
-
-        }
+        return userdatabase.passwordUsernameMatch(password,userObject.username());
     }
 
 }
