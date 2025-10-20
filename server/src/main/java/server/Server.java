@@ -67,8 +67,14 @@ public class Server {
             ctx.result("{ \"message\": \"Error: unauthorized\" }\n");
             return;
         }
+        accountService.removeAuth(authToken);
+        if(accountService.checkAuth(authToken)){
+            ctx.status(500);
+            ctx.result("{ \"message\": \"Error: (description of error)\" }\n");
+            return;
+        }
         // see if the auth token is valid
-
+        ctx.status(200);
         ctx.result("{}");
     }
     private void login(Context ctx){
