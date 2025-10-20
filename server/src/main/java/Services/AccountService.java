@@ -29,5 +29,9 @@ public class AccountService {
     public boolean checkPassword(String password, User userObject){
         return userdatabase.passwordUsernameMatch(password,userObject.username());
     }
+    public boolean checkAuth(String auth){
+        return authdatabase.inDatabase(auth);
+
+    }
 
 }

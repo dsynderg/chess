@@ -62,6 +62,11 @@ public class Server {
     private void logout(Context ctx){
         var serializer = new Gson();
         var authToken = ctx.header("authorization");
+        if(!accountService.checkAuth(authToken)){
+            ctx.status(401);
+            ctx.result("{ \"message\": \"Error: unauthorized\" }\n");
+            return;
+        }
         // see if the auth token is valid
 
         ctx.result("{}");
