@@ -12,23 +12,31 @@ public class GameDatabase implements dataBaseAccessor<GameData>  {
     public ArrayList<GameData> getDatabase(){
         return (ArrayList<GameData>) database.clone();
     }
-    public boolean inDatabase(String gameName) {
+    public GameData inDatabase(String gameName) {
         for(GameData data: database){
             if(Objects.equals(data.GameName(), gameName)){
-                return true;
+                return data;
             }
         }
-        return false;
+        return null;
     }
 
     @Override
     public boolean addToDatabase(GameData addObject) {
-        return false;
+        if(inDatabase(addObject.GameName())!=null){
+            return false;
+        }
+        database.add(addObject);
+        return true;
     }
 
     @Override
     public boolean removeFromDatabase(GameData removeObject) {
-        return false;
+        if(inDatabase(removeObject.GameName())==null){
+            return false;
+        }
+        database.remove(removeObject);
+        return true;
     }
 
     @Override

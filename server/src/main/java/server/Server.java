@@ -2,10 +2,12 @@ package server;
 
 import Services.AccountService;
 import Services.DeleteService;
+import Services.GameService;
 import com.google.gson.Gson;
 import io.javalin.*;
 import io.javalin.http.Context;
 import modules.AuthData;
+import modules.GameData;
 import modules.User;
 
 import java.util.Map;
@@ -14,6 +16,7 @@ public class Server {
 
     private final Javalin server;
     AccountService accountService = new AccountService();
+    GameService gameService = new GameService();
 
     public Server() {
         server = Javalin.create(config -> config.staticFiles.add("web"));
@@ -39,15 +42,21 @@ public class Server {
         ctx.result("{}");
     }
     private boolean validateAuth(Context ctx){
+        var authToken = ctx.header("authorization");
 
-        return true;
+        if(accountService.checkAuth(authToken)){
+        return true;}
+        return false;
     }
     private void createGame(Context ctx){
-        if (validateAuth(ctx)==false){
-            ctx.result("[401] { \\\"message\\\": \\\"Error: unauthorized\\\" }");
+        if (!validateAuth(ctx)){
+            ctx.status(401);
+            ctx.result("{ \"message\": \"Error: unauthorized\" }");
         }
         var serializer = new Gson();
         var req = serializer.fromJson(ctx.body(), Map.class);
+
+        GameData gameObject = gameService.gameDataGenorator((String) req.get("gameName"));
 
     }
     private void listGames(Context ctx){
