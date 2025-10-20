@@ -3,13 +3,17 @@ package dataaccess;
 import modules.AuthData;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AuthDatabase implements dataBaseAccessor<AuthData>{
     ArrayList<AuthData> database = new ArrayList<>();
 
+    public ArrayList<AuthData> getDatabase(){
+        return (ArrayList<AuthData>) database.clone();
+    }
     public boolean inDatabase(String searchKey) {
         for(AuthData authData:database){
-            if (authData.authToken()==searchKey){
+            if (Objects.equals(authData.authToken(), searchKey)){
                 return true;
             }
         }

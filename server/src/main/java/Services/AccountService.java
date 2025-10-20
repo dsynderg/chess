@@ -5,6 +5,9 @@ import dataaccess.UserDatabase;
 import modules.AuthData;
 import dataaccess.AuthDatabase;
 import modules.User;
+
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 public class AccountService {
@@ -32,6 +35,16 @@ public class AccountService {
     public boolean checkAuth(String auth){
         return authdatabase.inDatabase(auth);
 
+    }
+    public boolean removeAuth(String auth){
+        ArrayList<AuthData> database = authdatabase.getDatabase();
+        for(AuthData data:database){
+            if (Objects.equals(data.authToken(), auth)){
+                return authdatabase.removeFromDatabase(data);
+
+            }
+        }
+        return false;
     }
 
 }
