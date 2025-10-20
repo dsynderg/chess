@@ -4,6 +4,7 @@ import Services.AccountService;
 import Services.DeleteService;
 import Services.GameService;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import io.javalin.*;
 import io.javalin.http.Context;
 import modules.AuthData;
@@ -49,14 +50,31 @@ public class Server {
         return false;
     }
     private void createGame(Context ctx){
+        var serializer = new Gson();
+        var req = serializer.fromJson(ctx.body(), Map.class);
+        if(req.get("gameName")==null){
+            ctx.status(400);
+            ctx.result("{ \"message\": \"Error: bad request\" }");
+            return;
+        }
         if (!validateAuth(ctx)){
             ctx.status(401);
             ctx.result("{ \"message\": \"Error: unauthorized\" }");
+            return;
         }
-        var serializer = new Gson();
-        var req = serializer.fromJson(ctx.body(), Map.class);
 
         GameData gameObject = gameService.gameDataGenorator((String) req.get("gameName"));
+        if(gameObject==null){
+            ctx.status(400);
+            ctx.result("{ \"message\": \"That game name is already taken\" }");
+            return;
+        }
+        String json;
+        json = String.format("{ \"gameID\": \"%d\" }", gameObject.gameID());
+//        String json ="{ \"gameID\": 1234 }";
+        ctx.status(200);
+        ctx.contentType("application/json");
+        ctx.result(json);
 
     }
     private void listGames(Context ctx){

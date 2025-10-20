@@ -42,7 +42,7 @@ public class GameDatabase implements dataBaseAccessor<GameData>  {
     @Override
     public boolean deleteall() {
         database.clear();
-        if(database.size()>0){
+        if(!database.isEmpty()){
             return false;
         }
         return true;
