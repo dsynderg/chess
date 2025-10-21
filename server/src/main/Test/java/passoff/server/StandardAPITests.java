@@ -57,7 +57,8 @@ public class StandardAPITests {
         String htmlFromServer = serverFacade.file("/").replaceAll("\r", "");
         Assertions.assertEquals(HttpURLConnection.HTTP_OK, serverFacade.getStatusCode(), "Server response code was not 200 OK");
         Assertions.assertNotNull(htmlFromServer, "Server returned an empty file");
-        Assertions.assertTrue(htmlFromServer.contains("CS 240 Chess Server Web API"), "file returned did not contain an exact match of text from provided index.html");
+        Assertions.assertTrue(htmlFromServer.contains("CS 240 Chess Server Web API"),
+                "file returned did not contain an exact match of text from provided index.html");
     }
 
     @Test
@@ -209,7 +210,8 @@ public class StandardAPITests {
         TestListResult listResult = serverFacade.listGames(existingAuth);
 
         Assertions.assertNotNull(listResult.getGames(), "List result did not contain games");
-        Assertions.assertEquals(1, listResult.getGames().length, "List result is incorrect size");
+        Assertions.assertEquals(1, listResult.getGames().length,
+                "List result is incorrect size");
         Assertions.assertEquals(existingUser.getUsername(), listResult.getGames()[0].getWhiteUsername(), "Username of joined player not present in list result");
         Assertions.assertNull(listResult.getGames()[0].getBlackUsername(),
                 "Username present on non-joined color");
