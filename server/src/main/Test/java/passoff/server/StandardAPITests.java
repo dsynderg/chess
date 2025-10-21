@@ -212,7 +212,9 @@ public class StandardAPITests {
         Assertions.assertNotNull(listResult.getGames(), "List result did not contain games");
         Assertions.assertEquals(1, listResult.getGames().length,
                 "List result is incorrect size");
-        Assertions.assertEquals(existingUser.getUsername(), listResult.getGames()[0].getWhiteUsername(), "Username of joined player not present in list result");
+        Assertions.assertEquals(existingUser.getUsername(),
+                listResult.getGames()[0].getWhiteUsername(),
+                "Username of joined player not present in list result");
         Assertions.assertNull(listResult.getGames()[0].getBlackUsername(),
                 "Username present on non-joined color");
     }

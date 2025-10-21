@@ -242,10 +242,14 @@ public class ChessPiece {
         moverrow += advance;
         for (int attack : attacks) {
             movercol += attack;
-            if (movercol < 1 || movercol > 8) continue;
+            if (movercol < 1 || movercol > 8) {
+                continue;
+            }
 
             ChessPosition attackPos = new ChessPosition(moverrow, movercol);
-            if (board.getColor(attackPos) != enemyColor) continue;
+            if (board.getColor(attackPos) != enemyColor) {
+                continue;
+            }
 
             if (moverrow == promo) {
                 for (ChessPiece.PieceType promotion : promotions) {
