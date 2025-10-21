@@ -12,14 +12,14 @@ public class GameService {
     GameDatabase gameDatabase = DatabaseRegistry.getGameDb();
     private int gameID = 0;
 
-    public boolean addGamedata(GameData data) {
-        return gameDatabase.addToDatabase(data);
-    }
-
-
-    public boolean checkGameName(String name) {
-        return (gameDatabase.inDatabaseName(name) != null);
-    }
+//    public boolean addGamedata(GameData data) {
+//        return gameDatabase.addToDatabase(data);
+//    }
+//
+//
+//    public boolean checkGameName(String name) {
+//        return (gameDatabase.inDatabaseName(name) != null);
+//    }
 
     public boolean checkGameID(int gameID) {
         return (gameDatabase.inDatabaseID(gameID) != null);
