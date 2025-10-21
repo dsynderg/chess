@@ -241,24 +241,21 @@ public class ChessPiece {
         }
         moverrow += advance;
         for (int attack : attacks) {
-
             movercol += attack;
-            if (movercol >= 1 && movercol <= 8) {
-                ChessPosition attackPos = new ChessPosition(moverrow, movercol);
+            if (movercol < 1 || movercol > 8) continue;
 
-                if (board.getColor(attackPos) == enemyColor) {
-                    if (moverrow == promo) {
-                        for (ChessPiece.PieceType promotion : promotions) {
-                            moves.add(new ChessMove(pos, attackPos, promotion));
+            ChessPosition attackPos = new ChessPosition(moverrow, movercol);
+            if (board.getColor(attackPos) != enemyColor) continue;
 
-                        }
-                    } else {
-                        moves.add(new ChessMove(pos, attackPos, null));
-
-                    }
+            if (moverrow == promo) {
+                for (ChessPiece.PieceType promotion : promotions) {
+                    moves.add(new ChessMove(pos, attackPos, promotion));
                 }
+            } else {
+                moves.add(new ChessMove(pos, attackPos, null));
             }
         }
+
         return moves;
     }
 
