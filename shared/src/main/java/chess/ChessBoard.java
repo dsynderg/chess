@@ -81,9 +81,15 @@ public class ChessBoard implements Cloneable {
                 ChessPosition pos = new ChessPosition(i, j);
                 ChessPiece piece = getPiece(pos);
 
-                if (piece == null) continue;
-                if (piece.getPieceType() != ChessPiece.PieceType.KING) continue;
-                if (piece.getTeamColor() != teamColor) continue;
+                if (piece == null) {
+                    continue;
+                }
+                if (piece.getPieceType() != ChessPiece.PieceType.KING) {
+                    continue;
+                }
+                if (piece.getTeamColor() != teamColor) {
+                    continue;
+                }
 
                 return pos;
             }
