@@ -7,7 +7,14 @@ import java.util.Objects;
 
 public class AuthDatabase implements dataBaseAccessor<AuthData>{
     ArrayList<AuthData> database = new ArrayList<>();
-
+    public String getUsername(String authToken){
+        for(AuthData data: database){
+            if(Objects.equals(data.authToken(), authToken)){
+                return data.username();
+            }
+        }
+        return null;
+    }
     public ArrayList<AuthData> getDatabase(){
         return (ArrayList<AuthData>) database.clone();
     }

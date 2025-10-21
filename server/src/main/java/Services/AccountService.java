@@ -1,5 +1,6 @@
 package Services;
 
+import chess.ChessGame;
 import dataaccess.DatabaseRegistry;
 import dataaccess.UserDatabase;
 import modules.AuthData;
@@ -46,5 +47,9 @@ public class AccountService {
         }
         return false;
     }
+    public String getUsernameFromAuth(String authToken){
+        return authdatabase.getUsername(authToken);
+    }
+
 
 }

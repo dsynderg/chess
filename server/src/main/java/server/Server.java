@@ -3,6 +3,7 @@ package server;
 import Services.AccountService;
 import Services.DeleteService;
 import Services.GameService;
+import chess.ChessGame;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import io.javalin.*;
@@ -11,7 +12,10 @@ import modules.AuthData;
 import modules.GameData;
 import modules.User;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Server {
 
@@ -27,9 +31,56 @@ public class Server {
         server.delete("session",this::logout);
         server.get("game",this::listGames);
         server.post("game",this::createGame);
-//        server.put("game",this::joinGame);
+        server.put("game",this::joinGame);
         // Register your endpoints and exception handlers here.
 
+    }
+    private void joinGame(Context ctx){
+        var serializer = new Gson();
+        //validates auth
+        if (!validateAuth(ctx)){
+            ctx.status(401);
+            ctx.result("{ \"message\": \"Error: unauthorized\" }");
+            return;
+        }
+        String username = accountService.getUsernameFromAuth(ctx.header("authorization"));
+        //makes sure the body is good
+
+        var req = serializer.fromJson(ctx.body(), Map.class);
+        if(req.get("playerColor")==null || req.get("gameID")==null){
+            ctx.status(400);
+            ctx.result("{ \"message\": \"Error: bad request\" }");
+            return;
+        }
+        //makes sure that the game id is valid
+
+        //checks joincolor
+        ChessGame.TeamColor joinColor;
+        String joinstring = req.get("playerColor").toString();
+        if(Objects.equals(joinstring, "WHITE")){
+            joinColor = ChessGame.TeamColor.WHITE;
+        }
+        else if(Objects.equals(joinstring, "BLACK")){
+            joinColor = ChessGame.TeamColor.BLACK;
+        }
+        else{
+            ctx.status(400);
+            ctx.result("{ \"message\": \"Error: playerColor was wrong\" }");
+            return;
+        }
+        int gameID = ((Double) req.get("gameID")).intValue();
+        if(!gameService.checkGameID(gameID)){
+            ctx.status(400);
+            ctx.result("{ \"message\": \"gameID was invalid\" }");
+            return;
+        }
+        if(!gameService.assignColor(username,joinColor,gameID)){
+            ctx.status(403);
+            ctx.result("{ \"message\": \"Error: already taken\" }");
+            return;
+        }
+        ctx.status(200);
+        ctx.result("{}");
     }
     private void deleteall(Context ctx){
         var serializer = new Gson();
@@ -79,11 +130,19 @@ public class Server {
     }
     private void listGames(Context ctx){
         var serializer = new Gson();
-        if (validateAuth(ctx)==false){
-            ctx.result("[401] { \\\"message\\\": \\\"Error: unauthorized\\\" }");
+        if (!validateAuth(ctx)){
+            ctx.status(401);
+            ctx.result("{ \"message\": \"Error: unauthorized\" }");
+            return;
         }
 //        ctx.result("[200] { \"games\": [{\"gameID\": 1234, \"whiteUsername\":\"\", \"blackUsername\":\"\", \"gameName:\"\"} ]}");
-        Context result = ctx.result("{\"games\":[]}");
+        ArrayList<GameData> gameList = gameService.getGames();
+        Map<String, Object> response = new HashMap<>();
+        response.put("games", gameList);
+        ctx.status(200);
+        System.out.println(serializer.toJson(response));
+        ctx.result(serializer.toJson(response));
+        return;
     }
 
     private void logout(Context ctx){

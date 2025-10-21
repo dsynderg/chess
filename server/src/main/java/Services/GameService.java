@@ -3,9 +3,9 @@ package Services;
 import chess.ChessGame;
 import dataaccess.DatabaseRegistry;
 import dataaccess.GameDatabase;
-import modules.AuthData;
 import modules.GameData;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class GameService {
@@ -17,8 +17,9 @@ public class GameService {
 
 
     public boolean checkGameName(String name){
-        return (gameDatabase.inDatabase(name)!=null);
+        return (gameDatabase.inDatabaseName(name)!=null);
     }
+    public boolean checkGameID(int gameID){return (gameDatabase.inDatabaseID(gameID)!=null);}
 
 
     public GameData gameDataGenorator(String gameName){
@@ -32,4 +33,41 @@ public class GameService {
         return null;
 
     }
+    public ArrayList<GameData> getGames(){
+        return gameDatabase.getDatabase();
+    }
+    public boolean assignColor(String username, ChessGame.TeamColor joinColor,int gameID){
+        GameData data = gameDatabase.inDatabaseID(gameID);
+        if(joinColor== ChessGame.TeamColor.WHITE){
+            if(data.whiteUsername()==null){
+                GameData updatedData = new GameData(
+                        data.gameID(),
+                        username,               // new whiteUsername
+                        data.blackUsername(),
+                        data.gameName(),
+                        data.game()
+                );
+                gameDatabase.removeFromDatabase(data);
+                gameDatabase.addToDatabase(updatedData);
+                return true;
+            }
+        }
+        if(joinColor == ChessGame.TeamColor.BLACK){
+            if(data.blackUsername()==null){
+                GameData updatedData = new GameData(
+                        data.gameID(),
+                        data.whiteUsername(),               // new whiteUsername
+                        username,
+                        data.gameName(),
+                        data.game()
+                );
+                gameDatabase.removeFromDatabase(data);
+                gameDatabase.addToDatabase(updatedData);
+                return true;
+
+            }
+        }
+        return false;
+    }
 }
+
