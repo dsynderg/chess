@@ -5,22 +5,25 @@ import modules.AuthData;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class AuthDatabase implements dataBaseAccessor<AuthData>{
+public class AuthDatabase implements dataBaseAccessor<AuthData> {
     ArrayList<AuthData> database = new ArrayList<>();
-    public String getUsername(String authToken){
-        for(AuthData data: database){
-            if(Objects.equals(data.authToken(), authToken)){
+
+    public String getUsername(String authToken) {
+        for (AuthData data : database) {
+            if (Objects.equals(data.authToken(), authToken)) {
                 return data.username();
             }
         }
         return null;
     }
-    public ArrayList<AuthData> getDatabase(){
+
+    public ArrayList<AuthData> getDatabase() {
         return (ArrayList<AuthData>) database.clone();
     }
+
     public boolean inDatabase(String searchKey) {
-        for(AuthData authData:database){
-            if (Objects.equals(authData.authToken(), searchKey)){
+        for (AuthData authData : database) {
+            if (Objects.equals(authData.authToken(), searchKey)) {
                 return true;
             }
         }
@@ -29,7 +32,7 @@ public class AuthDatabase implements dataBaseAccessor<AuthData>{
 
     @Override
     public boolean addToDatabase(AuthData addObject) {
-        if(inDatabase(addObject.authToken())){
+        if (inDatabase(addObject.authToken())) {
             return false;
         }
         database.add(addObject);
@@ -38,7 +41,7 @@ public class AuthDatabase implements dataBaseAccessor<AuthData>{
 
     @Override
     public boolean removeFromDatabase(AuthData removeObject) {
-        if(!inDatabase(removeObject.authToken())){
+        if (!inDatabase(removeObject.authToken())) {
             return false;
         }
         database.remove(removeObject);
@@ -48,7 +51,7 @@ public class AuthDatabase implements dataBaseAccessor<AuthData>{
     @Override
     public boolean deleteall() {
         database.clear();
-        if(database.size()>0){
+        if (database.size() > 0) {
             return false;
         }
         return true;

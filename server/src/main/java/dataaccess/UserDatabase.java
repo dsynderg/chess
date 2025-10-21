@@ -6,20 +6,21 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
-public class UserDatabase implements dataBaseAccessor<User>{
+public class UserDatabase implements dataBaseAccessor<User> {
     ArrayList<User> database = new ArrayList<>();
 
     public boolean inDatabase(String username) {
-        for(User user:database){
-            if(Objects.equals(user.username(), username)){
+        for (User user : database) {
+            if (Objects.equals(user.username(), username)) {
                 return true;
             }
         }
         return false;
     }
-    public boolean passwordUsernameMatch(String password,String username){
-        for(User user:database){
-            if(Objects.equals(user.username(), username)){
+
+    public boolean passwordUsernameMatch(String password, String username) {
+        for (User user : database) {
+            if (Objects.equals(user.username(), username)) {
                 return Objects.equals(user.password(), password);
             }
         }
@@ -28,7 +29,7 @@ public class UserDatabase implements dataBaseAccessor<User>{
 
     @Override
     public boolean removeFromDatabase(User removeObject) {
-        if(!inDatabase(removeObject.username())){
+        if (!inDatabase(removeObject.username())) {
             return false;
         }
         database.remove(removeObject);
@@ -38,16 +39,17 @@ public class UserDatabase implements dataBaseAccessor<User>{
 
     @Override
     public boolean addToDatabase(User addObject) {
-        if (inDatabase(addObject.username())){
+        if (inDatabase(addObject.username())) {
             return false;
         }
         database.add(addObject);
         return true;
     }
+
     @Override
     public boolean deleteall() {
         database.clear();
-        if(database.size()>0){
+        if (database.size() > 0) {
             return false;
         }
         return true;

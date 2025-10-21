@@ -10,15 +10,16 @@ public class ServiceTestsReal {
     @Test
     @DisplayName("clear database")
     void clearAll() {
-        User user1 = new User("joe",";alsdkfj","sdfl@sdf");
+        User user1 = new User("joe", ";alsdkfj", "sdfl@sdf");
         assert aS.creatAccont(user1);
         assert aS.checkUsername(user1.username());
         assert DeleteService.deleteAll();
         assert !aS.checkUsername(user1.username());
     }
+
     @Test
-    void repeteAccounts(){
-        User dummyUser = new User("asdf","a;sdfl","sldjflsdj");
+    void repeteAccounts() {
+        User dummyUser = new User("asdf", "a;sdfl", "sldjflsdj");
         assert !aS.checkUsername(dummyUser.username());
         assert aS.creatAccont(dummyUser);
         assert !aS.creatAccont(dummyUser);
