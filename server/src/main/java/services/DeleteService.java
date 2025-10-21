@@ -6,9 +6,9 @@ import dataaccess.GameDatabase;
 import dataaccess.UserDatabase;
 
 public class DeleteService {
-    static UserDatabase userdatabase = DatabaseRegistry.getUserDB();
-    static AuthDatabase authdatabase = DatabaseRegistry.getAuthDB();
-    static GameDatabase gamedatabase = DatabaseRegistry.getGameDB();
+    static UserDatabase userdatabase = DatabaseRegistry.getUserDb();
+    static AuthDatabase authdatabase = DatabaseRegistry.getAuthDb();
+    static GameDatabase gamedatabase = DatabaseRegistry.getGameDb();
 
     public static boolean deleteAll() {
         return userdatabase.deleteall() && authdatabase.deleteall() && gamedatabase.deleteall();

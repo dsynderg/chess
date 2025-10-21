@@ -2,13 +2,13 @@ package dataaccess;
 
 import java.util.ArrayList;
 
-public interface DataBaseAccessor<idStorageType> {
-    ArrayList<Object> Database = new ArrayList<>();
+public interface DataBaseAccessor<T> {
+    ArrayList<Object> DATABASE = new ArrayList<>();
 
     //    boolean inDatabase(Object searchObject);
-    boolean addToDatabase(idStorageType addObject);
+    boolean addToDatabase(T addObject);
 
-    boolean removeFromDatabase(idStorageType removeObject);
+    boolean removeFromDatabase(T removeObject);
 
     boolean deleteall();
 }

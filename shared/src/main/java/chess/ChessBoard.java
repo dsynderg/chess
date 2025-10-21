@@ -101,53 +101,53 @@ public class ChessBoard implements Cloneable {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        ChessPiece black_pawn = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
-        ChessPiece black_bishop = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
-        int[] bishop_columns = {3, 6};
-        ChessPiece black_knight = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
-        int[] knight_columns = {2, 7};
-        ChessPiece black_rook = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
-        int[] rook_columns = {1, 8};
-        ChessPiece black_king = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
-        ChessPiece black_queen = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN);
-        ChessPiece white_pawn = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-        ChessPiece white_bishop = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
-        ChessPiece white_knight = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
-        ChessPiece white_rook = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
-        ChessPiece white_king = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING);
-        ChessPiece white_queen = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
+        ChessPiece blackPawn = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+        ChessPiece blackBishop = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+        int[] bishopColumns = {3, 6};
+        ChessPiece blackKnight = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+        int[] knightColumns = {2, 7};
+        ChessPiece blackRook = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+        int[] rookColumns = {1, 8};
+        ChessPiece blackKing = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
+        ChessPiece blackQueen = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN);
+        ChessPiece whitePawn = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        ChessPiece whiteBishop = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
+        ChessPiece whiteKnight = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
+        ChessPiece whiteRook = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+        ChessPiece whiteKing = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING);
+        ChessPiece whiteQueen = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
         for (int i = 1; i < 9; i++) {
             ChessPosition whitepos = new ChessPosition(2, i);
             ChessPosition blackpos = new ChessPosition(7, i);
-            addPiece(whitepos, white_pawn);
-            addPiece(blackpos, black_pawn);
+            addPiece(whitepos, whitePawn);
+            addPiece(blackpos, blackPawn);
         }
-        for (int pos : bishop_columns) {
+        for (int pos : bishopColumns) {
             ChessPosition whitepos = new ChessPosition(1, pos);
             ChessPosition blackpos = new ChessPosition(8, pos);
-            addPiece(whitepos, white_bishop);
-            addPiece(blackpos, black_bishop);
+            addPiece(whitepos, whiteBishop);
+            addPiece(blackpos, blackBishop);
         }
-        for (int pos : rook_columns) {
+        for (int pos : rookColumns) {
             ChessPosition whitepos = new ChessPosition(1, pos);
             ChessPosition blackpos = new ChessPosition(8, pos);
-            addPiece(whitepos, white_rook);
-            addPiece(blackpos, black_rook);
+            addPiece(whitepos, whiteRook);
+            addPiece(blackpos, blackRook);
         }
-        for (int pos : knight_columns) {
+        for (int pos : knightColumns) {
             ChessPosition whitepos = new ChessPosition(1, pos);
             ChessPosition blackpos = new ChessPosition(8, pos);
-            addPiece(whitepos, white_knight);
-            addPiece(blackpos, black_knight);
+            addPiece(whitepos, whiteKnight);
+            addPiece(blackpos, blackKnight);
         }
         ChessPosition whitepos = new ChessPosition(1, 5);
         ChessPosition blackpos = new ChessPosition(8, 5);
-        addPiece(whitepos, white_king);
-        addPiece(blackpos, black_king);
+        addPiece(whitepos, whiteKing);
+        addPiece(blackpos, blackKing);
         whitepos = new ChessPosition(1, 4);
         blackpos = new ChessPosition(8, 4);
-        addPiece(whitepos, white_queen);
-        addPiece(blackpos, black_queen);
+        addPiece(whitepos, whiteQueen);
+        addPiece(blackpos, blackQueen);
     }
 }
 
