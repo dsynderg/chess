@@ -67,11 +67,11 @@ public class ChessPiece {
 //         *  cant move off the board
 //         */
 //    }
-    private Boolean kingHelper(ChessBoard board, Collection<ChessMove> dangerMoves, List<PieceType> danger_pieces) {
+    private Boolean kingHelper(ChessBoard board, Collection<ChessMove> dangerMoves, List<PieceType> dangerPieces) {
         for (ChessMove move : dangerMoves) {
             ChessPiece enemyPiece = board.getPiece(move.getEndPosition());
             if (enemyPiece != null) {
-                if (danger_pieces.contains(enemyPiece.getPieceType())) {
+                if (dangerPieces.contains(enemyPiece.getPieceType())) {
                     if (enemyPiece.getTeamColor() != pieceColor) {
                         return true;
                     }
@@ -196,7 +196,10 @@ public class ChessPiece {
     }
 
     private Collection<ChessMove> pawnMoves(ChessPosition pos, ChessBoard board) {
-        ChessPiece.PieceType[] promotions = {ChessPiece.PieceType.ROOK, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP};
+        ChessPiece.PieceType[] promotions = {ChessPiece.PieceType.ROOK,
+                ChessPiece.PieceType.QUEEN,
+                ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.BISHOP};
         int row = pos.getRow();
         int moverrow = pos.getRow();
         int col = pos.getColumn();
@@ -205,17 +208,17 @@ public class ChessPiece {
 //        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
         int[] attacks = {-1, 2};
         int advance, promo, start;
-        ChessGame.TeamColor enemy_color;
+        ChessGame.TeamColor enemyColor;
         if (pieceColor == ChessGame.TeamColor.WHITE) {
             advance = 1;
             promo = 8;
             start = 2;
-            enemy_color = ChessGame.TeamColor.BLACK;
+            enemyColor = ChessGame.TeamColor.BLACK;
         } else {
             advance = -1;
             promo = 1;
             start = 7;
-            enemy_color = ChessGame.TeamColor.WHITE;
+            enemyColor = ChessGame.TeamColor.WHITE;
         }
         ChessGame.TeamColor squareColor = null;
         ChessPosition newPos = new ChessPosition(row + advance, col);
@@ -243,7 +246,7 @@ public class ChessPiece {
             if (movercol >= 1 && movercol <= 8) {
                 ChessPosition attackPos = new ChessPosition(moverrow, movercol);
 
-                if (board.getColor(attackPos) == enemy_color) {
+                if (board.getColor(attackPos) == enemyColor) {
                     if (moverrow == promo) {
                         for (ChessPiece.PieceType promotion : promotions) {
                             moves.add(new ChessMove(pos, attackPos, promotion));
