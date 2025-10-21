@@ -7,7 +7,7 @@
 //import org.junit.jupiter.api.Test;
 //import passoff.chess.TestUtilities;
 //
-///**
+/// **
 // * Tests if the ChessGame implementation can handle Castling moves
 // * Castling is a situational move the king can make as it's first move. If one of the rooks has not yet moved
 // * and there are no pieces between the rook and the king, and the path is "safe", the king can castle. Castling is

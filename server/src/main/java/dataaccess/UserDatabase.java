@@ -3,7 +3,6 @@ package dataaccess;
 import modules.User;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Objects;
 
 public class UserDatabase implements dataBaseAccessor<User> {
@@ -49,9 +48,6 @@ public class UserDatabase implements dataBaseAccessor<User> {
     @Override
     public boolean deleteall() {
         database.clear();
-        if (database.size() > 0) {
-            return false;
-        }
-        return true;
+        return database.size() <= 0;
     }
 }

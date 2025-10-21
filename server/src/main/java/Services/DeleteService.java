@@ -1,9 +1,9 @@
 package Services;
 
+import dataaccess.AuthDatabase;
 import dataaccess.DatabaseRegistry;
 import dataaccess.GameDatabase;
 import dataaccess.UserDatabase;
-import dataaccess.AuthDatabase;
 
 public class DeleteService {
     static UserDatabase userdatabase = DatabaseRegistry.getUserDB();

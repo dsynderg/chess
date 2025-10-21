@@ -5,8 +5,7 @@ import Services.DeleteService;
 import Services.GameService;
 import chess.ChessGame;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import io.javalin.*;
+import io.javalin.Javalin;
 import io.javalin.http.Context;
 import modules.AuthData;
 import modules.GameData;
@@ -97,10 +96,7 @@ public class Server {
     private boolean validateAuth(Context ctx) {
         var authToken = ctx.header("authorization");
 
-        if (accountService.checkAuth(authToken)) {
-            return true;
-        }
-        return false;
+        return accountService.checkAuth(authToken);
     }
 
     private void createGame(Context ctx) {
@@ -146,7 +142,6 @@ public class Server {
         ctx.status(200);
         System.out.println(serializer.toJson(response));
         ctx.result(serializer.toJson(response));
-        return;
     }
 
     private void logout(Context ctx) {

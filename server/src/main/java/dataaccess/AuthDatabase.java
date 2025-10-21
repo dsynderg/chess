@@ -51,10 +51,7 @@ public class AuthDatabase implements dataBaseAccessor<AuthData> {
     @Override
     public boolean deleteall() {
         database.clear();
-        if (database.size() > 0) {
-            return false;
-        }
-        return true;
+        return database.size() <= 0;
     }
 
 }

@@ -1,10 +1,9 @@
 package Services;
 
-import chess.ChessGame;
+import dataaccess.AuthDatabase;
 import dataaccess.DatabaseRegistry;
 import dataaccess.UserDatabase;
 import modules.AuthData;
-import dataaccess.AuthDatabase;
 import modules.User;
 
 import java.util.ArrayList;

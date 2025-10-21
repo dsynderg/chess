@@ -143,7 +143,7 @@
 //    ChessPiece friend = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
 //    ChessBoard board = new ChessBoard();
 //    ChessPosition pos = new ChessPosition(2,2);
-////    board.addPiece(new ChessPosition(4,1),friend);
+/// /    board.addPiece(new ChessPosition(4,1),friend);
 //    board.addPiece(new ChessPosition(3,3),enemy);
 ////    board.addPiece(new ChessPosition(2,5),friend);
 //    Collection<ChessMove> moves = pawn_move(pos,board);

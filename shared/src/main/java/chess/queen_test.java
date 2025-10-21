@@ -111,8 +111,8 @@
 //public Collection<ChessMove> queen_moves(ChessPosition pos, ChessBoard board){
 //
 //    Collection<ChessMove> diagonal_moves = bishops_move(pos,board);
-////    Collection<ChessMove> latteral_moves = lat_vert(pos,board);
-////    latteral_moves.addAll(diagonal_moves);
+/// /    Collection<ChessMove> latteral_moves = lat_vert(pos,board);
+/// /    latteral_moves.addAll(diagonal_moves);
 //    return diagonal_moves;
 //
 //}
