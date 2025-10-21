@@ -211,7 +211,8 @@ public class StandardAPITests {
         Assertions.assertNotNull(listResult.getGames(), "List result did not contain games");
         Assertions.assertEquals(1, listResult.getGames().length, "List result is incorrect size");
         Assertions.assertEquals(existingUser.getUsername(), listResult.getGames()[0].getWhiteUsername(), "Username of joined player not present in list result");
-        Assertions.assertNull(listResult.getGames()[0].getBlackUsername(), "Username present on non-joined color");
+        Assertions.assertNull(listResult.getGames()[0].getBlackUsername(),
+                "Username present on non-joined color");
     }
 
     @Test
@@ -363,7 +364,9 @@ public class StandardAPITests {
 
         Assertions.assertNotEquals(existingAuth, loginOne.getAuthToken(), "Authtoken returned by login matched authtoken from prior register");
         Assertions.assertNotEquals(existingAuth, loginTwo.getAuthToken(), "Authtoken returned by login matched authtoken from prior register");
-        Assertions.assertNotEquals(loginOne.getAuthToken(), loginTwo.getAuthToken(), "Authtoken returned by login matched authtoken from prior login");
+        Assertions.assertNotEquals(loginOne.getAuthToken(),
+                loginTwo.getAuthToken(),
+                "Authtoken returned by login matched authtoken from prior login");
 
 
         TestCreateResult createResult = serverFacade.createGame(createRequest, existingAuth);
@@ -451,31 +454,40 @@ public class StandardAPITests {
     // ### HELPER ASSERTIONS ###
 
     private void assertHttpOk(TestResult result) {
-        Assertions.assertEquals(HttpURLConnection.HTTP_OK, serverFacade.getStatusCode(), "Server response code was not 200 OK (message: %s)".formatted(result.getMessage()));
-        Assertions.assertFalse(result.getMessage() != null && result.getMessage().toLowerCase(Locale.ROOT).contains("error"), "Result returned an error message");
+        Assertions.assertEquals(HttpURLConnection.HTTP_OK, serverFacade.getStatusCode(),
+                "Server response code was not 200 OK (message: %s)".formatted(result.getMessage()));
+        Assertions.assertFalse(result.getMessage() != null && result.getMessage().toLowerCase(Locale.ROOT).contains("error"),
+                "Result returned an error message");
     }
 
     private void assertHttpBadRequest(TestResult result) {
-        assertHttpError(result, HttpURLConnection.HTTP_BAD_REQUEST, "Bad Request");
+        assertHttpError(result,
+                HttpURLConnection.HTTP_BAD_REQUEST, "Bad Request");
     }
 
     private void assertHttpUnauthorized(TestResult result) {
-        assertHttpError(result, HttpURLConnection.HTTP_UNAUTHORIZED, "Unauthorized");
+        assertHttpError(result,
+                HttpURLConnection.HTTP_UNAUTHORIZED, "Unauthorized");
     }
 
     private void assertHttpForbidden(TestResult result) {
-        assertHttpError(result, HttpURLConnection.HTTP_FORBIDDEN, "Forbidden");
+        assertHttpError(result,
+                HttpURLConnection.HTTP_FORBIDDEN, "Forbidden");
     }
 
     private void assertHttpError(TestResult result, int statusCode, String message) {
-        Assertions.assertEquals(statusCode, serverFacade.getStatusCode(), "Server response code was not %d %s (message: %s)".formatted(statusCode, message, result.getMessage()));
+        Assertions.assertEquals(statusCode, serverFacade.getStatusCode(),
+                "Server response code was not %d %s (message: %s)".formatted(statusCode, message, result.getMessage()));
         Assertions.assertNotNull(result.getMessage(), "Invalid Request didn't return an error message");
-        Assertions.assertTrue(result.getMessage().toLowerCase(Locale.ROOT).contains("error"), "Error message didn't contain the word \"Error\"");
+        Assertions.assertTrue(result.getMessage().toLowerCase(Locale.ROOT).contains("error"),
+                "Error message didn't contain the word \"Error\"");
     }
 
     private void assertAuthFieldsMissing(TestAuthResult result) {
-        Assertions.assertNull(result.getUsername(), "Response incorrectly returned username");
-        Assertions.assertNull(result.getAuthToken(), "Response incorrectly return authentication String");
+        Assertions.assertNull(result.getUsername(),
+                "Response incorrectly returned username");
+        Assertions.assertNull(result.getAuthToken(),
+                "Response incorrectly return authentication String");
     }
 
 }

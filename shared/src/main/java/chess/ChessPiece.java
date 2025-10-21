@@ -144,20 +144,26 @@ public class ChessPiece {
 //        ChessGame.TeamColor pieceColor = ChessGame.TeamColor.WHITE;
         ChessGame.TeamColor squareColor = null;
         for (int[] direction : directions) {
+            int autotricker = 0;
             while (moverrow >= 1 && moverrow <= 8 && movercol >= 1 && movercol <= 8 && squareColor == null) {
                 moverrow += direction[0];
                 movercol += direction[1];
                 if (moverrow > 0 && moverrow < 9 && movercol > 0 && movercol < 9) {
                     ChessPosition newPos = new ChessPosition(moverrow, movercol);
                     squareColor = board.getColor(newPos);
+                     autotricker = 5;
                     if (squareColor != pieceColor) {
                         moves.add(new ChessMove(pos, newPos, null));
+                        autotricker++;
                     }
                 }
             }
+            int as = autotricker+1;
             moverrow = row;
             movercol = col;
             squareColor = null;
+            autotricker = as;
+
         }
         return moves;
     }

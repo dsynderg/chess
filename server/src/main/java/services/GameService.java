@@ -12,14 +12,6 @@ public class GameService {
     GameDatabase gameDatabase = DatabaseRegistry.getGameDb();
     private int gameID = 0;
 
-    public boolean addGamedata(GameData data) {
-        return gameDatabase.addToDatabase(data);
-    }
-
-
-    public boolean checkGameName(String name) {
-        return (gameDatabase.inDatabaseName(name) != null);
-    }
 
     public boolean checkGameID(int gameID) {
         return (gameDatabase.inDatabaseID(gameID) != null);
@@ -27,7 +19,6 @@ public class GameService {
 
 
     public GameData gameDataGenorator(String gameName) {
-        UUID uuid = UUID.randomUUID();
         gameID++;
         int gameid = gameID;
         GameData gameData = new GameData(gameid, null, null, gameName, new ChessGame());

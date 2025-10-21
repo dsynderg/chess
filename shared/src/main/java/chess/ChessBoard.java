@@ -53,9 +53,6 @@ public class ChessBoard implements Cloneable {
         board[pos.getRow() - 1][pos.getColumn() - 1] = piece;
     }
 
-    public void removePiece(ChessPosition pos) {
-        board[pos.getRow() - 1][pos.getColumn() - 1] = null;
-    }
 
     /**
      * Gets a chess piece on the chessboard
