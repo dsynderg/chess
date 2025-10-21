@@ -5,7 +5,7 @@ import modules.AuthData;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class AuthDatabase implements dataBaseAccessor<AuthData> {
+public class AuthDatabase implements DataBaseAccessor<AuthData> {
     ArrayList<AuthData> database = new ArrayList<>();
 
     public String getUsername(String authToken) {

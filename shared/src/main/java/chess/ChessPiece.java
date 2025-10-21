@@ -67,12 +67,12 @@ public class ChessPiece {
 //         *  cant move off the board
 //         */
 //    }
-    private Boolean king_helper(ChessBoard board, Collection<ChessMove> danger_moves, List<PieceType> danger_pieces) {
+    private Boolean kingHelper(ChessBoard board, Collection<ChessMove> danger_moves, List<PieceType> danger_pieces) {
         for (ChessMove move : danger_moves) {
-            ChessPiece enemy_piece = board.getPiece(move.getEndPosition());
-            if (enemy_piece != null) {
-                if (danger_pieces.contains(enemy_piece.getPieceType())) {
-                    if (enemy_piece.getTeamColor() != pieceColor) {
+            ChessPiece enemyPiece = board.getPiece(move.getEndPosition());
+            if (enemyPiece != null) {
+                if (danger_pieces.contains(enemyPiece.getPieceType())) {
+                    if (enemyPiece.getTeamColor() != pieceColor) {
                         return true;
                     }
                 }
@@ -87,26 +87,26 @@ public class ChessPiece {
         int[][] bishopdirections = {{1, -1}, {1, 1}, {-1, -1}, {-1, 1}};
         int[][] knightdirections = {{2, -1}, {1, -2}, {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}, {1, 2}, {2, 1}};
         int[][] kingdirections = {{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
-        danger_moves = Queen_Rook_bishop_move(pos, board, rookdirections);
-        if (king_helper(board, danger_moves, new ArrayList<>(Arrays.asList(PieceType.ROOK, PieceType.QUEEN)))) {
+        danger_moves = queenRookBishopMove(pos, board, rookdirections);
+        if (kingHelper(board, danger_moves, new ArrayList<>(Arrays.asList(PieceType.ROOK, PieceType.QUEEN)))) {
             return true;
         }
-        danger_moves = Queen_Rook_bishop_move(pos, board, bishopdirections);
-        if (king_helper(board, danger_moves, new ArrayList<>(Arrays.asList(PieceType.BISHOP, PieceType.QUEEN)))) {
+        danger_moves = queenRookBishopMove(pos, board, bishopdirections);
+        if (kingHelper(board, danger_moves, new ArrayList<>(Arrays.asList(PieceType.BISHOP, PieceType.QUEEN)))) {
             return true;
         }
-        danger_moves = knight_king_moves(pos, board, knightdirections);
-        if (king_helper(board, danger_moves, new ArrayList<>(List.of(PieceType.KNIGHT)))) {
+        danger_moves = knightKingMoves(pos, board, knightdirections);
+        if (kingHelper(board, danger_moves, new ArrayList<>(List.of(PieceType.KNIGHT)))) {
             return true;
         }
-        danger_moves = knight_king_moves(pos, board, kingdirections);
-        if (king_helper(board, danger_moves, new ArrayList<>(List.of(PieceType.KING)))) {
+        danger_moves = knightKingMoves(pos, board, kingdirections);
+        if (kingHelper(board, danger_moves, new ArrayList<>(List.of(PieceType.KING)))) {
             return true;
         }
         //still need to implement pawn danger
         int moverrow = pos.getRow();
         int movercol = pos.getColumn();
-        Collection<ChessMove> moves = new ArrayList<>();
+//        Collection<ChessMove> moves = new ArrayList<>();
         int[] attacks = {-1, 2};
         int advance;
         ChessGame.TeamColor enemy_color;
@@ -135,7 +135,7 @@ public class ChessPiece {
         return false;
     }
 
-    private Collection<ChessMove> Queen_Rook_bishop_move(ChessPosition pos, ChessBoard board, int[][] directions) {
+    private Collection<ChessMove> queenRookBishopMove(ChessPosition pos, ChessBoard board, int[][] directions) {
         int row = pos.getRow();
         int moverrow = pos.getRow();
         int col = pos.getColumn();
@@ -162,7 +162,7 @@ public class ChessPiece {
         return moves;
     }
 
-    private Collection<ChessMove> knight_king_moves(ChessPosition pos, ChessBoard board, int[][] directions) {
+    private Collection<ChessMove> knightKingMoves(ChessPosition pos, ChessBoard board, int[][] directions) {
         int row = pos.getRow();
         int moverrow = pos.getRow();
         int col = pos.getColumn();
@@ -189,7 +189,7 @@ public class ChessPiece {
         return moves;
     }
 
-    private Collection<ChessMove> pawn_moves(ChessPosition pos, ChessBoard board) {
+    private Collection<ChessMove> pawnMoves(ChessPosition pos, ChessBoard board) {
         ChessPiece.PieceType[] promotions = {ChessPiece.PieceType.ROOK, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP};
         int row = pos.getRow();
         int moverrow = pos.getRow();
@@ -257,27 +257,27 @@ public class ChessPiece {
         Collection<ChessMove> moves = List.of();
         if (type == PieceType.KING) {
             int[][] directions = {{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
-            return knight_king_moves(myPosition, board, directions);
+            return knightKingMoves(myPosition, board, directions);
         }
         if (type == PieceType.QUEEN) {
             int[][] directions = {{1, -1}, {1, 1}, {-1, -1}, {-1, 1}, {1, 0}, {0, 1}, {-1, 0}, {0, -1}};
-            return Queen_Rook_bishop_move(myPosition, board, directions);
+            return queenRookBishopMove(myPosition, board, directions);
         }
         if (type == PieceType.KNIGHT) {
             int[][] directions = {{2, -1}, {1, -2}, {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}, {1, 2}, {2, 1}};
-            return knight_king_moves(myPosition, board, directions);
+            return knightKingMoves(myPosition, board, directions);
         }
         if (type == PieceType.ROOK) {
             int[][] directions = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
-            return Queen_Rook_bishop_move(myPosition, board, directions);
+            return queenRookBishopMove(myPosition, board, directions);
         }
         if (type == PieceType.BISHOP) {
             int[][] directions = {{1, -1}, {1, 1}, {-1, -1}, {-1, 1}};
-            return Queen_Rook_bishop_move(myPosition, board, directions);
+            return queenRookBishopMove(myPosition, board, directions);
 
         }
         if (type == PieceType.PAWN) {
-            return pawn_moves(myPosition, board);
+            return pawnMoves(myPosition, board);
         }
         return moves;
     }

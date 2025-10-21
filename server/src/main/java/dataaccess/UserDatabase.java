@@ -5,7 +5,7 @@ import modules.User;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class UserDatabase implements dataBaseAccessor<User> {
+public class UserDatabase implements DataBaseAccessor<User> {
     ArrayList<User> database = new ArrayList<>();
 
     public boolean inDatabase(String username) {

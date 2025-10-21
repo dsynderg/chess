@@ -2,8 +2,8 @@ package dataaccess;
 
 import java.util.ArrayList;
 
-public interface dataBaseAccessor<idStorageType> {
-    ArrayList<Object> database = new ArrayList<>();
+public interface DataBaseAccessor<idStorageType> {
+    ArrayList<Object> Database = new ArrayList<>();
 
     //    boolean inDatabase(Object searchObject);
     boolean addToDatabase(idStorageType addObject);

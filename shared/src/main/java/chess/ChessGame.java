@@ -74,7 +74,7 @@ public class ChessGame {
 
         ChessPiece piece = board.getPiece(startPosition);
         Collection<ChessMove> moves = new ArrayList<>();
-        Collection<ChessMove> return_moves = new ArrayList<>();
+        Collection<ChessMove> returnMoves = new ArrayList<>();
         chess.ChessBoard tempboard = board.clone();
         if (piece != null) {
             moves = piece.pieceMoves(board, startPosition);
@@ -82,11 +82,11 @@ public class ChessGame {
         for (ChessMove move : moves) {
             updateBoardState(move);
             if (!isInCheck(piece.getTeamColor())) {
-                return_moves.add(move);
+                returnMoves.add(move);
             }
             board = tempboard.clone();
         }
-        return return_moves;
+        return returnMoves;
     }
 
     public Collection<ChessMove> allMoves(ChessGame.TeamColor teamColor) {
@@ -141,9 +141,9 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        ChessPosition king_pos = board.getKingPosition(teamColor);
-        ChessPiece king = board.getPiece(king_pos);
-        return king.isKingInCheck(board, king_pos);
+        ChessPosition kingPosition = board.getKingPosition(teamColor);
+        ChessPiece king = board.getPiece(kingPosition);
+        return king.isKingInCheck(board, kingPosition);
 
     }
 

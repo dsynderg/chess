@@ -5,7 +5,7 @@ import modules.GameData;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class GameDatabase implements dataBaseAccessor<GameData> {
+public class GameDatabase implements DataBaseAccessor<GameData> {
     ArrayList<GameData> database = new ArrayList<>();
 
     public ArrayList<GameData> getDatabase() {
