@@ -1,5 +1,5 @@
-import Services.AccountService;
-import Services.DeleteService;
+import services.AccountService;
+import services.DeleteService;
 import modules.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

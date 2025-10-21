@@ -1,8 +1,8 @@
 package server;
 
-import Services.AccountService;
-import Services.DeleteService;
-import Services.GameService;
+import services.AccountService;
+import services.DeleteService;
+import services.GameService;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import io.javalin.Javalin;
