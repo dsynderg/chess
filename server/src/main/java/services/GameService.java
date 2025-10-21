@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class GameService {
-    GameDatabase gameDatabase = DatabaseRegistry.getGameDB();
+    GameDatabase gameDatabase = DatabaseRegistry.getGameDb();
     private int gameID = 0;
 
     public boolean addGamedata(GameData data) {

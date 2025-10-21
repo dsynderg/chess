@@ -3,7 +3,7 @@ package dataaccess;
 import java.util.ArrayList;
 
 public interface DataBaseAccessor<idStorageType> {
-    ArrayList<Object> Database = new ArrayList<>();
+    ArrayList<Object> DATABASE = new ArrayList<>();
 
     //    boolean inDatabase(Object searchObject);
     boolean addToDatabase(idStorageType addObject);

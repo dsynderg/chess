@@ -11,8 +11,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class AccountService {
-    UserDatabase userdatabase = DatabaseRegistry.getUserDB();
-    AuthDatabase authdatabase = DatabaseRegistry.getAuthDB();
+    UserDatabase userdatabase = DatabaseRegistry.getUserDb();
+    AuthDatabase authdatabase = DatabaseRegistry.getAuthDb();
 
     public boolean creatAccont(User userdata) {
         return userdatabase.addToDatabase(userdata);
