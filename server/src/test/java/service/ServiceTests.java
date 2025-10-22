@@ -38,7 +38,10 @@ public class ServiceTests {
     }
     @Test
     void register(){
-
+        User user1 = new User("sldkf","a;sldkj","jflasjdf");
+        assert !aS.checkUsername(user1.username());
+        assert aS.creatAccont(user1);
+        assert aS.checkUsername(user1.username());
     }
 
     @Test
