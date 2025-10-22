@@ -19,6 +19,9 @@ public class GameService {
 
 
     public GameData gameDataGenorator(String gameName) {
+        if(gameName == ""){
+            return null;
+        }
         gameID++;
         int gameid = gameID;
         GameData gameData = new GameData(gameid, null, null, gameName, new ChessGame());

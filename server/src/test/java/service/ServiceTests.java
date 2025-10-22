@@ -1,12 +1,16 @@
 package service;
 
+import chess.ChessGame;
 import modules.AuthData;
+import modules.GameData;
 import services.AccountService;
 import services.DeleteService;
 import modules.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import services.GameService;
+
+import java.util.ArrayList;
 
 public class ServiceTests {
     AccountService aS = new AccountService();
@@ -63,5 +67,42 @@ public class ServiceTests {
     @Test
     void loginWithInvalidAuth(){
         assert !aS.checkAuth("abcdefg");
+    }
+    @Test
+    void logout(){
+        User logoutuser = new User("logout", "fdlfkj", "a;sdlfkj@gdsf");
+        assert aS.creatAccont(logoutuser);
+        modules.AuthData authToken = aS.authDataGenorator(logoutuser.username());
+        assert aS.checkAuth(authToken.authToken());
+        assert aS.removeAuth(authToken.authToken());
+        assert !aS.checkAuth(authToken.authToken());
+    }
+    @Test
+    void logoutfail(){
+        assert !aS.removeAuth("this sucks");
+    }
+    @Test
+    void listgamesSuccess(){
+        for(int i = 0; i<3;i++){
+            GameData game = gS.gameDataGenorator(String.valueOf(i));
+        }
+        ArrayList<GameData> games = gS.getGames();
+        assert games!= null;
+        for(GameData game:games){
+            System.out.println(game);
+        }
+    }
+    @Test
+    void listGamesFail(){
+        assert !aS.checkAuth("lsjdfsldjf");
+    }
+    @Test
+    void creatGame(){
+        modules.GameData game = gS.gameDataGenorator("testgame");
+        assert gS.checkGameID(game.gameID());
+    }
+    @Test
+    void creatGameFail(){
+        assert gS.gameDataGenorator("")==null;
     }
 }
