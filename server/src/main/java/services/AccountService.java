@@ -15,6 +15,9 @@ public class AccountService {
     AuthDatabase authdatabase = DatabaseRegistry.getAuthDb();
 
     public boolean creatAccont(User userdata) {
+        if(userdata.username()==null|| userdata.email()==null||userdata.password()==null){
+            return false;
+        }
         return userdatabase.addToDatabase(userdata);
 
     }

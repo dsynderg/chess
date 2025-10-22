@@ -1,5 +1,6 @@
 package service;
 
+import modules.AuthData;
 import services.AccountService;
 import services.DeleteService;
 import modules.User;
@@ -30,6 +31,15 @@ public class ServiceTests {
 
         assert aS.checkUsername(user1.username());
     }
+    @Test
+    void failRegister(){
+        User user1 = new User(null,null,"as;dfk@gsdlf");
+        assert !aS.creatAccont(user1);
+    }
+    @Test
+    void register(){
+
+    }
 
     @Test
     void repeteAccounts() {
@@ -44,7 +54,11 @@ public class ServiceTests {
         User dummyUser = new User("asdf", "a;sdfl", "sldjflsdj");
         assert !aS.checkUsername(dummyUser.username());
         assert aS.creatAccont(dummyUser);
-        assert !aS.creatAccont(dummyUser);
-//        assert aS.
+        AuthData auth = aS.authDataGenorator(dummyUser.username());
+        assert aS.checkAuth(auth.authToken());
+    }
+    @Test
+    void loginWithInvalidAuth(){
+        assert !aS.checkAuth("abcdefg");
     }
 }
