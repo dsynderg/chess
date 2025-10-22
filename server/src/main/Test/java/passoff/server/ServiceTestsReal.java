@@ -1,3 +1,5 @@
+package passoff.server;
+
 import services.AccountService;
 import services.DeleteService;
 import modules.User;
