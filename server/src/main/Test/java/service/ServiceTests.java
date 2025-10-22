@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import services.GameService;
 
-public class ServiceTestsReal {
+public class ServiceTests {
     AccountService aS = new AccountService();
     GameService gS = new GameService();
 
@@ -40,6 +40,11 @@ public class ServiceTestsReal {
     }
     @Test
     void loginTest(){
-        
+
+        User dummyUser = new User("asdf", "a;sdfl", "sldjflsdj");
+        assert !aS.checkUsername(dummyUser.username());
+        assert aS.creatAccont(dummyUser);
+        assert !aS.creatAccont(dummyUser);
+//        assert aS.
     }
 }
