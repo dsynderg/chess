@@ -1,4 +1,4 @@
-package passoff.server;
+package service;
 
 import services.AccountService;
 import services.DeleteService;
