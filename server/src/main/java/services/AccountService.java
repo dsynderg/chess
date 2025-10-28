@@ -13,52 +13,73 @@ import java.util.UUID;
 public class AccountService {
     MemUserDatabase userdatabase = MemDatabaseRegistry.getUserDb();
     MemAuthDatabase authdatabase = MemDatabaseRegistry.getAuthDb();
+    boolean isMemoryimplemtation = DatabaseConfigLoader.memoryimplementation();
 
     public boolean creatAccont(User userdata) {
-        if(userdata.username()==null|| userdata.email()==null||userdata.password()==null){
-            return false;
+        if(isMemoryimplemtation) {
+            if (userdata.username() == null || userdata.email() == null || userdata.password() == null) {
+                return false;
+            }
+            return userdatabase.addToDatabase(userdata);
         }
-        return userdatabase.addToDatabase(userdata);
-
+        //fix this
+        return false;
     }
 
     public boolean checkUsername(String username) {
-
-        return userdatabase.inDatabase(username);
+        if(isMemoryimplemtation) {
+            return userdatabase.inDatabase(username);
+        }
+        return false;
     }
 
     public AuthData authDataGenorator(String username) {
-        UUID uuid = UUID.randomUUID();
-        String authToken = uuid.toString();
-        AuthData authdata = new AuthData(authToken, username);
-        authdatabase.addToDatabase(authdata);
-        return authdata;
+        if(isMemoryimplemtation) {
+            UUID uuid = UUID.randomUUID();
+            String authToken = uuid.toString();
+            AuthData authdata = new AuthData(authToken, username);
+            authdatabase.addToDatabase(authdata);
+            return authdata;
+        }
+        return null;
 
     }
 
     public boolean checkPassword(String password, User userObject) {
-        return userdatabase.passwordUsernameMatch(password, userObject.username());
+        if(isMemoryimplemtation) {
+            return userdatabase.passwordUsernameMatch(password, userObject.username());
+        }
+        return false;
     }
 
     public boolean checkAuth(String auth) {
-        return authdatabase.inDatabase(auth);
-
+        if(isMemoryimplemtation) {
+            return authdatabase.inDatabase(auth);
+        }
+        return false;
     }
 
     public boolean removeAuth(String auth) {
-        ArrayList<AuthData> database = authdatabase.getDatabase();
-        for (AuthData data : database) {
-            if (Objects.equals(data.authToken(), auth)) {
-                return authdatabase.removeFromDatabase(data);
+        if(isMemoryimplemtation) {
+            ArrayList<AuthData> database = authdatabase.getDatabase();
+            for (AuthData data : database) {
+                if (Objects.equals(data.authToken(), auth)) {
+                    return authdatabase.removeFromDatabase(data);
 
+                }
             }
+            return false;
         }
         return false;
     }
 
     public String getUsernameFromAuth(String authToken) {
+        if(isMemoryimplemtation){
         return authdatabase.getUsername(authToken);
     }
+        return null;
+    }
+
 
 
 }

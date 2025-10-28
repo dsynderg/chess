@@ -19,7 +19,7 @@ public class ServiceTests {
     @Test
     @DisplayName("clear database")
     void clearAll() {
-        User user1 = new User("joe", ";alsdkfj", "sdfl@sdf");
+        User user1 = new User("josdfse", ";alsdkfj", "sdfl@sdf");
         assert aS.creatAccont(user1);
         assert aS.checkUsername(user1.username());
         assert DeleteService.deleteAll();
