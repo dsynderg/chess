@@ -1,14 +1,14 @@
 package services;
 
-import dataaccess.AuthDatabase;
-import dataaccess.DatabaseRegistry;
-import dataaccess.GameDatabase;
-import dataaccess.UserDatabase;
+import dataaccess.MemAuthDatabase;
+import dataaccess.MemDatabaseRegistry;
+import dataaccess.MemGameDatabase;
+import dataaccess.MemUserDatabase;
 
 public class DeleteService {
-    static UserDatabase userdatabase = DatabaseRegistry.getUserDb();
-    static AuthDatabase authdatabase = DatabaseRegistry.getAuthDb();
-    static GameDatabase gamedatabase = DatabaseRegistry.getGameDb();
+    static MemUserDatabase userdatabase = MemDatabaseRegistry.getUserDb();
+    static MemAuthDatabase authdatabase = MemDatabaseRegistry.getAuthDb();
+    static MemGameDatabase gamedatabase = MemDatabaseRegistry.getGameDb();
 
     public static boolean deleteAll() {
         return userdatabase.deleteall() && authdatabase.deleteall() && gamedatabase.deleteall();

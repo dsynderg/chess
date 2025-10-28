@@ -1,8 +1,8 @@
 package services;
 
-import dataaccess.AuthDatabase;
-import dataaccess.DatabaseRegistry;
-import dataaccess.UserDatabase;
+import dataaccess.MemAuthDatabase;
+import dataaccess.MemDatabaseRegistry;
+import dataaccess.MemUserDatabase;
 import modules.AuthData;
 import modules.User;
 
@@ -11,8 +11,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class AccountService {
-    UserDatabase userdatabase = DatabaseRegistry.getUserDb();
-    AuthDatabase authdatabase = DatabaseRegistry.getAuthDb();
+    MemUserDatabase userdatabase = MemDatabaseRegistry.getUserDb();
+    MemAuthDatabase authdatabase = MemDatabaseRegistry.getAuthDb();
 
     public boolean creatAccont(User userdata) {
         if(userdata.username()==null|| userdata.email()==null||userdata.password()==null){

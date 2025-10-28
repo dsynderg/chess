@@ -1,15 +1,14 @@
 package services;
 
 import chess.ChessGame;
-import dataaccess.DatabaseRegistry;
-import dataaccess.GameDatabase;
+import dataaccess.MemDatabaseRegistry;
+import dataaccess.MemGameDatabase;
 import modules.GameData;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class GameService {
-    GameDatabase gameDatabase = DatabaseRegistry.getGameDb();
+    MemGameDatabase gameDatabase = MemDatabaseRegistry.getGameDb();
     private int gameID = 0;
 
 

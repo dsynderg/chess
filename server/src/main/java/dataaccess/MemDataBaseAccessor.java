@@ -2,7 +2,7 @@ package dataaccess;
 
 import java.util.ArrayList;
 
-public interface DataBaseAccessor<T> {
+public interface MemDataBaseAccessor<T> {
     ArrayList<Object> DATABASE = new ArrayList<>();
 
     //    boolean inDatabase(Object searchObject);
