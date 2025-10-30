@@ -21,9 +21,9 @@ public class MemAuthDatabase implements MemDataBaseAccessor<AuthData> {
         return (ArrayList<AuthData>) database.clone();
     }
 
-    public boolean inDatabase(String searchKey) {
+    public boolean inDatabase(String authToken) {
         for (AuthData authData : database) {
-            if (Objects.equals(authData.authToken(), searchKey)) {
+            if (Objects.equals(authData.authToken(), authToken)) {
                 return true;
             }
         }

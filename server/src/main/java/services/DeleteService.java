@@ -1,9 +1,6 @@
 package services;
 
-import dataaccess.MemAuthDatabase;
-import dataaccess.MemDatabaseRegistry;
-import dataaccess.MemGameDatabase;
-import dataaccess.MemUserDatabase;
+import dataaccess.*;
 
 public class DeleteService {
     static MemUserDatabase userdatabase = MemDatabaseRegistry.getUserDb();
@@ -14,6 +11,9 @@ public class DeleteService {
     public static boolean deleteAll() {
         if(isMemoryImplemntation) {
             return userdatabase.deleteall() && authdatabase.deleteall() && gamedatabase.deleteall();
+        }
+        else{
+            SQLDeleteDataBase.deleteAll();
         }
 
         return false;
