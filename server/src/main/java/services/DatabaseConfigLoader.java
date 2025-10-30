@@ -1,11 +1,16 @@
 package services;
-import java.io.InputStream;
-import java.util.Properties;
+import dataaccess.SQLTableControler;
 
 //allows you to ch
 public class DatabaseConfigLoader {
     private static boolean mI = true;
-    public static boolean memoryimplementation(){
+    public static boolean memoryimplementation()  {
+        if(!mI){
+            SQLTableControler.initialize();
+        }
+
         return mI;
+
+
     }
 }
