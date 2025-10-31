@@ -1,9 +1,9 @@
 package services;
 
-import dataaccess.DataAccessException;
-import dataaccess.MemAuthDatabase;
-import dataaccess.MemDatabaseRegistry;
-import dataaccess.MemUserDatabase;
+import dataaccess.*;
+import dataaccess.memoryImplementaiton.MemAuthDatabase;
+import dataaccess.memoryImplementaiton.MemDatabaseRegistry;
+import dataaccess.memoryImplementaiton.MemUserDatabase;
 import modules.AuthData;
 import modules.User;
 
@@ -37,14 +37,17 @@ public class AccountService {
     }
 
     public AuthData authDataGenorator(String username) {
+        UUID uuid = UUID.randomUUID();
+        String authToken = uuid.toString();
+        AuthData authdata = new AuthData(authToken, username);
         if(isMemoryimplemtation) {
-            UUID uuid = UUID.randomUUID();
-            String authToken = uuid.toString();
-            AuthData authdata = new AuthData(authToken, username);
+
             authdatabase.addToDatabase(authdata);
-            return authdata;
         }
-        return null;
+        else{
+            SQLAuthDatabase.addToDatabase(authdata);
+        }
+        return authdata;
 
     }
 
@@ -59,7 +62,10 @@ public class AccountService {
         if(isMemoryimplemtation) {
             return authdatabase.inDatabase(auth);
         }
-        return false;
+        else{
+            return SQLAuthDatabase.inDatabase(auth);
+        }
+
     }
 
     public boolean removeAuth(String auth) {
@@ -73,14 +79,19 @@ public class AccountService {
             }
             return false;
         }
-        return false;
+        else{
+            var authData = new AuthData(auth,SQLAuthDatabase.getUsername(auth));
+            return SQLAuthDatabase.removeFromDatabase(authData);
+        }
     }
 
     public String getUsernameFromAuth(String authToken) {
         if(isMemoryimplemtation){
-        return authdatabase.getUsername(authToken);
-    }
-        return null;
+            return authdatabase.getUsername(authToken);
+        }
+        else{
+            return SQLAuthDatabase.getUsername(authToken);
+        }
     }
 
 

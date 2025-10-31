@@ -1,6 +1,10 @@
 package services;
 
 import dataaccess.*;
+import dataaccess.memoryImplementaiton.MemAuthDatabase;
+import dataaccess.memoryImplementaiton.MemDatabaseRegistry;
+import dataaccess.memoryImplementaiton.MemGameDatabase;
+import dataaccess.memoryImplementaiton.MemUserDatabase;
 
 public class DeleteService {
     static MemUserDatabase userdatabase = MemDatabaseRegistry.getUserDb();

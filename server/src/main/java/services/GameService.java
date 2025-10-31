@@ -1,8 +1,8 @@
 package services;
 
 import chess.ChessGame;
-import dataaccess.MemDatabaseRegistry;
-import dataaccess.MemGameDatabase;
+import dataaccess.memoryImplementaiton.MemDatabaseRegistry;
+import dataaccess.memoryImplementaiton.MemGameDatabase;
 import modules.GameData;
 
 import java.util.ArrayList;
