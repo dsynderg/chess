@@ -65,11 +65,6 @@ public class SQLTableControler {
     };
 
 
-    public static enum tableType{
-        AUTH,
-        GAME,
-        USER
 
-    }
 }
 
