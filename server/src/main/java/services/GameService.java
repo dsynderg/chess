@@ -1,11 +1,13 @@
 package services;
 
 import chess.ChessGame;
+import dataaccess.DataAccessException;
 import dataaccess.SQLGameDatabase;
 import dataaccess.memoryImplementaiton.MemDatabaseRegistry;
 import dataaccess.memoryImplementaiton.MemGameDatabase;
 import modules.GameData;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class GameService {
@@ -13,7 +15,7 @@ public class GameService {
     private int gameID = 0;
     private boolean isMemoryImplemntation = DatabaseConfigLoader.memoryimplementation();
 
-    public boolean checkGameID(int gameID) {
+    public boolean checkGameID(int gameID) throws SQLException, DataAccessException {
         if(isMemoryImplemntation) {
             return (gameDatabase.inDatabaseID(gameID) != null);
         }
@@ -24,7 +26,7 @@ public class GameService {
     }
 
 
-    public GameData gameDataGenorator(String gameName) {
+    public GameData gameDataGenorator(String gameName) throws SQLException, DataAccessException {
         if(gameName == ""){
             return null;
         }
@@ -46,7 +48,7 @@ public class GameService {
         return null;
     }
 
-    public ArrayList<GameData> getGames() {
+    public ArrayList<GameData> getGames() throws SQLException, DataAccessException {
         if(isMemoryImplemntation){
         return gameDatabase.getDatabase();
     }
@@ -56,7 +58,7 @@ public class GameService {
 
     }
 
-    public boolean assignColor(String username, ChessGame.TeamColor joinColor, int gameID) {
+    public boolean assignColor(String username, ChessGame.TeamColor joinColor, int gameID) throws SQLException, DataAccessException {
         GameData data;
         if(isMemoryImplemntation){
                 data = gameDatabase.inDatabaseID(gameID);
