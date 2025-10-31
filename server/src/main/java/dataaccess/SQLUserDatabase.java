@@ -13,7 +13,7 @@ import java.sql.Statement;
 import java.util.Objects;
 
 public class SQLUserDatabase {
-    public static boolean inDatabase(String username) {
+    public static boolean inDatabase(String username) throws SQLException, DataAccessException {
         String checkSql = "SELECT 1 FROM userdata WHERE username = ?";
 
         return DatabaseManager.inDatabaseHelper(username, checkSql);
@@ -49,38 +49,33 @@ public class SQLUserDatabase {
 
 
 
-    public static boolean addToDatabase(User addObject) {
+    public static boolean addToDatabase(User addObject) throws SQLException, DataAccessException {
         String query = "INSERT INTO userdata " +
                 "(username, password, email) " +
                 "VALUES (?, ?, ?)";
         if(inDatabase(addObject.username())){
             return false;
         }
-        try(Connection conn = DatabaseManager.getConnection()){
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, String.valueOf(addObject.username()));
-            statement.setString(2, addObject.password());
-            statement.setString(3, addObject.email());
+        Connection conn = DatabaseManager.getConnection();
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, String.valueOf(addObject.username()));
+        statement.setString(2, addObject.password());
+        statement.setString(3, addObject.email());
 
 
-            statement.executeUpdate();
-            return true;
-        }
-        catch(SQLException|DataAccessException e){
-            throw new RuntimeException("There was a database connection issue",e);
-        }
+        statement.executeUpdate();
+        return true;
+
     }
-    public static boolean deleteall() {
-    String query =  "DELETE FROM userdata;";
-    try (Connection conn = DatabaseManager.getConnection()) {
+    public static boolean deleteall() throws DataAccessException, SQLException {
+        String query =  "DELETE FROM userdata;";
+        Connection conn = DatabaseManager.getConnection();
         Statement statement = conn.createStatement();
 
         statement.executeUpdate(query);
 
         return true;
-    } catch (SQLException | DataAccessException e) {
-        throw new RuntimeException("Failed to get a connection", e);
-    }
+
 }
 
 }
