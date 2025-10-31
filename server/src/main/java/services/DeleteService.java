@@ -17,9 +17,9 @@ public class DeleteService {
             return userdatabase.deleteall() && authdatabase.deleteall() && gamedatabase.deleteall();
         }
         else{
-            SQLDeleteDataBase.deleteAll();
+            return SQLUserDatabase.deleteall() && SQLGameDatabase.deleteAll()&&SQLAuthDatabase.deleteall();
         }
 
-        return false;
+
     }
 }

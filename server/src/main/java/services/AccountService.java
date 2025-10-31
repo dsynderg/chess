@@ -24,20 +24,25 @@ public class AccountService {
             return false;
         }
         String hashedPassword = BCrypt.hashpw(userdata.password(), BCrypt.gensalt());
-        User userdataWPassword = new User(userdata.username(),hashedPassword, userdata.email());
-        if(isMemoryimplemtation) {
+        User userdataWPassword = new User(userdata.username(), hashedPassword, userdata.email());
+        if (isMemoryimplemtation) {
 
             return userdatabase.addToDatabase(userdataWPassword);
         }
-        //fix this
-        return false;
+        else{
+            return SQLUserDatabase.addToDatabase(userdataWPassword);
+        }
     }
+
 
     public boolean checkUsername(String username) {
         if(isMemoryimplemtation) {
             return userdatabase.inDatabase(username);
         }
-        return false;
+        else{
+            return SQLUserDatabase.inDatabase(username);
+        }
+
     }
 
     public AuthData authDataGenorator(String username) {
@@ -60,7 +65,9 @@ public class AccountService {
         if(isMemoryimplemtation) {
             return userdatabase.passwordUsernameMatch(password, userObject.username());
         }
-        return false;
+        else{
+            return SQLUserDatabase.passwordUsernameMatch(password,userObject.username());
+        }
     }
 
     public boolean checkAuth(String auth) {

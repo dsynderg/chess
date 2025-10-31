@@ -39,12 +39,12 @@ public class ServiceTests {
     }
     @Test
     void failRegister(){
-        User user1 = new User(null,null,"as;dfk@gsdlf");
+        User user1 = new User(null,null,"asdfk@gsdlf");
         assert !aS.creatAccont(user1);
     }
     @Test
     void register(){
-        User user1 = new User("sldkf","a;sldkj","jflasjdf");
+        User user1 = new User("sldkf","asldkj","jflasjdf");
         assert !aS.checkUsername(user1.username());
         assert aS.creatAccont(user1);
         assert aS.checkUsername(user1.username());

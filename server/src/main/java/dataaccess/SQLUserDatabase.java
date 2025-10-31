@@ -1,4 +1,97 @@
 package dataaccess;
 
+import chess.ChessGame;
+import com.google.gson.Gson;
+import modules.GameData;
+import modules.User;
+import org.mindrot.jbcrypt.BCrypt;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Objects;
+
 public class SQLUserDatabase {
+    public static boolean inDatabase(String username) {
+        String checkSql = "SELECT 1 FROM userdata WHERE username = ?";
+
+        return DatabaseManager.inDatabaseHelper(username, checkSql);
+        }
+
+
+
+    public static boolean passwordUsernameMatch(String password, String username) {
+        String sql ="SELECT * FROM userdata WHERE username = ?";
+        try(Connection conn = DatabaseManager.getConnection()){
+            var statement = conn.prepareStatement(sql);
+            statement.setString(1,String.valueOf(username));
+            var response = statement.executeQuery();
+            while(response.next()){
+                return BCrypt.checkpw(password, response.getString("password"));
+            }
+            return true;
+
+        }
+        catch(SQLException|DataAccessException e){
+            throw new RuntimeException("There was a database connection issue",e);
+        }
+    }
+
+    public static boolean removeFromDatabase(User removeObject) {
+        String deleteStatement = "DELETE FROM userdata WHERE username = ?;";
+        if(!inDatabase(removeObject.username())){
+            return false;
+        }
+        try(Connection conn = DatabaseManager.getConnection()){
+            var statement = conn.prepareStatement(deleteStatement);
+            statement.setString(1,String.valueOf(removeObject.username()));
+            statement.executeUpdate();
+            return true;
+
+        }
+        catch(SQLException|DataAccessException e){
+            throw new RuntimeException("There was a database connection issue",e);
+        }
+    }
+
+
+
+    public static boolean addToDatabase(User addObject) {
+        String query = "INSERT INTO userdata " +
+                "(username, password, email) " +
+                "VALUES (?, ?, ?)";
+        if(inDatabase(addObject.username())){
+            return false;
+        }
+        try(Connection conn = DatabaseManager.getConnection()){
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, String.valueOf(addObject.username()));
+            statement.setString(2, addObject.password());
+            statement.setString(3, addObject.email());
+
+
+            statement.executeUpdate();
+            return true;
+        }
+        catch(SQLException|DataAccessException e){
+            throw new RuntimeException("There was a database connection issue",e);
+        }
+    }
+    public static boolean deleteall() {
+    String query =  "DELETE FROM userdata;";
+    try (Connection conn = DatabaseManager.getConnection()) {
+        Statement statement = conn.createStatement();
+
+        statement.executeUpdate(query);
+
+        return true;
+    } catch (SQLException | DataAccessException e) {
+        throw new RuntimeException("Failed to get a connection", e);
+    }
 }
+
+}
+
+
+
