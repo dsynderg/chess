@@ -21,38 +21,30 @@ public class SQLUserDatabase {
 
 
 
-    public static boolean passwordUsernameMatch(String password, String username) {
+    public static boolean passwordUsernameMatch(String password, String username) throws DataAccessException, SQLException {
         String sql ="SELECT * FROM userdata WHERE username = ?";
-        try(Connection conn = DatabaseManager.getConnection()){
-            var statement = conn.prepareStatement(sql);
-            statement.setString(1,String.valueOf(username));
-            var response = statement.executeQuery();
-            while(response.next()){
-                return BCrypt.checkpw(password, response.getString("password"));
-            }
-            return true;
+        Connection conn = DatabaseManager.getConnection();
+        var statement = conn.prepareStatement(sql);
+        statement.setString(1,String.valueOf(username));
+        var response = statement.executeQuery();
+        while(response.next()){
+            return BCrypt.checkpw(password, response.getString("password"));
+        }
+        return true;
 
-        }
-        catch(SQLException|DataAccessException e){
-            throw new RuntimeException("There was a database connection issue",e);
-        }
     }
 
-    public static boolean removeFromDatabase(User removeObject) {
+    public static boolean removeFromDatabase(User removeObject) throws DataAccessException, SQLException {
         String deleteStatement = "DELETE FROM userdata WHERE username = ?;";
         if(!inDatabase(removeObject.username())){
             return false;
         }
-        try(Connection conn = DatabaseManager.getConnection()){
-            var statement = conn.prepareStatement(deleteStatement);
-            statement.setString(1,String.valueOf(removeObject.username()));
-            statement.executeUpdate();
-            return true;
+        Connection conn = DatabaseManager.getConnection();
+        var statement = conn.prepareStatement(deleteStatement);
+        statement.setString(1,String.valueOf(removeObject.username()));
+        statement.executeUpdate();
+        return true;
 
-        }
-        catch(SQLException|DataAccessException e){
-            throw new RuntimeException("There was a database connection issue",e);
-        }
     }
 
 
