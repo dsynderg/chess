@@ -51,8 +51,7 @@ public class GameService {
         return gameDatabase.getDatabase();
     }
         else {
-            SQLGameDatabase.listDatabase();
-            return null;
+            return SQLGameDatabase.listDatabase();
         }
 
     }

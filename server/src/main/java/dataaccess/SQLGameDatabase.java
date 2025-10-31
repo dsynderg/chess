@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class SQLGameDatabase {
 
@@ -74,22 +75,27 @@ public class SQLGameDatabase {
         }
     }
 
-    public static void listDatabase(){
+    public static ArrayList<GameData> listDatabase(){
+
         try(Connection conn = DatabaseManager.getConnection()){
             var statement = conn.prepareStatement("select * from gamedata;");
             var response = statement.executeQuery();
+            Gson gson = new Gson();
+            ArrayList<GameData> returnList = new ArrayList<>();
             while(response.next()){
                 int gameID= response.getInt("gameID");
                 String whiteUsername = response.getString("whiteUsername");
                 String blackUsername = response.getString("blackUsername");
                 String gameName = response.getString("gameName");
-                String game = response.getString("game");
-                System.out.println("gameID: " + String.valueOf(gameID)+
-                                    ", White: "+ whiteUsername+
-                                    ", Black: "+ blackUsername+
-                                    ", Name: "+ gameName +
-                                    ", Game: "+game);
+                ChessGame game = gson.fromJson(response.getString("game"), ChessGame.class);
+                returnList.add(new GameData(gameID,whiteUsername,blackUsername,gameName,game));
+//                System.out.println("gameID: " + String.valueOf(gameID)+
+//                                    ", White: "+ whiteUsername+
+//                                    ", Black: "+ blackUsername+
+//                                    ", Name: "+ gameName +
+//                                    ", Game: "+game);
             }
+            return returnList;
         }
         catch(SQLException|DataAccessException e){
             throw new RuntimeException("There was a database connection issue",e);

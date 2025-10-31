@@ -90,12 +90,12 @@ public class ServiceTests {
             GameData game = gS.gameDataGenorator(String.valueOf(i));
         }
         ArrayList<GameData> games = gS.getGames();
-        if(isMemory) {
+//        if(isMemory) {
             assert games != null;
             for (GameData game : games) {
                 System.out.println(game);
             }
-        }
+//        }
     }
     @Test
     void listGamesFail(){
