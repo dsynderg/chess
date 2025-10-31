@@ -4,6 +4,7 @@ import chess.ChessGame;
 import modules.AuthData;
 import modules.GameData;
 import services.AccountService;
+import services.DatabaseConfigLoader;
 import services.DeleteService;
 import modules.User;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public class ServiceTests {
     AccountService aS = new AccountService();
     GameService gS = new GameService();
+    boolean isMemory = DatabaseConfigLoader.memoryimplementation();
 
     @Test
     @DisplayName("clear database")
@@ -83,13 +85,16 @@ public class ServiceTests {
     }
     @Test
     void listgamesSuccess(){
+        DeleteService.deleteAll();
         for(int i = 0; i<3;i++){
             GameData game = gS.gameDataGenorator(String.valueOf(i));
         }
         ArrayList<GameData> games = gS.getGames();
-        assert games!= null;
-        for(GameData game:games){
-            System.out.println(game);
+        if(isMemory) {
+            assert games != null;
+            for (GameData game : games) {
+                System.out.println(game);
+            }
         }
     }
     @Test

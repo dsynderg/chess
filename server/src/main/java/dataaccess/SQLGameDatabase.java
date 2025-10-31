@@ -1,5 +1,8 @@
 package dataaccess;
 
+import chess.ChessBoard;
+import chess.ChessGame;
+import com.google.gson.Gson;
 import modules.AuthData;
 import modules.GameData;
 
@@ -20,11 +23,13 @@ public class SQLGameDatabase {
         }
         try(Connection conn = DatabaseManager.getConnection()){
             PreparedStatement statement = conn.prepareStatement(query);
+            Gson gson = new Gson();
+            String json = gson.toJson(addObject.game());
             statement.setString(1, String.valueOf(addObject.gameID()));
             statement.setString(2, addObject.whiteUsername());
             statement.setString(3, addObject.blackUsername());
             statement.setString(4, addObject.gameName());
-            statement.setString(5, addObject.game().toString());
+            statement.setString(5, json);
 
 
             statement.executeUpdate();
@@ -95,6 +100,29 @@ public class SQLGameDatabase {
 
         return DatabaseManager.inDatabaseHelper(gameName, checkSql);
 
+    }
+    public static GameData inDatabaseID(int gameID){
+        String checkSql = "SELECT * FROM gamedata WHERE gameID = ?";
+        Gson gson = new Gson();
+        try(Connection conn = DatabaseManager.getConnection()){
+            var statement = conn.prepareStatement(checkSql);
+            statement.setInt(1,gameID);
+            var rs = statement.executeQuery();
+            if(rs.next()){
+                int ID = rs.getInt("gameID");
+                String whiteUsername = rs.getString("whiteUsername");
+                String blackUsername = rs.getString("blackUsername");
+                String gameName = rs.getString("gameName");
+                ChessGame game = gson.fromJson(rs.getString("game"), ChessGame.class);
+                return new GameData(ID,whiteUsername,blackUsername,gameName,game);
+            }
+            else{
+                return null;
+            }
+        }
+        catch(SQLException | DataAccessException e){
+            throw new RuntimeException("There was a database connection issue",e);
+        }
     }
 
 

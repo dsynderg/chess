@@ -1,6 +1,7 @@
 package services;
 
 import chess.ChessGame;
+import dataaccess.SQLGameDatabase;
 import dataaccess.memoryImplementaiton.MemDatabaseRegistry;
 import dataaccess.memoryImplementaiton.MemGameDatabase;
 import modules.GameData;
@@ -16,7 +17,10 @@ public class GameService {
         if(isMemoryImplemntation) {
             return (gameDatabase.inDatabaseID(gameID) != null);
         }
-        return false;
+        else{
+            return (SQLGameDatabase.inDatabaseID(gameID)!= null);
+        }
+
     }
 
 
@@ -26,12 +30,18 @@ public class GameService {
         }
         gameID++;
         int gameid = gameID;
+        GameData gameData = new GameData(gameid, null, null, gameName, new ChessGame());
         if(isMemoryImplemntation) {
-            GameData gameData = new GameData(gameid, null, null, gameName, new ChessGame());
+
             if (gameDatabase.addToDatabase(gameData)) {
                 return gameData;
             }
-            return null;
+
+        }
+        else{
+            if(SQLGameDatabase.addToDatabase(gameData)){
+                return gameData;
+            }
         }
         return null;
     }
@@ -40,12 +50,24 @@ public class GameService {
         if(isMemoryImplemntation){
         return gameDatabase.getDatabase();
     }
-        return null;
+        else {
+            SQLGameDatabase.listDatabase();
+            return null;
+        }
+
     }
 
     public boolean assignColor(String username, ChessGame.TeamColor joinColor, int gameID) {
+        GameData data;
         if(isMemoryImplemntation){
-            GameData data = gameDatabase.inDatabaseID(gameID);
+                data = gameDatabase.inDatabaseID(gameID);
+            }
+            else{
+                data = SQLGameDatabase.inDatabaseID(gameID);
+            }
+            assert data != null;
+
+
             if (joinColor == ChessGame.TeamColor.WHITE) {
                 if (data.whiteUsername() == null) {
                     GameData updatedData = new GameData(
@@ -55,8 +77,14 @@ public class GameService {
                             data.gameName(),
                             data.game()
                     );
-                    gameDatabase.removeFromDatabase(data);
-                    gameDatabase.addToDatabase(updatedData);
+                    if(isMemoryImplemntation) {
+                        gameDatabase.removeFromDatabase(data);
+                        gameDatabase.addToDatabase(updatedData);
+                    }
+                    else {
+                        SQLGameDatabase.removeFromDatabase(data);
+                        SQLGameDatabase.addToDatabase(updatedData);
+                    }
                     return true;
                 }
             }
@@ -69,15 +97,21 @@ public class GameService {
                             data.gameName(),
                             data.game()
                     );
-                    gameDatabase.removeFromDatabase(data);
-                    gameDatabase.addToDatabase(updatedData);
+                    if(isMemoryImplemntation) {
+                        gameDatabase.removeFromDatabase(data);
+                        gameDatabase.addToDatabase(updatedData);
+                    }
+                    else{
+                        SQLGameDatabase.removeFromDatabase(data);
+                        SQLGameDatabase.addToDatabase(updatedData);
+                    }
                     return true;
 
                 }
             }
             return false;
-        }
-        return false;
+
+
     }
 }
 

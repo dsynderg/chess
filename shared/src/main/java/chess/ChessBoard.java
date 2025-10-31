@@ -16,6 +16,7 @@ public class ChessBoard implements Cloneable {
 
     }
 
+
     @Override
     public ChessBoard clone() {
         ChessBoard copy = new ChessBoard();

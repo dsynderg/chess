@@ -71,6 +71,7 @@ public class DatabaseTests {
         GameData game1 = new GameData(145,"asdf","asdfa","asdfd",new ChessGame());
         assert SQLGameDatabase.addToDatabase(game1);
         assert SQLGameDatabase.inDatabase(game1.gameName());
+        assert (SQLGameDatabase.inDatabaseID(game1.gameID()) != null);
         assert SQLGameDatabase.removeFromDatabase(game1);
         assert !SQLGameDatabase.inDatabase(game1.gameName());
     }

@@ -1,6 +1,7 @@
 package dataaccess.memoryImplementaiton;
 
 import modules.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -20,7 +21,7 @@ public class MemUserDatabase implements MemDataBaseAccessor<User> {
     public boolean passwordUsernameMatch(String password, String username) {
         for (User user : database) {
             if (Objects.equals(user.username(), username)) {
-                return Objects.equals(user.password(), password);
+                return BCrypt.checkpw(password, user.password());
             }
         }
         return false;

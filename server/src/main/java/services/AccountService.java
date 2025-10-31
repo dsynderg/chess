@@ -6,6 +6,7 @@ import dataaccess.memoryImplementaiton.MemDatabaseRegistry;
 import dataaccess.memoryImplementaiton.MemUserDatabase;
 import modules.AuthData;
 import modules.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -19,11 +20,14 @@ public class AccountService {
 
 
     public boolean creatAccont(User userdata) {
+        if (userdata.username() == null || userdata.email() == null || userdata.password() == null) {
+            return false;
+        }
+        String hashedPassword = BCrypt.hashpw(userdata.password(), BCrypt.gensalt());
+        User userdataWPassword = new User(userdata.username(),hashedPassword, userdata.email());
         if(isMemoryimplemtation) {
-            if (userdata.username() == null || userdata.email() == null || userdata.password() == null) {
-                return false;
-            }
-            return userdatabase.addToDatabase(userdata);
+
+            return userdatabase.addToDatabase(userdataWPassword);
         }
         //fix this
         return false;
@@ -52,6 +56,7 @@ public class AccountService {
     }
 
     public boolean checkPassword(String password, User userObject) {
+
         if(isMemoryimplemtation) {
             return userdatabase.passwordUsernameMatch(password, userObject.username());
         }
