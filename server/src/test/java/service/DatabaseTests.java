@@ -1,38 +1,36 @@
 package service;
 
 import chess.ChessGame;
-import dataaccess.SQLAuthDatabase;
-import dataaccess.SQLDeleteDataBase;
-import dataaccess.SQLGameDatabase;
-import dataaccess.SQLUserDatabase;
+import dataaccess.*;
 import dataaccess.memoryImplementaiton.MemGameDatabase;
 import modules.AuthData;
 import modules.GameData;
 import modules.User;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class DatabaseTests {
     @Test
-    void deleteDatabase() {
+    void deleteDatabase() throws SQLException, DataAccessException {
         assert SQLDeleteDataBase.deleteAll();
     }
 
     @Test
-    void addToAuth() {
+    void addToAuth() throws SQLException, DataAccessException {
         SQLAuthDatabase.deleteall();
         AuthData auth = new AuthData("123", "myname is jeff");
         assert SQLAuthDatabase.addToDatabase(auth);
     }
 
     @Test
-    void deleteAllAuth() {
+    void deleteAllAuth() throws SQLException, DataAccessException {
         assert SQLAuthDatabase.deleteall();
     }
 
     @Test
-    void checkusername() {
+    void checkusername() throws SQLException, DataAccessException {
         SQLAuthDatabase.deleteall();
         AuthData auth = new AuthData("abc", "dexter");
         assert SQLAuthDatabase.addToDatabase(auth);
@@ -41,7 +39,7 @@ public class DatabaseTests {
     }
 
     @Test
-    void printDatabase() {
+    void printDatabase() throws SQLException, DataAccessException {
         SQLAuthDatabase.deleteall();
         AuthData auth = new AuthData("1", "dexter");
         assert SQLAuthDatabase.addToDatabase(auth);
@@ -54,7 +52,7 @@ public class DatabaseTests {
     }
 
     @Test
-    void addToGame() {
+    void addToGame() throws SQLException, DataAccessException {
         GameData game = new GameData(1, "asdf", "asdf", "asdf", new ChessGame());
         assert SQLGameDatabase.deleteAll();
         assert SQLGameDatabase.addToDatabase(game);
@@ -62,7 +60,7 @@ public class DatabaseTests {
 
 
     @Test
-    void listGamesWorks() {
+    void listGamesWorks() throws SQLException, DataAccessException {
         assert SQLGameDatabase.deleteAll();
         GameData game1 = new GameData(1, "asdf", "asdfa", "asdfd", new ChessGame());
         GameData game2 = new GameData(2, "asdfb", "asdfs", "asdfs", new ChessGame());
@@ -74,7 +72,7 @@ public class DatabaseTests {
     }
 
     @Test
-    void removeGame() {
+    void removeGame() throws SQLException, DataAccessException {
         assert SQLGameDatabase.deleteAll();
         GameData game1 = new GameData(145, "asdf", "asdfa", "asdfd", new ChessGame());
         assert SQLGameDatabase.addToDatabase(game1);
@@ -84,7 +82,7 @@ public class DatabaseTests {
         assert !SQLGameDatabase.inDatabase(game1.gameName());
     }
     @Test
-    void addUser() {
+    void addUser() throws SQLException, DataAccessException {
         User user1 = new User("jake","abcdefg","afjdjk@gokdsd");
         assert !SQLUserDatabase.inDatabase(user1.username());
         assert SQLUserDatabase.addToDatabase(user1);
