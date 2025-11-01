@@ -3,11 +3,10 @@ package services;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.SQLGameDatabase;
-import dataaccess.memoryImplementaiton.MemDatabaseRegistry;
-import dataaccess.memoryImplementaiton.MemGameDatabase;
+import dataaccess.memoryimplementaiton.MemDatabaseRegistry;
+import dataaccess.memoryimplementaiton.MemGameDatabase;
 import modules.GameData;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class GameService {

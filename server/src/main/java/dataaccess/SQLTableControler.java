@@ -1,7 +1,5 @@
 package dataaccess;
 
-import modules.AuthData;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -10,7 +8,7 @@ public class SQLTableControler {
     public static void initialize() throws DataAccessException {
         DatabaseManager.createDatabase();
 
-        for(String statement: createStatementList){
+        for(String statement: CreateStatementList){
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement prepStatement = conn.prepareStatement(statement);){
              prepStatement.executeUpdate();
@@ -21,7 +19,7 @@ public class SQLTableControler {
 
 
     }
-    private static final String[] createStatementList = {
+    private static final String[] CreateStatementList = {
           """  
           CREATE TABLE IF NOT EXISTS gamedata (
           gameID INT PRIMARY KEY,

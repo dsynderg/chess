@@ -1,10 +1,10 @@
 package services;
 
 import dataaccess.*;
-import dataaccess.memoryImplementaiton.MemAuthDatabase;
-import dataaccess.memoryImplementaiton.MemDatabaseRegistry;
-import dataaccess.memoryImplementaiton.MemGameDatabase;
-import dataaccess.memoryImplementaiton.MemUserDatabase;
+import dataaccess.memoryimplementaiton.MemAuthDatabase;
+import dataaccess.memoryimplementaiton.MemDatabaseRegistry;
+import dataaccess.memoryimplementaiton.MemGameDatabase;
+import dataaccess.memoryimplementaiton.MemUserDatabase;
 
 import java.sql.SQLException;
 

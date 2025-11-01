@@ -1,4 +1,4 @@
-package dataaccess.memoryImplementaiton;
+package dataaccess.memoryimplementaiton;
 
 import modules.GameData;
 

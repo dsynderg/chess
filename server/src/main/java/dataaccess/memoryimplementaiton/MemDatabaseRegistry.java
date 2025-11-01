@@ -1,4 +1,4 @@
-package dataaccess.memoryImplementaiton;
+package dataaccess.memoryimplementaiton;
 
 public class MemDatabaseRegistry {
     private static final MemAuthDatabase AUTH_DB = new MemAuthDatabase();

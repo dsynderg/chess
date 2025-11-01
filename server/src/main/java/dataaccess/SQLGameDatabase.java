@@ -114,12 +114,12 @@ public class SQLGameDatabase {
             statement.setInt(1, gameID);
             var rs = statement.executeQuery();
             if (rs.next()) {
-                int ID = rs.getInt("gameID");
+                int id = rs.getInt("gameID");
                 String whiteUsername = rs.getString("whiteUsername");
                 String blackUsername = rs.getString("blackUsername");
                 String gameName = rs.getString("gameName");
                 ChessGame game = gson.fromJson(rs.getString("game"), ChessGame.class);
-                return new GameData(ID, whiteUsername, blackUsername, gameName, game);
+                return new GameData(id, whiteUsername, blackUsername, gameName, game);
             } else {
                 return null;
             }

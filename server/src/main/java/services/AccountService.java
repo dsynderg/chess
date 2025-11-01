@@ -1,14 +1,13 @@
 package services;
 
 import dataaccess.*;
-import dataaccess.memoryImplementaiton.MemAuthDatabase;
-import dataaccess.memoryImplementaiton.MemDatabaseRegistry;
-import dataaccess.memoryImplementaiton.MemUserDatabase;
+import dataaccess.memoryimplementaiton.MemAuthDatabase;
+import dataaccess.memoryimplementaiton.MemDatabaseRegistry;
+import dataaccess.memoryimplementaiton.MemUserDatabase;
 import modules.AuthData;
 import modules.User;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;

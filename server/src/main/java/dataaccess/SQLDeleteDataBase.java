@@ -5,14 +5,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class SQLDeleteDataBase {
-    private static final String [] deleteStatements = {
+    private static final String [] DeleteStatements = {
             "DELETE FROM authdata;",
             "DELETE FROM gamedata;",
             "DELETE FROM userdata;"};
     public static boolean deleteAll() throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection();
         Statement statement = conn.createStatement();) {
-            for (String query : deleteStatements) {
+            for (String query : DeleteStatements) {
                 statement.executeUpdate(query);
             }
             return true;
