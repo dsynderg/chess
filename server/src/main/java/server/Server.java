@@ -1,6 +1,7 @@
 package server;
 
 import dataaccess.DataAccessException;
+import dataaccess.SQLTableControler;
 import services.AccountService;
 import services.DeleteService;
 import services.GameService;
@@ -20,11 +21,17 @@ import java.util.Objects;
 
 public class Server {
 
+
     private final Javalin server;
     AccountService accountService = new AccountService();
     GameService gameService = new GameService();
 
     public Server() {
+        try {
+            SQLTableControler.initialize();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
         server = Javalin.create(config -> config.staticFiles.add("web"));
         server.delete("db", this::deleteall);
         server.post("user", this::register);
@@ -54,7 +61,7 @@ public class Server {
         String username;
         try {
             username = accountService.getUsernameFromAuth(ctx.header("authorization"));
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
             ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;

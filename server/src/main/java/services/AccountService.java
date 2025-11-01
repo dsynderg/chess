@@ -105,7 +105,7 @@ public class AccountService {
         }
     }
 
-    public String getUsernameFromAuth(String authToken) throws SQLException, DataAccessException {
+    public String getUsernameFromAuth(String authToken) throws  DataAccessException {
         if(isMemoryimplemtation){
             return authdatabase.getUsername(authToken);
         }
