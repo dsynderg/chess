@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class SQLGameDatabase {
 
 
-    public static boolean addToDatabase(GameData addObject) throws SQLException, DataAccessException {
+    public static boolean addToDatabase(GameData addObject) throws DataAccessException {
         String query = "INSERT INTO gamedata " +
                 "(gameID, whiteUsername, blackUsername, gameName, game) " +
                 "VALUES (?, ?, ?, ?, ?)";

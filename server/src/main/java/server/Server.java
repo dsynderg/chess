@@ -46,9 +46,9 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e.toString()+"\" }\n");
             return;
         }
         String username;
@@ -56,7 +56,7 @@ public class Server {
             username = accountService.getUsernameFromAuth(ctx.header("authorization"));
         } catch (SQLException | DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
         //makes sure the body is good
@@ -88,9 +88,9 @@ public class Server {
                 ctx.result("{ \"message\": \"gameID was invalid\" }");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
         try {
@@ -101,7 +101,7 @@ public class Server {
             }
         } catch (SQLException | DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
         ctx.status(200);
@@ -115,7 +115,7 @@ public class Server {
             deleteSuccess = DeleteService.deleteAll();
         } catch (SQLException | DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
         if (!deleteSuccess) {
@@ -127,7 +127,7 @@ public class Server {
         ctx.result("{}");
     }
 
-    private boolean validateAuth(Context ctx) throws SQLException, DataAccessException {
+    private boolean validateAuth(Context ctx) throws DataAccessException {
         var authToken = ctx.header("authorization");
 
         return accountService.checkAuth(authToken);
@@ -147,16 +147,16 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch (DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
 
         GameData gameObject;
         try {
             gameObject = gameService.gameDataGenorator((String) req.get("gameName"));
-        } catch (SQLException | DataAccessException e) {
+        } catch (DataAccessException e) {
             ctx.status(500);
             ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
             return;
@@ -183,7 +183,7 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
             ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
             return;
@@ -192,9 +192,9 @@ public class Server {
         ArrayList<GameData> gameList;
         try {
             gameList = gameService.getGames();
-        } catch (SQLException | DataAccessException e) {
+        } catch (DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
         Map<String, Object> response = new HashMap<>();
@@ -213,16 +213,16 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }\n");
                 return;
             }
-        } catch (DataAccessException| SQLException e) {
+        } catch (DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a problem with the database\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
         try {
             accountService.removeAuth(authToken);
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: (description of error)\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
         try {
@@ -231,9 +231,9 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: (description of error)\" }\n");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: (description of error)\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
         // see if the auth token is valid
@@ -257,9 +257,9 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: bad request\" }");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
         try {
@@ -268,17 +268,17 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: wrongPassword\" }");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
         AuthData authData = null;
         try {
             authData = accountService.authDataGenorator(userData.username());
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
 
@@ -303,15 +303,15 @@ public class Server {
                 ctx.result("{\"message\": \"Error: already taken\"}");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
             return;
         }
         AuthData authToken = null;
         try {
             authToken = accountService.authDataGenorator(userData.username());
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
             ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
             return;

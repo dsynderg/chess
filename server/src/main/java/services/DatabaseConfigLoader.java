@@ -6,13 +6,14 @@ import dataaccess.SQLTableControler;
 public class DatabaseConfigLoader {
     private static boolean mI = false;
     public static boolean memoryimplementation() throws DataAccessException {
-        if(!mI){
+        if(!mI) {
             try {
                 SQLTableControler.initialize();
             } catch (DataAccessException e) {
-                throw new DataAccessException("database problem",e);
+                throw new DataAccessException("database problem", e);
             }
         }
+
 
         return mI;
 

@@ -27,7 +27,7 @@ public class AccountService {
     }
 
 
-    public boolean creatAccont(User userdata) throws SQLException, DataAccessException {
+    public boolean creatAccont(User userdata) throws DataAccessException {
         if (userdata.username() == null || userdata.email() == null || userdata.password() == null) {
             return false;
         }
@@ -43,7 +43,7 @@ public class AccountService {
     }
 
 
-    public boolean checkUsername(String username) throws SQLException, DataAccessException {
+    public boolean checkUsername(String username) throws DataAccessException {
         if(isMemoryimplemtation) {
             return userdatabase.inDatabase(username);
         }
@@ -53,7 +53,7 @@ public class AccountService {
 
     }
 
-    public AuthData authDataGenorator(String username) throws SQLException, DataAccessException {
+    public AuthData authDataGenorator(String username) throws DataAccessException {
         UUID uuid = UUID.randomUUID();
         String authToken = uuid.toString();
         AuthData authdata = new AuthData(authToken, username);
@@ -68,7 +68,7 @@ public class AccountService {
 
     }
 
-    public boolean checkPassword(String password, User userObject) throws SQLException, DataAccessException {
+    public boolean checkPassword(String password, User userObject) throws DataAccessException {
 
         if(isMemoryimplemtation) {
             return userdatabase.passwordUsernameMatch(password, userObject.username());
@@ -78,7 +78,7 @@ public class AccountService {
         }
     }
 
-    public boolean checkAuth(String auth) throws SQLException, DataAccessException {
+    public boolean checkAuth(String auth) throws DataAccessException {
         if(isMemoryimplemtation) {
             return authdatabase.inDatabase(auth);
         }
@@ -88,7 +88,7 @@ public class AccountService {
 
     }
 
-    public boolean removeAuth(String auth) throws SQLException, DataAccessException {
+    public boolean removeAuth(String auth) throws  DataAccessException {
         if(isMemoryimplemtation) {
             ArrayList<AuthData> database = authdatabase.getDatabase();
             for (AuthData data : database) {

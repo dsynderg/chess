@@ -23,7 +23,7 @@ public class GameService {
         }
     }
 
-    public boolean checkGameID(int gameID) throws SQLException, DataAccessException {
+    public boolean checkGameID(int gameID) throws DataAccessException {
         if(isMemoryImplemntation) {
             return (gameDatabase.inDatabaseID(gameID) != null);
         }
@@ -34,7 +34,7 @@ public class GameService {
     }
 
 
-    public GameData gameDataGenorator(String gameName) throws SQLException, DataAccessException {
+    public GameData gameDataGenorator(String gameName) throws DataAccessException {
         if(gameName == ""){
             return null;
         }
@@ -56,7 +56,7 @@ public class GameService {
         return null;
     }
 
-    public ArrayList<GameData> getGames() throws SQLException, DataAccessException {
+    public ArrayList<GameData> getGames() throws DataAccessException {
         if(isMemoryImplemntation){
         return gameDatabase.getDatabase();
     }
