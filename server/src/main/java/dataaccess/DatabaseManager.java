@@ -74,17 +74,20 @@ public class DatabaseManager {
         var port = Integer.parseInt(props.getProperty("db.port"));
         connectionUrl = String.format("jdbc:mysql://%s:%d", host, port);
     }
-    static boolean inDatabaseHelper(String gameName, String checkSql) throws DataAccessException, SQLException {
-        Connection conn = DatabaseManager.getConnection();
-        var statement = conn.prepareStatement(checkSql);
-        statement.setString(1,gameName);
-        var rs = statement.executeQuery();
-        if(rs.next()){
-            return true;
+    static boolean inDatabaseHelper(String gameName, String checkSql) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection();
+        var statement = conn.prepareStatement(checkSql);) {
+            statement.setString(1, gameName);
+            var rs = statement.executeQuery();
+            if (rs.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("There was a Database problem",e);
         }
-        else{
-            return false;
-        }
+
 
     }
 }

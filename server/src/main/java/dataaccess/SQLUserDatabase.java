@@ -67,14 +67,20 @@ public class SQLUserDatabase {
         return true;
 
     }
-    public static boolean deleteall() throws DataAccessException, SQLException {
+    public static boolean deleteall() throws DataAccessException {
         String query =  "DELETE FROM userdata;";
-        Connection conn = DatabaseManager.getConnection();
-        Statement statement = conn.createStatement();
 
-        statement.executeUpdate(query);
+        try(Connection conn = DatabaseManager.getConnection();
+        Statement statement = conn.createStatement()) {
+            statement.executeUpdate(query);
 
-        return true;
+            return true;
+
+        } catch (DataAccessException | SQLException e) {
+            throw new DataAccessException("there was a data access issue",e);
+        }
+
+
 
 }
 
