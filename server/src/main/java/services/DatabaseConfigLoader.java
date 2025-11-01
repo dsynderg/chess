@@ -4,7 +4,7 @@ import dataaccess.SQLTableControler;
 
 //allows you to ch
 public class DatabaseConfigLoader {
-    private static boolean mI = true;
+    private static boolean mI = false;
     public static boolean memoryimplementation() throws DataAccessException {
         if(!mI){
             try {
