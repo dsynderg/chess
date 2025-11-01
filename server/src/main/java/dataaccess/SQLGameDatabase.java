@@ -64,7 +64,7 @@ public class SQLGameDatabase {
 
 
     public static boolean deleteAll() throws DataAccessException {
-        String query =  "DELETE FROM DameData;";
+        String query =  "DELETE FROM gamedata;";
         try (Connection conn = DatabaseManager.getConnection();
         Statement statement = conn.createStatement()) {
             statement.executeUpdate(query);
@@ -78,7 +78,7 @@ public class SQLGameDatabase {
 
     public static ArrayList<GameData> listDatabase() throws DataAccessException {
         try(Connection conn = DatabaseManager.getConnection();
-        var statement = conn.prepareStatement("select * from GameData;");
+        var statement = conn.prepareStatement("select * from gamedata;");
         var response = statement.executeQuery();) {
             Gson gson = new Gson();
             ArrayList<GameData> returnList = new ArrayList<>();
@@ -101,13 +101,13 @@ public class SQLGameDatabase {
         }
     }
     public static boolean inDatabase(String gameName) throws DataAccessException {
-        String checkSql = "SELECT 1 FROM GameData WHERE gameName = ?";
+        String checkSql = "SELECT 1 FROM gamedata WHERE gameName = ?";
 
         return DatabaseManager.inDatabaseHelper(gameName, checkSql);
 
     }
     public static GameData inDatabaseID(int gameID) throws DataAccessException {
-        String checkSql = "SELECT * FROM GameData WHERE gameID = ?";
+        String checkSql = "SELECT * FROM gamedata WHERE gameID = ?";
         Gson gson = new Gson();
         try(Connection conn = DatabaseManager.getConnection();
         var statement = conn.prepareStatement(checkSql);) {
