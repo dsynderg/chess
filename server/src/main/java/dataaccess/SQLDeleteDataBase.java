@@ -6,9 +6,9 @@ import java.sql.Statement;
 
 public class SQLDeleteDataBase {
     private static final String [] deleteStatements = {
-            "DELETE FROM authdata;",
-            "DELETE FROM gamedata;",
-            "DELETE FROM userdata;"};
+            "DELETE FROM AuthData;",
+            "DELETE FROM GameData;",
+            "DELETE FROM UserData;"};
     public static boolean deleteAll() throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection();
         Statement statement = conn.createStatement();) {
