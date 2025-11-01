@@ -127,7 +127,7 @@ public class Server {
         ctx.result("{}");
     }
 
-    private boolean validateAuth(Context ctx) throws SQLException, DataAccessException {
+    private boolean validateAuth(Context ctx) throws DataAccessException {
         var authToken = ctx.header("authorization");
 
         return accountService.checkAuth(authToken);
@@ -147,7 +147,7 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
             ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
             return;

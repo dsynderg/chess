@@ -66,7 +66,7 @@ public class AccountService {
 
     }
 
-    public boolean checkAuth(String auth) throws SQLException, DataAccessException {
+    public boolean checkAuth(String auth) throws DataAccessException {
 
             return authdatabase.inDatabase(auth) || SQLAuthDatabase.inDatabase(auth);
 
