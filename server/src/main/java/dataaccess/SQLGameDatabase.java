@@ -16,7 +16,7 @@ public class SQLGameDatabase {
 
 
     public static boolean addToDatabase(GameData addObject) throws DataAccessException {
-        String query = "INSERT INTO gamedata " +
+        String query = "INSERT INTO GameData " +
                 "(gameID, whiteUsername, blackUsername, gameName, game) " +
                 "VALUES (?, ?, ?, ?, ?)";
         if(inDatabase(addObject.gameName())){
@@ -44,7 +44,7 @@ public class SQLGameDatabase {
 
 
     public static boolean removeFromDatabase(GameData removeObject) throws DataAccessException {
-        String deleteStatement = "DELETE FROM gamedata WHERE gameID = ?;";
+        String deleteStatement = "DELETE FROM GameData WHERE gameID = ?;";
         if(!inDatabase(removeObject.gameName())){
             return false;
         }
@@ -64,7 +64,7 @@ public class SQLGameDatabase {
 
 
     public static boolean deleteAll() throws DataAccessException {
-        String query =  "DELETE FROM gamedata;";
+        String query =  "DELETE FROM DameData;";
         try (Connection conn = DatabaseManager.getConnection();
         Statement statement = conn.createStatement()) {
             statement.executeUpdate(query);
@@ -78,7 +78,7 @@ public class SQLGameDatabase {
 
     public static ArrayList<GameData> listDatabase() throws DataAccessException {
         try(Connection conn = DatabaseManager.getConnection();
-        var statement = conn.prepareStatement("select * from gamedata;");
+        var statement = conn.prepareStatement("select * from GameData;");
         var response = statement.executeQuery();) {
             Gson gson = new Gson();
             ArrayList<GameData> returnList = new ArrayList<>();
@@ -101,13 +101,13 @@ public class SQLGameDatabase {
         }
     }
     public static boolean inDatabase(String gameName) throws DataAccessException {
-        String checkSql = "SELECT 1 FROM gamedata WHERE gameName = ?";
+        String checkSql = "SELECT 1 FROM GameData WHERE gameName = ?";
 
         return DatabaseManager.inDatabaseHelper(gameName, checkSql);
 
     }
     public static GameData inDatabaseID(int gameID) throws DataAccessException {
-        String checkSql = "SELECT * FROM gamedata WHERE gameID = ?";
+        String checkSql = "SELECT * FROM GameData WHERE gameID = ?";
         Gson gson = new Gson();
         try(Connection conn = DatabaseManager.getConnection();
         var statement = conn.prepareStatement(checkSql);) {
