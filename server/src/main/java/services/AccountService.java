@@ -33,24 +33,17 @@ public class AccountService {
         }
         String hashedPassword = BCrypt.hashpw(userdata.password(), BCrypt.gensalt());
         User userdataWPassword = new User(userdata.username(), hashedPassword, userdata.email());
-        if (isMemoryimplemtation) {
 
-            return userdatabase.addToDatabase(userdataWPassword);
-        }
-        else{
-            return SQLUserDatabase.addToDatabase(userdataWPassword);
-        }
+        SQLUserDatabase.addToDatabase(userdataWPassword);
+        return userdatabase.addToDatabase(userdataWPassword);
+
+
     }
 
 
     public boolean checkUsername(String username) throws SQLException, DataAccessException {
-        if(isMemoryimplemtation) {
-            return userdatabase.inDatabase(username);
-        }
-        else{
-            return SQLUserDatabase.inDatabase(username);
-        }
 
+            return userdatabase.inDatabase(username) || SQLUserDatabase.inDatabase(username);
     }
 
     public AuthData authDataGenorator(String username) throws SQLException, DataAccessException {
@@ -58,60 +51,52 @@ public class AccountService {
         String authToken = uuid.toString();
         AuthData authdata = new AuthData(authToken, username);
         if(isMemoryimplemtation) {
-
+            SQLAuthDatabase.addToDatabase(authdata);
             authdatabase.addToDatabase(authdata);
         }
-        else{
-            SQLAuthDatabase.addToDatabase(authdata);
-        }
+
         return authdata;
 
     }
 
     public boolean checkPassword(String password, User userObject) throws SQLException, DataAccessException {
 
-        if(isMemoryimplemtation) {
-            return userdatabase.passwordUsernameMatch(password, userObject.username());
-        }
-        else{
-            return SQLUserDatabase.passwordUsernameMatch(password,userObject.username());
-        }
+            return userdatabase.passwordUsernameMatch(password, userObject.username()) ||SQLUserDatabase.passwordUsernameMatch(password,userObject.username());
+
+
     }
 
     public boolean checkAuth(String auth) throws SQLException, DataAccessException {
-        if(isMemoryimplemtation) {
-            return authdatabase.inDatabase(auth);
-        }
-        else{
-            return SQLAuthDatabase.inDatabase(auth);
-        }
+
+            return authdatabase.inDatabase(auth) || SQLAuthDatabase.inDatabase(auth);
+
+
 
     }
 
     public boolean removeAuth(String auth) throws SQLException, DataAccessException {
-        if(isMemoryimplemtation) {
+
             ArrayList<AuthData> database = authdatabase.getDatabase();
             for (AuthData data : database) {
                 if (Objects.equals(data.authToken(), auth)) {
-                    return authdatabase.removeFromDatabase(data);
+                    authdatabase.removeFromDatabase(data);
 
                 }
             }
-            return false;
-        }
-        else{
             var authData = new AuthData(auth,SQLAuthDatabase.getUsername(auth));
             return SQLAuthDatabase.removeFromDatabase(authData);
-        }
+
     }
 
     public String getUsernameFromAuth(String authToken) throws SQLException, DataAccessException {
-        if(isMemoryimplemtation){
-            return authdatabase.getUsername(authToken);
-        }
-        else{
+
+            String username = authdatabase.getUsername(authToken);
+            if (username != null){
+                return username;
+            }
             return SQLAuthDatabase.getUsername(authToken);
-        }
+
+
     }
 
 

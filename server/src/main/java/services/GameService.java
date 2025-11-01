@@ -24,12 +24,9 @@ public class GameService {
     }
 
     public boolean checkGameID(int gameID) throws SQLException, DataAccessException {
-        if(isMemoryImplemntation) {
-            return (gameDatabase.inDatabaseID(gameID) != null);
-        }
-        else{
-            return (SQLGameDatabase.inDatabaseID(gameID)!= null);
-        }
+
+            return (gameDatabase.inDatabaseID(gameID) != null)||(SQLGameDatabase.inDatabaseID(gameID)!= null);
+
 
     }
 
@@ -43,84 +40,67 @@ public class GameService {
         GameData gameData = new GameData(gameid, null, null, gameName, new ChessGame());
         if(isMemoryImplemntation) {
 
-            if (gameDatabase.addToDatabase(gameData)) {
+            if (gameDatabase.addToDatabase(gameData)&&SQLGameDatabase.addToDatabase(gameData)) {
                 return gameData;
             }
 
         }
-        else{
-            if(SQLGameDatabase.addToDatabase(gameData)){
-                return gameData;
-            }
-        }
+
         return null;
     }
 
     public ArrayList<GameData> getGames() throws SQLException, DataAccessException {
-        if(isMemoryImplemntation){
-        return gameDatabase.getDatabase();
-    }
-        else {
-            return SQLGameDatabase.listDatabase();
-        }
+
+        return SQLGameDatabase.listDatabase();//gameDatabase.getDatabase();
+
 
     }
 
     public boolean assignColor(String username, ChessGame.TeamColor joinColor, int gameID) throws SQLException, DataAccessException {
         GameData data;
-        if(isMemoryImplemntation){
-                data = gameDatabase.inDatabaseID(gameID);
+
+        data = SQLGameDatabase.inDatabaseID(gameID);
+
+
+        if (joinColor == ChessGame.TeamColor.WHITE) {
+            if (data.whiteUsername() == null) {
+                GameData updatedData = new GameData(
+                        data.gameID(),
+                        username,               // new whiteUsername
+                        data.blackUsername(),
+                        data.gameName(),
+                        data.game()
+                );
+
+                gameDatabase.removeFromDatabase(data);
+                gameDatabase.addToDatabase(updatedData);
+                SQLGameDatabase.removeFromDatabase(data);
+                SQLGameDatabase.addToDatabase(updatedData);
+
+                return true;
+
             }
-            else{
-                data = SQLGameDatabase.inDatabaseID(gameID);
+        }
+        if (joinColor == ChessGame.TeamColor.BLACK) {
+            if (data.blackUsername() == null) {
+                GameData updatedData = new GameData(
+                        data.gameID(),
+                        data.whiteUsername(),               // new whiteUsername
+                        username,
+                        data.gameName(),
+                        data.game()
+                );
+
+                gameDatabase.removeFromDatabase(data);
+                gameDatabase.addToDatabase(updatedData);
+                SQLGameDatabase.removeFromDatabase(data);
+                SQLGameDatabase.addToDatabase(updatedData);
+
+                return true;
+
             }
-            assert data != null;
-
-
-            if (joinColor == ChessGame.TeamColor.WHITE) {
-                if (data.whiteUsername() == null) {
-                    GameData updatedData = new GameData(
-                            data.gameID(),
-                            username,               // new whiteUsername
-                            data.blackUsername(),
-                            data.gameName(),
-                            data.game()
-                    );
-                    if(isMemoryImplemntation) {
-                        gameDatabase.removeFromDatabase(data);
-                        gameDatabase.addToDatabase(updatedData);
-                    }
-                    else {
-                        SQLGameDatabase.removeFromDatabase(data);
-                        SQLGameDatabase.addToDatabase(updatedData);
-                    }
-                    return true;
-                }
-            }
-            if (joinColor == ChessGame.TeamColor.BLACK) {
-                if (data.blackUsername() == null) {
-                    GameData updatedData = new GameData(
-                            data.gameID(),
-                            data.whiteUsername(),               // new whiteUsername
-                            username,
-                            data.gameName(),
-                            data.game()
-                    );
-                    if(isMemoryImplemntation) {
-                        gameDatabase.removeFromDatabase(data);
-                        gameDatabase.addToDatabase(updatedData);
-                    }
-                    else{
-                        SQLGameDatabase.removeFromDatabase(data);
-                        SQLGameDatabase.addToDatabase(updatedData);
-                    }
-                    return true;
-
-                }
-            }
-            return false;
-
-
+        }
+        return false;
     }
-}
+    }
 
