@@ -23,12 +23,10 @@ public class DeleteService {
     }
 
     public static boolean deleteAll() throws SQLException, DataAccessException {
-        if(isMemoryImplemntation) {
-            return userdatabase.deleteall() && authdatabase.deleteall() && gamedatabase.deleteall();
-        }
-        else{
-            return SQLUserDatabase.deleteall() && SQLGameDatabase.deleteAll()&&SQLAuthDatabase.deleteall();
-        }
+
+            return userdatabase.deleteall() && authdatabase.deleteall() && gamedatabase.deleteall()&&SQLUserDatabase.deleteall()
+                    && SQLGameDatabase.deleteAll()&&SQLAuthDatabase.deleteall();
+
 
 
     }

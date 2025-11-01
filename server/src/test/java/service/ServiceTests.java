@@ -69,7 +69,7 @@ public class ServiceTests {
     }
     @Test
     void loginTest() throws SQLException, DataAccessException {
-
+        DeleteService.deleteAll();
         User dummyUser = new User("asdf", "a;sdfl", "sldjflsdj");
         assert !aS.checkUsername(dummyUser.username());
         assert aS.creatAccont(dummyUser);
