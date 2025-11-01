@@ -12,7 +12,15 @@ public class DeleteService {
     static MemUserDatabase userdatabase = MemDatabaseRegistry.getUserDb();
     static MemAuthDatabase authdatabase = MemDatabaseRegistry.getAuthDb();
     static MemGameDatabase gamedatabase = MemDatabaseRegistry.getGameDb();
-    private static boolean isMemoryImplemntation = DatabaseConfigLoader.memoryimplementation();
+    private static boolean isMemoryImplemntation;
+
+    static {
+        try {
+            isMemoryImplemntation = DatabaseConfigLoader.memoryimplementation();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static boolean deleteAll() throws SQLException, DataAccessException {
         if(isMemoryImplemntation) {

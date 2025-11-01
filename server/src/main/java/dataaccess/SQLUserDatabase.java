@@ -13,7 +13,7 @@ import java.sql.Statement;
 import java.util.Objects;
 
 public class SQLUserDatabase {
-    public static boolean inDatabase(String username) throws SQLException, DataAccessException {
+    public static boolean inDatabase(String username) throws DataAccessException {
         String checkSql = "SELECT 1 FROM userdata WHERE username = ?";
 
         return DatabaseManager.inDatabaseHelper(username, checkSql);
@@ -21,50 +21,59 @@ public class SQLUserDatabase {
 
 
 
-    public static boolean passwordUsernameMatch(String password, String username) throws DataAccessException, SQLException {
+    public static boolean passwordUsernameMatch(String password, String username) throws DataAccessException {
         String sql ="SELECT * FROM userdata WHERE username = ?";
-        Connection conn = DatabaseManager.getConnection();
-        var statement = conn.prepareStatement(sql);
-        statement.setString(1,String.valueOf(username));
-        var response = statement.executeQuery();
-        while(response.next()){
-            return BCrypt.checkpw(password, response.getString("password"));
+        try (Connection conn = DatabaseManager.getConnection();
+        var statement = conn.prepareStatement(sql);) {
+            statement.setString(1, String.valueOf(username));
+            var response = statement.executeQuery();
+            while (response.next()) {
+                return BCrypt.checkpw(password, response.getString("password"));
+            }
+            return true;
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("Database problems",e);
         }
-        return true;
 
     }
 
-    public static boolean removeFromDatabase(User removeObject) throws DataAccessException, SQLException {
+    public static boolean removeFromDatabase(User removeObject) throws DataAccessException {
         String deleteStatement = "DELETE FROM userdata WHERE username = ?;";
         if(!inDatabase(removeObject.username())){
             return false;
         }
-        Connection conn = DatabaseManager.getConnection();
-        var statement = conn.prepareStatement(deleteStatement);
-        statement.setString(1,String.valueOf(removeObject.username()));
-        statement.executeUpdate();
-        return true;
+        try (Connection conn = DatabaseManager.getConnection();
+        var statement = conn.prepareStatement(deleteStatement);) {
+            statement.setString(1, String.valueOf(removeObject.username()));
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("",e);
+        }
 
     }
 
 
 
-    public static boolean addToDatabase(User addObject) throws SQLException, DataAccessException {
+    public static boolean addToDatabase(User addObject) throws DataAccessException {
         String query = "INSERT INTO userdata " +
                 "(username, password, email) " +
                 "VALUES (?, ?, ?)";
         if(inDatabase(addObject.username())){
             return false;
         }
-        Connection conn = DatabaseManager.getConnection();
-        PreparedStatement statement = conn.prepareStatement(query);
-        statement.setString(1, String.valueOf(addObject.username()));
-        statement.setString(2, addObject.password());
-        statement.setString(3, addObject.email());
+        try(Connection conn = DatabaseManager.getConnection();
+        PreparedStatement statement = conn.prepareStatement(query);) {
+            statement.setString(1, String.valueOf(addObject.username()));
+            statement.setString(2, addObject.password());
+            statement.setString(3, addObject.email());
 
 
-        statement.executeUpdate();
-        return true;
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("Database problem",e);
+        }
 
     }
     public static boolean deleteall() throws DataAccessException {

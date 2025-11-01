@@ -16,8 +16,15 @@ import java.util.UUID;
 public class AccountService {
     MemUserDatabase userdatabase = MemDatabaseRegistry.getUserDb();
     MemAuthDatabase authdatabase = MemDatabaseRegistry.getAuthDb();
-    boolean isMemoryimplemtation = DatabaseConfigLoader.memoryimplementation();
+    boolean isMemoryimplemtation;
 
+    {
+        try {
+            isMemoryimplemtation = DatabaseConfigLoader.memoryimplementation();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     public boolean creatAccont(User userdata) throws SQLException, DataAccessException {

@@ -18,7 +18,15 @@ import java.util.ArrayList;
 public class ServiceTests {
     AccountService aS = new AccountService();
     GameService gS = new GameService();
-    boolean isMemory = DatabaseConfigLoader.memoryimplementation();
+    boolean isMemory;
+
+    {
+        try {
+            isMemory = DatabaseConfigLoader.memoryimplementation();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Test
     @DisplayName("clear database")

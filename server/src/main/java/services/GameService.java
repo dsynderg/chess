@@ -13,7 +13,15 @@ import java.util.ArrayList;
 public class GameService {
     MemGameDatabase gameDatabase = MemDatabaseRegistry.getGameDb();
     private int gameID = 0;
-    private boolean isMemoryImplemntation = DatabaseConfigLoader.memoryimplementation();
+    private boolean isMemoryImplemntation;
+
+    {
+        try {
+            isMemoryImplemntation = DatabaseConfigLoader.memoryimplementation();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public boolean checkGameID(int gameID) throws SQLException, DataAccessException {
         if(isMemoryImplemntation) {
