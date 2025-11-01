@@ -49,7 +49,7 @@ public class GameService {
         return null;
     }
 
-    public ArrayList<GameData> getGames() throws SQLException, DataAccessException {
+    public ArrayList<GameData> getGames() throws DataAccessException {
 
         return SQLGameDatabase.listDatabase();//gameDatabase.getDatabase();
 

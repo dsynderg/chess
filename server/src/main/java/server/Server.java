@@ -46,7 +46,7 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch ( DataAccessException e) {
             ctx.status(500);
             ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
             return;
@@ -183,7 +183,7 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch (DataAccessException e) {
             ctx.status(500);
             ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
             return;
@@ -192,7 +192,7 @@ public class Server {
         ArrayList<GameData> gameList;
         try {
             gameList = gameService.getGames();
-        } catch (SQLException | DataAccessException e) {
+        } catch (DataAccessException e) {
             ctx.status(500);
             ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
             return;
@@ -213,7 +213,7 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }\n");
                 return;
             }
-        } catch (DataAccessException| SQLException e) {
+        } catch (DataAccessException e) {
             ctx.status(500);
             ctx.result("{ \"message\": \"Error: There was a problem with the database\" }\n");
             return;
@@ -231,7 +231,7 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: (description of error)\" }\n");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+        } catch (DataAccessException e) {
             ctx.status(500);
             ctx.result("{ \"message\": \"Error: (description of error)\" }\n");
             return;
