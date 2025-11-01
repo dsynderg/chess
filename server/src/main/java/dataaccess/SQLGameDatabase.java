@@ -16,7 +16,7 @@ public class SQLGameDatabase {
 
 
     public static boolean addToDatabase(GameData addObject) throws DataAccessException {
-        String query = "INSERT INTO GameData " +
+        String query = "INSERT INTO gamedata " +
                 "(gameID, whiteUsername, blackUsername, gameName, game) " +
                 "VALUES (?, ?, ?, ?, ?)";
         if(inDatabase(addObject.gameName())){
@@ -44,7 +44,7 @@ public class SQLGameDatabase {
 
 
     public static boolean removeFromDatabase(GameData removeObject) throws DataAccessException {
-        String deleteStatement = "DELETE FROM GameData WHERE gameID = ?;";
+        String deleteStatement = "DELETE FROM gamedata WHERE gameID = ?;";
         if(!inDatabase(removeObject.gameName())){
             return false;
         }
