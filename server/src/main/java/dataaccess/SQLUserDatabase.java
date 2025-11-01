@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class SQLUserDatabase {
     public static boolean inDatabase(String username) throws DataAccessException {
-        String checkSql = "SELECT 1 FROM UserData WHERE username = ?";
+        String checkSql = "SELECT 1 FROM userdata WHERE username = ?";
 
         return DatabaseManager.inDatabaseHelper(username, checkSql);
         }
@@ -22,7 +22,7 @@ public class SQLUserDatabase {
 
 
     public static boolean passwordUsernameMatch(String password, String username) throws DataAccessException {
-        String sql ="SELECT * FROM UserData WHERE username = ?";
+        String sql ="SELECT * FROM userdata WHERE username = ?";
         try (Connection conn = DatabaseManager.getConnection();
         var statement = conn.prepareStatement(sql);) {
             statement.setString(1, String.valueOf(username));
@@ -38,7 +38,7 @@ public class SQLUserDatabase {
     }
 
     public static boolean removeFromDatabase(User removeObject) throws DataAccessException {
-        String deleteStatement = "DELETE FROM UserData WHERE username = ?;";
+        String deleteStatement = "DELETE FROM userdata WHERE username = ?;";
         if(!inDatabase(removeObject.username())){
             return false;
         }
@@ -56,7 +56,7 @@ public class SQLUserDatabase {
 
 
     public static boolean addToDatabase(User addObject) throws DataAccessException {
-        String query = "INSERT INTO UserData " +
+        String query = "INSERT INTO userdata " +
                 "(username, password, email) " +
                 "VALUES (?, ?, ?)";
         if(inDatabase(addObject.username())){
@@ -77,7 +77,7 @@ public class SQLUserDatabase {
 
     }
     public static boolean deleteall() throws DataAccessException {
-        String query =  "DELETE FROM UserData;";
+        String query =  "DELETE FROM userdata;";
 
         try(Connection conn = DatabaseManager.getConnection();
         Statement statement = conn.createStatement()) {
