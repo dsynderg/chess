@@ -7,33 +7,16 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SQLTableControler {
-    public static void initialize() {
-        try {
-            DatabaseManager.createDatabase();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
-        Connection conn = null;
-        try {
-            conn = DatabaseManager.getConnection();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public static void initialize() throws DataAccessException {
+        DatabaseManager.createDatabase();
+
         for(String statement: createStatementList){
-
-
-            PreparedStatement prepStatement = null;
-            try {
-                prepStatement = conn.prepareStatement(statement);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                prepStatement.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement prepStatement = conn.prepareStatement(statement);){
+             prepStatement.executeUpdate();
+        } catch (DataAccessException | SQLException e) {
+            throw new DataAccessException("database issue",e);
+        }
         }
 
 

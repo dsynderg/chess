@@ -48,78 +48,83 @@ public class SQLGameDatabase {
         if(!inDatabase(removeObject.gameName())){
             return false;
         }
-        try(Connection conn = DatabaseManager.getConnection()){
-            var statement = conn.prepareStatement(deleteStatement);
+        try(Connection conn = DatabaseManager.getConnection();
+            var statement = conn.prepareStatement(deleteStatement);){
+
             statement.setString(1,String.valueOf(removeObject.gameID()));
             statement.executeUpdate();
             return true;
 
         }
         catch(SQLException|DataAccessException e){
-            throw new RuntimeException("There was a database connection issue",e);
+            throw new DataAccessException("There was a database connection issue",e);
         }
 
     }
 
 
-    public static boolean deleteAll() {
+    public static boolean deleteAll() throws DataAccessException {
         String query =  "DELETE FROM gamedata;";
-        try (Connection conn = DatabaseManager.getConnection()) {
-            Statement statement = conn.createStatement();
-
+        try (Connection conn = DatabaseManager.getConnection();
+        Statement statement = conn.createStatement()) {
             statement.executeUpdate(query);
 
             return true;
-        } catch (SQLException| DataAccessException e) {
-            throw new RuntimeException("Failed to get a connection", e);
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("Database problem",e);
         }
-    }
+        }
 
-    public static ArrayList<GameData> listDatabase() throws DataAccessException, SQLException {
-        Connection conn = DatabaseManager.getConnection();
+
+    public static ArrayList<GameData> listDatabase() throws DataAccessException {
+        try(Connection conn = DatabaseManager.getConnection();
         var statement = conn.prepareStatement("select * from gamedata;");
-        var response = statement.executeQuery();
-        Gson gson = new Gson();
-        ArrayList<GameData> returnList = new ArrayList<>();
-        while(response.next()){
-            int gameID= response.getInt("gameID");
-            String whiteUsername = response.getString("whiteUsername");
-            String blackUsername = response.getString("blackUsername");
-            String gameName = response.getString("gameName");
-            ChessGame game = gson.fromJson(response.getString("game"), ChessGame.class);
-            returnList.add(new GameData(gameID,whiteUsername,blackUsername,gameName,game));
+        var response = statement.executeQuery();) {
+            Gson gson = new Gson();
+            ArrayList<GameData> returnList = new ArrayList<>();
+            while (response.next()) {
+                int gameID = response.getInt("gameID");
+                String whiteUsername = response.getString("whiteUsername");
+                String blackUsername = response.getString("blackUsername");
+                String gameName = response.getString("gameName");
+                ChessGame game = gson.fromJson(response.getString("game"), ChessGame.class);
+                returnList.add(new GameData(gameID, whiteUsername, blackUsername, gameName, game));
 //                System.out.println("gameID: " + String.valueOf(gameID)+
 //                                    ", White: "+ whiteUsername+
 //                                    ", Black: "+ blackUsername+
 //                                    ", Name: "+ gameName +
 //                                    ", Game: "+game);
+            }
+            return returnList;
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("Database problem",e);
         }
-        return returnList;
-
     }
-    public static boolean inDatabase(String gameName) throws SQLException, DataAccessException {
+    public static boolean inDatabase(String gameName) throws DataAccessException {
         String checkSql = "SELECT 1 FROM gamedata WHERE gameName = ?";
 
         return DatabaseManager.inDatabaseHelper(gameName, checkSql);
 
     }
-    public static GameData inDatabaseID(int gameID) throws DataAccessException, SQLException {
+    public static GameData inDatabaseID(int gameID) throws DataAccessException {
         String checkSql = "SELECT * FROM gamedata WHERE gameID = ?";
         Gson gson = new Gson();
-        Connection conn = DatabaseManager.getConnection();
-        var statement = conn.prepareStatement(checkSql);
-        statement.setInt(1,gameID);
-        var rs = statement.executeQuery();
-        if(rs.next()){
-            int ID = rs.getInt("gameID");
-            String whiteUsername = rs.getString("whiteUsername");
-            String blackUsername = rs.getString("blackUsername");
-            String gameName = rs.getString("gameName");
-            ChessGame game = gson.fromJson(rs.getString("game"), ChessGame.class);
-            return new GameData(ID,whiteUsername,blackUsername,gameName,game);
-        }
-        else{
-            return null;
+        try(Connection conn = DatabaseManager.getConnection();
+        var statement = conn.prepareStatement(checkSql);) {
+            statement.setInt(1, gameID);
+            var rs = statement.executeQuery();
+            if (rs.next()) {
+                int ID = rs.getInt("gameID");
+                String whiteUsername = rs.getString("whiteUsername");
+                String blackUsername = rs.getString("blackUsername");
+                String gameName = rs.getString("gameName");
+                ChessGame game = gson.fromJson(rs.getString("game"), ChessGame.class);
+                return new GameData(ID, whiteUsername, blackUsername, gameName, game);
+            } else {
+                return null;
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("Database problem",e);
         }
 
     }

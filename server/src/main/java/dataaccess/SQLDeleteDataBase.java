@@ -9,13 +9,16 @@ public class SQLDeleteDataBase {
             "DELETE FROM authdata;",
             "DELETE FROM gamedata;",
             "DELETE FROM userdata;"};
-    public static boolean deleteAll() throws DataAccessException, SQLException {
-        Connection conn = DatabaseManager.getConnection();
-        Statement statement = conn.createStatement();
-        for(String query: deleteStatements){
-            statement.executeUpdate(query);
+    public static boolean deleteAll() throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection();
+        Statement statement = conn.createStatement();) {
+            for (String query : deleteStatements) {
+                statement.executeUpdate(query);
+            }
+            return true;
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("problem with database",e);
         }
-        return true;
 
     }
 

@@ -1,12 +1,17 @@
 package services;
+import dataaccess.DataAccessException;
 import dataaccess.SQLTableControler;
 
 //allows you to ch
 public class DatabaseConfigLoader {
     private static boolean mI = false;
-    public static boolean memoryimplementation()  {
+    public static boolean memoryimplementation() throws DataAccessException {
         if(!mI){
-            SQLTableControler.initialize();
+            try {
+                SQLTableControler.initialize();
+            } catch (DataAccessException e) {
+                throw new DataAccessException("database problem",e);
+            }
         }
 
         return mI;
