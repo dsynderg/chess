@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class SQLAuthDatabase  {
     public static String getUsername(String authToken) throws DataAccessException {
-        String checkSql = "SELECT username FROM AuthData WHERE authToken = ?";
+        String checkSql = "SELECT username FROM AuthData WHERE authtoken = ?";
         try (Connection conn = DatabaseManager.getConnection();
         var statement = conn.prepareStatement(checkSql);) {
             statement.setString(1, authToken);
@@ -28,7 +28,7 @@ public class SQLAuthDatabase  {
 
 
     public static boolean addToDatabase(AuthData addObject) throws DataAccessException {
-        String query = "INSERT INTO AuthData (authToken, username) VALUES (?, ?)";
+        String query = "INSERT INTO authdata (authToken, username) VALUES (?, ?)";
         if(inDatabase(addObject.authToken())){
             return false;
         }

@@ -66,7 +66,7 @@ public class GameService {
 
     }
 
-    public boolean assignColor(String username, ChessGame.TeamColor joinColor, int gameID) throws SQLException, DataAccessException {
+    public boolean assignColor(String username, ChessGame.TeamColor joinColor, int gameID) throws  DataAccessException {
         GameData data;
         if(isMemoryImplemntation){
                 data = gameDatabase.inDatabaseID(gameID);

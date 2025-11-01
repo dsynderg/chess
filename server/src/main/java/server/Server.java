@@ -1,17 +1,17 @@
 package server;
 
-import dataaccess.DataAccessException;
-import dataaccess.SQLTableControler;
-import services.AccountService;
-import services.DeleteService;
-import services.GameService;
 import chess.ChessGame;
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
+import dataaccess.SQLTableControler;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import modules.AuthData;
 import modules.GameData;
 import modules.User;
+import services.AccountService;
+import services.DeleteService;
+import services.GameService;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -53,85 +53,62 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }");
                 return;
             }
-        } catch ( DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e.toString()+"\" }\n");
-            return;
-        }
-        String username;
-        try {
+            String username;
             username = accountService.getUsernameFromAuth(ctx.header("authorization"));
-        } catch ( DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
-            return;
-        }
-        //makes sure the body is good
-
-        var req = serializer.fromJson(ctx.body(), Map.class);
-        if (req.get("playerColor") == null || req.get("gameID") == null) {
-            ctx.status(400);
-            ctx.result("{ \"message\": \"Error: bad request\" }");
-            return;
-        }
-        //makes sure that the game id is valid
-
-        //checks joincolor
-        ChessGame.TeamColor joinColor;
-        String joinstring = req.get("playerColor").toString();
-        if (Objects.equals(joinstring, "WHITE")) {
-            joinColor = ChessGame.TeamColor.WHITE;
-        } else if (Objects.equals(joinstring, "BLACK")) {
-            joinColor = ChessGame.TeamColor.BLACK;
-        } else {
-            ctx.status(400);
-            ctx.result("{ \"message\": \"Error: playerColor was wrong\" }");
-            return;
-        }
-        int gameID = ((Double) req.get("gameID")).intValue();
-        try {
+            var req = serializer.fromJson(ctx.body(), Map.class);
+            if (req.get("playerColor") == null || req.get("gameID") == null) {
+                ctx.status(400);
+                ctx.result("{ \"message\": \"Error: bad request\" }");
+                return;
+            }
+            ChessGame.TeamColor joinColor;
+            String joinstring = req.get("playerColor").toString();
+            if (Objects.equals(joinstring, "WHITE")) {
+                joinColor = ChessGame.TeamColor.WHITE;
+            } else if (Objects.equals(joinstring, "BLACK")) {
+                joinColor = ChessGame.TeamColor.BLACK;
+            } else {
+                ctx.status(400);
+                ctx.result("{ \"message\": \"Error: playerColor was wrong\" }");
+                return;
+            }
+            int gameID = ((Double) req.get("gameID")).intValue();
             if (!gameService.checkGameID(gameID)) {
                 ctx.status(400);
                 ctx.result("{ \"message\": \"gameID was invalid\" }");
                 return;
             }
-        } catch ( DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
-            return;
-        }
-        try {
             if (!gameService.assignColor(username, joinColor, gameID)) {
                 ctx.status(403);
                 ctx.result("{ \"message\": \"Error: already taken\" }");
                 return;
             }
-        } catch (SQLException | DataAccessException e) {
+            ctx.status(200);
+            ctx.result("{}");
+        } catch (DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
+            ctx.result("{ \"message\": \"Error: " + e.toString() + "\" }\n");
             return;
         }
-        ctx.status(200);
-        ctx.result("{}");
     }
+    //makes sure that the game id is valid
+
+    //checks joincolor
+
 
     private void deleteall(Context ctx) {
         var serializer = new Gson();
         boolean deleteSuccess;
         try {
-            deleteSuccess = DeleteService.deleteAll();
+            DeleteService.deleteAll();
+
+            ctx.status(200);
+            ctx.result("{}");
         } catch (SQLException | DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
+            ctx.result("{ \"message\": \"Error: " + e + "\" }\n");
             return;
         }
-        if (!deleteSuccess) {
-            ctx.status(500);
-            ctx.result(serializer.toJson("{ \"message\": \"Error: There was a problem deleting the database\" }"));
-            return;
-        }
-        ctx.status(200);
-        ctx.result("{}");
     }
 
     private boolean validateAuth(Context ctx) throws DataAccessException {
@@ -154,31 +131,25 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }");
                 return;
             }
-        } catch (DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
-            return;
-        }
-
-        GameData gameObject;
-        try {
+            GameData gameObject;
             gameObject = gameService.gameDataGenorator((String) req.get("gameName"));
+
+            if (gameObject == null) {
+                ctx.status(400);
+                ctx.result("{ \"message\": \"That game name is already taken\" }");
+                return;
+            }
+            String json;
+            json = String.format("{ \"gameID\": \"%d\" }", gameObject.gameID());
+//        String json ="{ \"gameID\": 1234 }";
+            ctx.status(200);
+            ctx.contentType("application/json");
+            ctx.result(json);
         } catch (DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
+            ctx.result("{ \"message\": \"Error: " + e + "\" }\n");
             return;
         }
-        if (gameObject == null) {
-            ctx.status(400);
-            ctx.result("{ \"message\": \"That game name is already taken\" }");
-            return;
-        }
-        String json;
-        json = String.format("{ \"gameID\": \"%d\" }", gameObject.gameID());
-//        String json ="{ \"gameID\": 1234 }";
-        ctx.status(200);
-        ctx.contentType("application/json");
-        ctx.result(json);
 
     }
 
@@ -190,25 +161,21 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }");
                 return;
             }
-        } catch ( DataAccessException e) {
+
+            ArrayList<GameData> gameList;
+
+            gameList = gameService.getGames();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("games", gameList);
+            ctx.status(200);
+            System.out.println(serializer.toJson(response));
+            ctx.result(serializer.toJson(response));
+        } catch (DataAccessException e) {
             ctx.status(500);
             ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
             return;
         }
-//        ctx.result("[200] { \"games\": [{\"gameID\": 1234, \"whiteUsername\":\"\", \"blackUsername\":\"\", \"gameName:\"\"} ]}");
-        ArrayList<GameData> gameList;
-        try {
-            gameList = gameService.getGames();
-        } catch (DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
-            return;
-        }
-        Map<String, Object> response = new HashMap<>();
-        response.put("games", gameList);
-        ctx.status(200);
-        System.out.println(serializer.toJson(response));
-        ctx.result(serializer.toJson(response));
     }
 
     private void logout(Context ctx) {
@@ -220,114 +187,95 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: unauthorized\" }\n");
                 return;
             }
-        } catch (DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
-            return;
-        }
-        try {
             accountService.removeAuth(authToken);
-        } catch ( DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
-            return;
-        }
-        try {
+
+
             if (accountService.checkAuth(authToken)) {
                 ctx.status(500);
                 ctx.result("{ \"message\": \"Error: (description of error)\" }\n");
                 return;
             }
-        } catch ( DataAccessException e) {
+
+            // see if the auth token is valid
+            ctx.status(200);
+            ctx.result("{}");
+        } catch (DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
+            ctx.result("{ \"message\": \"Error: " + e + "\" }\n");
             return;
         }
-        // see if the auth token is valid
-        ctx.status(200);
-        ctx.result("{}");
     }
 
     private void login(Context ctx) {
-        var serializer = new Gson();
-        var req = serializer.fromJson(ctx.body(), Map.class);
-        // if either the username or password is null
-        if (req.get("username") == null || req.get("password") == null) {
-            ctx.status(400);
-            ctx.result("{ \"message\": \"Error: bad request\" }");
-            return;
-        }
-        User userData = new User(req.get("username").toString(), req.get("password").toString(), "");
         try {
+            var serializer = new Gson();
+            var req = serializer.fromJson(ctx.body(), Map.class);
+            // if either the username or password is null
+            if (req.get("username") == null || req.get("password") == null) {
+                ctx.status(400);
+                ctx.result("{ \"message\": \"Error: bad request\" }");
+                return;
+            }
+            User userData = new User(req.get("username").toString(), req.get("password").toString(), "");
+
             if (!accountService.checkUsername(userData.username())) {
                 ctx.status(401);
                 ctx.result("{ \"message\": \"Error: bad request\" }");
                 return;
             }
-        } catch ( DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
-            return;
-        }
-        try {
+
+
             if (!accountService.checkPassword(userData.password(), userData)) {
                 ctx.status(401);
                 ctx.result("{ \"message\": \"Error: wrongPassword\" }");
                 return;
             }
-        } catch ( DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
-            return;
-        }
-        AuthData authData = null;
-        try {
-            authData = accountService.authDataGenorator(userData.username());
-        } catch ( DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
-            return;
-        }
 
-        var resp = serializer.toJson(authData);
-        ctx.status(200);
-        ctx.result(resp);
+            AuthData authData = null;
+
+            authData = accountService.authDataGenorator(userData.username());
+
+
+            var resp = serializer.toJson(authData);
+            ctx.status(200);
+            ctx.result(resp);
+        } catch (DataAccessException e) {
+            ctx.status(500);
+            ctx.result("{ \"message\": \"Error: " + e + "\" }\n");
+            return;
+        }
     }
 
     private void register(Context ctx) {
-        var serializer = new Gson();
-        var req = serializer.fromJson(ctx.body(), Map.class);
-        if (req.get("username") == null || req.get("password") == null || req.get("email") == null) {
-            ctx.status(400);
-            ctx.result("{ \"message\": \"Error: bad request\" }");
-            return;
-        }
-        User userData = new User(req.get("username").toString(), req.get("password").toString(), req.get("email").toString());
-
         try {
+            var serializer = new Gson();
+            var req = serializer.fromJson(ctx.body(), Map.class);
+            if (req.get("username") == null || req.get("password") == null || req.get("email") == null) {
+                ctx.status(400);
+                ctx.result("{ \"message\": \"Error: bad request\" }");
+                return;
+            }
+            User userData = new User(req.get("username").toString(), req.get("password").toString(), req.get("email").toString());
+
+
             if (!accountService.creatAccont(userData)) {
                 ctx.status(403);
                 ctx.result("{\"message\": \"Error: already taken\"}");
                 return;
             }
-        } catch ( DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: "+e+"\" }\n");
-            return;
-        }
-        AuthData authToken = null;
-        try {
-            authToken = accountService.authDataGenorator(userData.username());
-        } catch ( DataAccessException e) {
-            ctx.status(500);
-            ctx.result("{ \"message\": \"Error: There was a database error\" }\n");
-            return;
-        }
 
 
-        var resp = serializer.toJson(authToken);
-        ctx.status(200);
-        ctx.result(resp);
+            AuthData authToken = accountService.authDataGenorator(userData.username());
+
+
+            var resp = serializer.toJson(authToken);
+            ctx.status(200);
+            ctx.result(resp);
+        } catch (DataAccessException e) {
+            ctx.status(500);
+            ctx.result("{ \"message\": \"Error: " + e + "\" }\n");
+            return;
+        }
     }
 
     public int run(int desiredPort) {

@@ -43,7 +43,7 @@ public class SQLGameDatabase {
     }
 
 
-    public static boolean removeFromDatabase(GameData removeObject) throws SQLException, DataAccessException {
+    public static boolean removeFromDatabase(GameData removeObject) throws DataAccessException {
         String deleteStatement = "DELETE FROM gamedata WHERE gameID = ?;";
         if(!inDatabase(removeObject.gameName())){
             return false;
