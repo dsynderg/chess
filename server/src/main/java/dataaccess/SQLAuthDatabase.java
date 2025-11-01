@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class SQLAuthDatabase  {
     public static String getUsername(String authToken) throws DataAccessException {
-        String checkSql = "SELECT username FROM AuthData WHERE authToken = ?";
+        String checkSql = "SELECT username FROM authdata WHERE authToken = ?";
         try (Connection conn = DatabaseManager.getConnection();
         var statement = conn.prepareStatement(checkSql);) {
             statement.setString(1, authToken);
@@ -28,7 +28,7 @@ public class SQLAuthDatabase  {
 
 
     public static boolean addToDatabase(AuthData addObject) throws DataAccessException {
-        String query = "INSERT INTO AuthData (authToken, username) VALUES (?, ?)";
+        String query = "INSERT INTO authdata (authToken, username) VALUES (?, ?)";
         if(inDatabase(addObject.authToken())){
             return false;
         }
@@ -47,7 +47,7 @@ public class SQLAuthDatabase  {
 
 
     public static boolean removeFromDatabase(AuthData removeObject) throws DataAccessException {
-        String deleteStatement = "DELETE FROM AuthData WHERE authToken = ?;";
+        String deleteStatement = "DELETE FROM authdata WHERE authToken = ?;";
         if(!inDatabase(removeObject.authToken())){
             return false;
         }
@@ -65,7 +65,7 @@ public class SQLAuthDatabase  {
 
 
     public static boolean deleteall() throws DataAccessException {
-        String query =  "DELETE FROM AuthData;";
+        String query =  "DELETE FROM authdata;";
         try(Connection conn = DatabaseManager.getConnection();
         Statement statement = conn.createStatement();) {
 
@@ -81,7 +81,7 @@ public class SQLAuthDatabase  {
 
     public static void listDatabase() throws DataAccessException {
         try(Connection conn = DatabaseManager.getConnection();
-        var statement = conn.prepareStatement("select * from AuthData;");) {
+        var statement = conn.prepareStatement("select * from authdata;");) {
             var response = statement.executeQuery();
             while (response.next()) {
                 String auth = response.getString("authToken");
@@ -94,7 +94,7 @@ public class SQLAuthDatabase  {
 
     }
     public static boolean inDatabase(String authToken) throws DataAccessException {
-        String checkSql = "SELECT 1 FROM AuthData WHERE authToken = ?";
+        String checkSql = "SELECT 1 FROM authdata WHERE authToken = ?";
 
         return DatabaseManager.inDatabaseHelper(authToken, checkSql);
 

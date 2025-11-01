@@ -23,7 +23,7 @@ public class SQLTableControler {
     }
     private static final String[] createStatementList = {
           """  
-          CREATE TABLE IF NOT EXISTS GameData (
+          CREATE TABLE IF NOT EXISTS gamedata (
           gameID INT PRIMARY KEY,
           whiteUsername VARCHAR(255),
           blackUsername VARCHAR(255),
@@ -32,7 +32,7 @@ public class SQLTableControler {
           );
           """,
           """
-          CREATE TABLE IF NOT EXISTS UserData (
+          CREATE TABLE IF NOT EXISTS userdata (
           username VARCHAR(255),
           password VARCHAR(255),
           email VARCHAR(255)
@@ -40,7 +40,7 @@ public class SQLTableControler {
     
           """,
             """
-            CREATE TABLE IF NOT EXISTS AuthData (
+            CREATE TABLE IF NOT EXISTS authdata (
             authToken VARCHAR(255),
             username VARCHAR(255)
             );
