@@ -25,12 +25,12 @@ public class SQLUserDatabase {
         String sql ="SELECT * FROM userdata WHERE username = ?";
         try (Connection conn = DatabaseManager.getConnection();
         var statement = conn.prepareStatement(sql);) {
-            statement.setString(1, String.valueOf(username));
+            statement.setString(1, username);
             var response = statement.executeQuery();
             while (response.next()) {
                 return BCrypt.checkpw(password, response.getString("password"));
             }
-            return true;
+            return false;
         } catch (SQLException | DataAccessException e) {
             throw new DataAccessException("Database problems",e);
         }

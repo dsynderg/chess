@@ -5,6 +5,9 @@ import modules.AuthData;
 import modules.GameData;
 import modules.User;
 import org.junit.jupiter.api.Test;
+import services.AccountService;
+import services.DeleteService;
+import services.GameService;
 
 import java.sql.SQLException;
 import java.util.Objects;
@@ -25,6 +28,15 @@ public class DatabaseTests {
         AuthData auth = new AuthData("123", "myname is jeff");
         assert SQLAuthDatabase.addToDatabase(auth);
     }
+    @Test
+    void addAuththatAlreadyExists() throws DataAccessException {
+        SQLTableControler.initialize();
+
+        SQLAuthDatabase.deleteall();
+        AuthData auth = new AuthData("123", "myname is jeff");
+        assert SQLAuthDatabase.addToDatabase(auth);
+        assert !SQLAuthDatabase.addToDatabase(auth);
+    }
 
     @Test
     void deleteAllAuth() throws SQLException, DataAccessException {
@@ -32,7 +44,24 @@ public class DatabaseTests {
 
         assert SQLAuthDatabase.deleteall();
     }
+    @Test
+    void usernamesPasswordMatch() throws DataAccessException {
+        AccountService service = new AccountService();
+        SQLDeleteDataBase.deleteAll();
+        User user1 = new User("asdf","fjl","a;dslfkj");
+        assert service.creatAccont(user1);
+        assert SQLUserDatabase.passwordUsernameMatch(user1.password(), user1.username());
 
+    }
+    @Test
+    void usernamesPasswordDontMatch() throws DataAccessException {
+        AccountService service = new AccountService();
+        SQLDeleteDataBase.deleteAll();
+        User user1 = new User("asdf","fjl","a;dslfkj");
+        assert service.creatAccont(user1);
+        assert !SQLUserDatabase.passwordUsernameMatch(user1.password()," user1.username()");
+
+    }
     @Test
     void checkusername() throws SQLException, DataAccessException {
         SQLTableControler.initialize();
@@ -67,6 +96,14 @@ public class DatabaseTests {
         assert SQLGameDatabase.deleteAll();
         assert SQLGameDatabase.addToDatabase(game);
     }
+    @Test
+    void joinGame() throws DataAccessException{
+        GameService service = new GameService();
+        User user1 = new User("asdf","fjl","a;dslfkj");
+        GameData game = new GameData(2136,"bob",null,"best game",new ChessGame());
+        SQLGameDatabase.addToDatabase(game);
+        assert !service.assignColor(user1.username(), ChessGame.TeamColor.WHITE,2136);
+    }
 
 
     @Test
@@ -79,6 +116,12 @@ public class DatabaseTests {
         assert SQLGameDatabase.addToDatabase(game1);
         assert SQLGameDatabase.addToDatabase(game2);
         assert SQLGameDatabase.addToDatabase(game3);
+        SQLGameDatabase.listDatabase();
+    }
+    @Test
+    void listEmptyGames() throws DataAccessException{
+        SQLTableControler.initialize();
+        SQLDeleteDataBase.deleteAll();
         SQLGameDatabase.listDatabase();
     }
 
@@ -95,6 +138,13 @@ public class DatabaseTests {
         assert !SQLGameDatabase.inDatabase(game1.gameName());
     }
     @Test
+    void removeGameThatDosntExist() throws DataAccessException{
+        SQLTableControler.initialize();
+        SQLDeleteDataBase.deleteAll();
+        GameData game = new GameData(1,"sdf","asd","fjs",new ChessGame());
+        assert !SQLGameDatabase.removeFromDatabase(game);
+    }
+    @Test
     void addUser() throws SQLException, DataAccessException {
         SQLTableControler.initialize();
 
@@ -102,5 +152,13 @@ public class DatabaseTests {
         assert !SQLUserDatabase.inDatabase(user1.username());
         assert SQLUserDatabase.addToDatabase(user1);
         assert SQLUserDatabase.inDatabase(user1.username());
+    }
+    @Test
+    void addUserTwice() throws DataAccessException{
+        SQLDeleteDataBase.deleteAll();
+        User user1 = new User("dodf","aascdefg","afjdjk@gokdsd");
+        assert !SQLUserDatabase.inDatabase(user1.username());
+        assert SQLUserDatabase.addToDatabase(user1);
+        assert !SQLUserDatabase.addToDatabase(user1);
     }
 }
