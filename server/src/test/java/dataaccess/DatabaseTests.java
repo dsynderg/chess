@@ -51,6 +51,11 @@ public class DatabaseTests {
         assert SQLUserDatabase.deleteall();
     }
     @Test
+    void deleteAllGame() throws DataAccessException{
+        SQLTableControler.initialize();
+        assert SQLGameDatabase.deleteAll();
+    }
+    @Test
     void usernamesPasswordMatch() throws DataAccessException {
         AccountService service = new AccountService();
         SQLDeleteDataBase.deleteAll();
@@ -166,5 +171,11 @@ public class DatabaseTests {
         assert !SQLUserDatabase.inDatabase(user1.username());
         assert SQLUserDatabase.addToDatabase(user1);
         assert !SQLUserDatabase.addToDatabase(user1);
+    }
+    @Test
+    void removeUserThatDosntExist() throws DataAccessException{
+        SQLTableControler.initialize();
+        User user = new User("bob","password","asldfjksld");
+        assert !SQLUserDatabase.removeFromDatabase(user);
     }
 }
