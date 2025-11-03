@@ -8,7 +8,7 @@ public class SQLTableControler {
     public static void initialize() throws DataAccessException {
         DatabaseManager.createDatabase();
 
-        for(String statement: Create_Statement_List){
+        for(String statement: CREATE_STATEMENT_LIST){
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement prepStatement = conn.prepareStatement(statement);){
              prepStatement.executeUpdate();
@@ -19,7 +19,7 @@ public class SQLTableControler {
 
 
     }
-    private static final String[] Create_Statement_List = {
+    private static final String[] CREATE_STATEMENT_LIST = {
           """  
           CREATE TABLE IF NOT EXISTS gamedata (
           gameID INT PRIMARY KEY,

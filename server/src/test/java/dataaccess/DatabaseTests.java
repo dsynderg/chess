@@ -9,6 +9,7 @@ import services.AccountService;
 import services.DeleteService;
 import services.GameService;
 
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -43,6 +44,11 @@ public class DatabaseTests {
         SQLTableControler.initialize();
 
         assert SQLAuthDatabase.deleteall();
+    }
+    @Test
+    void deleteAllUser() throws DataAccessException{
+        SQLTableControler.initialize();
+        assert SQLUserDatabase.deleteall();
     }
     @Test
     void usernamesPasswordMatch() throws DataAccessException {
