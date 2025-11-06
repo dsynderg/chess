@@ -84,12 +84,17 @@ public class client_tests {
 
         board.addPiece(new ChessPosition(4,5),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         ChessGame.TeamColor viewPosition = ChessGame.TeamColor.BLACK;
-
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+        System.out.print("    A  B  C  D  E  F  G  H    ");
+        System.out.println(EscapeSequences.RESET_BG_COLOR);
         for(int i=0;i<8;i++){
+            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+            System.out.print("   ");
             for(int j=0;j<8;j++){
 
-                int row = (viewPosition == ChessGame.TeamColor.BLACK) ? i + 1 : 8 - i;
-                int col = (viewPosition == ChessGame.TeamColor.BLACK) ? j + 1 : 8 - j;
+                int row = (viewPosition == ChessGame.TeamColor.WHITE) ? 8 - i : i + 1;
+                int col = (viewPosition == ChessGame.TeamColor.WHITE) ? j + 1 : 8 - j;
                 ChessPosition pos = new ChessPosition(row,col);
                 ChessPiece piece = board.getPiece(pos);
                 //if its an even square
@@ -97,21 +102,28 @@ public class client_tests {
                 String bgColor = isEvenSquare ? EscapeSequences.SET_BG_COLOR_WHITE : EscapeSequences.SET_BG_COLOR_BLACK;
                 String textColor;
 
+
                 if (piece != null) {
                     textColor = piece.getTeamColor() == ChessGame.TeamColor.WHITE ? EscapeSequences.SET_TEXT_COLOR_RED : EscapeSequences.SET_TEXT_COLOR_BLUE;
                     System.out.print(textColor + bgColor + " " + piece + " ");
                 } else {
                     textColor = isEvenSquare ? EscapeSequences.SET_TEXT_COLOR_WHITE : EscapeSequences.SET_TEXT_COLOR_BLACK;
-                    System.out.print(bgColor + textColor + " \u265F ");
+                    System.out.print(bgColor + textColor + " a ");
+
+//                    System.out.print(bgColor + textColor + " \u265F ");
 //                    System.out.print(bgColor + textColor + " aa ");
                 }
 
 
             }
+            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+            System.out.print("   ");
+
             System.out.print(EscapeSequences.RESET_BG_COLOR);
             System.out.println();
             }
-
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+        System.out.print("   ");
         }
 
     }
