@@ -78,12 +78,12 @@ public class client_tests {
         }
     }
     @Test
-    void printRealBoardBlack(){
+    void printRealBoard(){
         ChessBoard board = new ChessBoard();
         board.resetBoard();
 
         board.addPiece(new ChessPosition(4,5),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
-        ChessGame.TeamColor viewPosition = ChessGame.TeamColor.WHITE;
+        ChessGame.TeamColor viewPosition = ChessGame.TeamColor.BLACK;
 
         for(int i=0;i<8;i++){
             for(int j=0;j<8;j++){
