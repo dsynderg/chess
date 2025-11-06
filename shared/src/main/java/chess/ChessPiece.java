@@ -33,6 +33,51 @@ public class ChessPiece {
         return Objects.hash(pieceColor, type);
     }
 
+    @Override
+    public String toString() {
+        if(pieceColor == ChessGame.TeamColor.BLACK){
+            if(type == PieceType.PAWN){
+                return "\u2659";
+            }
+            if(type == PieceType.BISHOP){
+                return "\u2657";
+            }
+            if(type == PieceType.KNIGHT){
+                return "\u2658";
+            }
+            if(type == PieceType.ROOK){
+                return "\u2656";
+            }
+            if(type == PieceType.QUEEN){
+                return "\u2655";
+            }
+            if(type == PieceType.KING){
+                return "\u2654";
+            }
+        }
+        if(pieceColor == ChessGame.TeamColor.WHITE){
+            if(type == PieceType.PAWN){
+                return "\u265F";
+            }
+            if(type == PieceType.BISHOP){
+                return "\u265D";
+            }
+            if(type == PieceType.KNIGHT){
+                return "\u265E";
+            }
+            if(type == PieceType.ROOK){
+                return "\u265C";
+            }
+            if(type == PieceType.QUEEN){
+                return "\u265B";
+            }
+            if(type == PieceType.KING){
+                return "\u265A";
+            }
+        }
+        return " ";
+    }
+
     /**
      * @return Which team this chess piece belongs to
      */
