@@ -84,7 +84,7 @@ public class client_tests {
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         board.addPiece(new ChessPosition(4,5),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
-        ChessGame.TeamColor viewPosition = ChessGame.TeamColor.BLACK;
+        ChessGame.TeamColor viewPosition = ChessGame.TeamColor.WHITE;
         String topbottom = (viewPosition == ChessGame.TeamColor.WHITE) ? "    A  B  C  D  E  F  G  H    " : "    H  G  F  E  D  C  B  A    ";
 
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
