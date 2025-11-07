@@ -79,21 +79,26 @@ public class client_tests {
     }
     @Test
     void printRealBoard(){
+        //this is the proto type for printing out the board, it will have the lines underneath it as parameters;
+//        ChessBoard board, ChessGame.TeamColor viewPosition
         ChessBoard board = new ChessBoard();
         board.resetBoard();
-
         board.addPiece(new ChessPosition(4,5),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         ChessGame.TeamColor viewPosition = ChessGame.TeamColor.BLACK;
+        String topbottom = (viewPosition == ChessGame.TeamColor.WHITE) ? "    A  B  C  D  E  F  G  H    " : "    H  G  F  E  D  C  B  A    ";
+
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-        System.out.print("    A  B  C  D  E  F  G  H    ");
+        System.out.print(topbottom);
         System.out.println(EscapeSequences.RESET_BG_COLOR);
         for(int i=0;i<8;i++){
+            int row = (viewPosition == ChessGame.TeamColor.WHITE) ? 8 - i : i + 1;
             System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print("   ");
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+            System.out.print(" "+String.valueOf(row)+" ");
             for(int j=0;j<8;j++){
 
-                int row = (viewPosition == ChessGame.TeamColor.WHITE) ? 8 - i : i + 1;
+
                 int col = (viewPosition == ChessGame.TeamColor.WHITE) ? j + 1 : 8 - j;
                 ChessPosition pos = new ChessPosition(row,col);
                 ChessPiece piece = board.getPiece(pos);
@@ -117,13 +122,16 @@ public class client_tests {
 
             }
             System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print("   ");
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+            System.out.print(" "+String.valueOf(row)+" ");
 
             System.out.print(EscapeSequences.RESET_BG_COLOR);
             System.out.println();
             }
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-        System.out.print("   ");
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+        System.out.print(topbottom);
+
         }
 
     }
