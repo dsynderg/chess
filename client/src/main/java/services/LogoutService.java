@@ -23,8 +23,11 @@ public class LogoutService {
         System.exit(-1);
     }
 
-    private void login() {
+    private  AbstractMap.SimpleEntry<AuthData, User> login() {
         Scanner scanner = new Scanner(System.in);
+        final String[] MESSAGES = {"What is your username?", "What is your password?"};
+        final String[] USERHEADINGS = {"username", "password"};
+        Map<String, String> userData = new HashMap<>();
 
         System.out.println("does login logic");
 
@@ -37,7 +40,6 @@ public class LogoutService {
         final String[] USERHEADINGS = {"username", "password", "email"};
         Map<String, String> userData = new HashMap<>();
 
-        System.out.println("does register logic");
         for (int i = 0; i < 3; i++) {
             System.out.println(MESSAGES[i]);
             System.out.print(">>>");
@@ -72,13 +74,11 @@ public class LogoutService {
                 quit();
             }
             if (Objects.equals(line, "login")) {
-                login();
-                return null;
+                return login();
             }
             if (Objects.equals(line, "register")) {
                 return register();
             }
-            return null;
         }
 
     }

@@ -10,13 +10,18 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Objects;
 
 public class HttpHelper {
 
 
+
+    private static int port = 1;
     private static final Server server = new Server();
+
     public HttpResponse<String> requestMaker(RequestType type, String path, String json, AuthData data) throws Exception {
-        var port = server.run(1);
+
+        server.run(port);
         try (HttpClient client = HttpClient.newHttpClient()) {
             if (json == null) {
                 json = "{}";
@@ -35,8 +40,14 @@ public class HttpHelper {
 
             }
             if (type == RequestType.post) {
+                if (Objects.equals(path, "session")){
+                    return send(client, HttpRequest.newBuilder()
+                            .uri(new URI(fullpath))
+                            .POST(HttpRequest.BodyPublishers.ofString(json))
+                            .build());
+                }
 
-                if(path =="user"){
+                if(Objects.equals(path, "user")){
                     return send(client, HttpRequest.newBuilder()
                             .uri(new URI(fullpath))
                             .POST(HttpRequest.BodyPublishers.ofString(json))
@@ -84,6 +95,9 @@ public class HttpHelper {
         server.stop();
     }
     @BeforeAll
-    static void startServer() {
+    static void startserver(){
     }
 }
+
+
+
