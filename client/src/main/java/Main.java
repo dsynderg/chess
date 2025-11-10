@@ -1,12 +1,18 @@
 import chess.ChessGame;
 import chess.ChessPiece;
 import clientenums.State;
+import modules.AuthData;
+import modules.User;
 import server.Server;
+import services.LogoutService;
+
 import java.util.*;
 
 public class Main {
     private State state = State.Loggedout;
-    private Server server;
+    private static AuthData authData;
+    private static User user;
+
 
     static void main(String[] args) {
         boolean isLoggedin = false;
@@ -19,8 +25,9 @@ public class Main {
 
         while(true){
             // User user = isLoggedout(); //this is what it will be once isLoggedout();
-            Logout.isLoggedout();
-            // isLoggedin(user);
+            var authAndUser = Logout.isLoggedout();
+            authData = authAndUser.getKey();
+            user = authAndUser.getValue();
         }
 
     }

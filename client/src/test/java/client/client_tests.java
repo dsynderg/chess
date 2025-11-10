@@ -5,6 +5,7 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import org.junit.jupiter.api.Test;
+import services.LogoutService;
 import ui.EscapeSequences;
 
 public class client_tests {

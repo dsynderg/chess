@@ -33,7 +33,9 @@ public class Server {
             throw new RuntimeException(e);
         }
         server = Javalin.create(config -> config.staticFiles.add("web"));
+//        server.start();
         server.delete("db", this::deleteall);
+
         server.post("user", this::register);
         server.post("session", this::login);
         server.delete("session", this::logout);
