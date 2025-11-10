@@ -16,12 +16,12 @@ public class HttpHelper {
 
 
 
-    private static int port = 1;
-    private static final Server server = new Server();
+    public static int port = 8080;
+//    private static final Server server = new Server();
 
     public HttpResponse<String> requestMaker(RequestType type, String path, String json, AuthData data) throws Exception {
 
-        server.run(port);
+//        server.run(port);
         try (HttpClient client = HttpClient.newHttpClient()) {
             if (json == null) {
                 json = "{}";
@@ -90,13 +90,13 @@ public class HttpHelper {
         return null;
 
     }
-    @AfterAll
-    static void stopServer(){
-        server.stop();
-    }
-    @BeforeAll
-    static void startserver(){
-    }
+//    @AfterAll
+//    static void stopServer(){
+//        server.stop();
+//    }
+//    @BeforeAll
+//    static void startserver(){
+//    }
 }
 
 

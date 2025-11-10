@@ -31,7 +31,7 @@ public class LoginService {
 
     }
     private void observe(String id){
-        
+
     }
     private void quit() {
         System.exit(1);
@@ -55,6 +55,18 @@ public class LoginService {
             }
             if( Objects.equals(line,"logout")){
                 return;
+            }
+            if(Objects.equals(line,"create game")){
+                return;
+            }
+            if(Objects.equals(line,"list game")){
+
+            }
+            if(Objects.equals(line,"play game")){
+
+            }
+            if(Objects.equals(line,"observe game")){
+
             }
         }
 
