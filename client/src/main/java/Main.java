@@ -3,6 +3,7 @@ import chess.ChessPiece;
 import clientenums.State;
 import modules.AuthData;
 import modules.User;
+import services.LoginService;
 import services.LogoutService;
 
 import java.util.*;
@@ -15,6 +16,7 @@ public class Main {
     static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         LogoutService Logout = new LogoutService();
+        LoginService Login = new LoginService();
 
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);
@@ -25,6 +27,8 @@ public class Main {
             var authAndUser = Logout.isLoggedout();
             assert authAndUser != null;
             authData = authAndUser.getKey();
+            Login.isLoggedin(authData);
+            authData=null;
         }
 
     }

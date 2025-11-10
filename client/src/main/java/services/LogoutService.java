@@ -9,7 +9,6 @@ import server.Server;
 import java.util.*;
 
 public class LogoutService {
-
     private HttpHelper httpHelper = new HttpHelper();
 
     private void help() {
@@ -20,7 +19,7 @@ public class LogoutService {
     }
 
     private void quit() {
-        System.exit(-1);
+        System.exit(1);
     }
 
     private  AbstractMap.SimpleEntry<AuthData, User> login() {
@@ -97,4 +96,5 @@ public class LogoutService {
         }
 
     }
+
 }
