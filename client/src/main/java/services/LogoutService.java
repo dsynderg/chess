@@ -29,8 +29,23 @@ public class LogoutService {
         final String[] USERHEADINGS = {"username", "password"};
         Map<String, String> userData = new HashMap<>();
 
-        System.out.println("does login logic");
-
+        for (int i = 0; i < 2; i++) {
+            System.out.println(MESSAGES[i]);
+            System.out.print(">>>");
+            String line = scanner.nextLine().trim().toLowerCase();
+            userData.put(USERHEADINGS[i], line);
+        }
+        User user = new User(userData.get("username"),userData.get("password"),null);
+        Gson gson = new Gson();
+        String json = gson.toJson(userData);
+        try {
+            var response = httpHelper.requestMaker(RequestType.post,"session",json,null);
+            Map<String,String> authmap  = gson.fromJson(response.body(),Map.class);
+            AuthData authData = new AuthData(authmap.get("authToken"),authmap.get("username"));
+            return new AbstractMap.SimpleEntry<>(authData,user);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public AbstractMap.SimpleEntry<AuthData, User> register() {
