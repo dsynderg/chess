@@ -13,7 +13,7 @@ public class Main {
     private static User user;
 
 
-    static void main(String[] args) {
+    static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         LogoutService Logout = new LogoutService();
         LoginService Login = new LoginService();
@@ -23,10 +23,10 @@ public class Main {
         System.out.println("Type HELP to get relevant commands");
 
         while(true){
-            // User user = isLoggedout(); //this is what it will be once isLoggedout();
             var authAndUser = Logout.isLoggedout();
             assert authAndUser != null;
             authData = authAndUser.getKey();
+            //fix this so we are catching and handleing the exception instead of just throwing it
             Login.isLoggedin(authData);
             authData=null;
         }

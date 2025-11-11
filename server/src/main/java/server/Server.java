@@ -52,6 +52,7 @@ public class Server {
 
     private void joinGame(Context ctx) {
         var serializer = new Gson();
+        System.out.println("joingame was made");
         //validates auth
         try {
             if (!validateAuth(ctx)) {

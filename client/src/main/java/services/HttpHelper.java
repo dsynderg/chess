@@ -28,15 +28,33 @@ public class HttpHelper {
             }
             String fullpath = "http://localhost:"+port+"/" + path;
             if (type == RequestType.get) {
-                var response = send(client, HttpRequest.newBuilder()
-                        .uri(new URI(fullpath))
-                        .GET()
-                        .header("Authorization", "secret1")
-                        .build());
+                if(Objects.equals(path,"game")){
+                    var response = send(client, HttpRequest.newBuilder()
+                            .uri(new URI(fullpath))
+                            .GET()
+                            .header("authorization", data.authToken())
+                            .build());
+                    System.out.print("games were listed");
+                }
+
             }
             if (type == RequestType.put) {
+                if(Objects.equals(path, "game")){
+                    return send(client,HttpRequest.newBuilder()
+                            .uri(new URI(fullpath))
+                            .POST(HttpRequest.BodyPublishers.ofString(json))
+                            .header("authorization", data.authToken())
+                            .build());
+                }
             }
             if (type == RequestType.delete) {
+                if (Objects.equals(path,"session")){
+                    return send(client,HttpRequest.newBuilder()
+                            .uri(new URI(fullpath))
+                            .DELETE()
+                            .header("authorization",data.authToken())
+                            .build());
+                }
 
             }
             if (type == RequestType.post) {
@@ -53,32 +71,18 @@ public class HttpHelper {
                             .POST(HttpRequest.BodyPublishers.ofString(json))
                             .build());
                 }
+                if(Objects.equals(path,"game")){
+                    return send(client, HttpRequest.newBuilder()
+                            .uri(new URI(fullpath))
+                            .POST(HttpRequest.BodyPublishers.ofString(json))
+                            .header("authorization", data.authToken())
+                            .build());
+                }
             }
         }
         return null;
     }
-    public static void main(String[] args) throws Exception {
-        try (HttpClient client = HttpClient.newHttpClient()) {
 
-
-            send(client, HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8080/name/joe"))
-                    .POST(HttpRequest.BodyPublishers.noBody())
-                    .header("Authorization", "secret1")
-                    .build());
-
-            send(client, HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8080/name"))
-                    .PUT(HttpRequest.BodyPublishers.ofString("{\"joe\":\"sue\"}"))
-                    .header("Authorization", "secret1")
-                    .build());
-
-            send(client, HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8080/name"))
-                    .GET()
-                    .build());
-        }
-    }
 
     private static HttpResponse<String> send(HttpClient client, HttpRequest request) throws Exception {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
