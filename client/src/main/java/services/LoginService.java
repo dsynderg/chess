@@ -86,18 +86,7 @@ public class LoginService {
             if(Objects.equals(line,"observe game")){
 
             }
-            if(Objects.equals(line,"create game")){
-                return;
-            }
-            if(Objects.equals(line,"list game")){
 
-            }
-            if(Objects.equals(line,"play game")){
-
-            }
-            if(Objects.equals(line,"observe game")){
-
-            }
         }
 
     }
