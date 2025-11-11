@@ -42,7 +42,44 @@ public class HttpHelper {
             System.out.println("There were no games to be listed");
         }
     }
+    private HttpResponse<String> createGame(HttpClient client, String fullpath, AuthData data, String json) throws Exception {
 
+        return send(client, HttpRequest.newBuilder()
+                .uri(new URI(fullpath))
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .header("authorization", data.authToken())
+                .build());
+    }
+    private HttpResponse<String> register (HttpClient client, String fullpath, AuthData data, String json) throws Exception {
+
+        return send(client, HttpRequest.newBuilder()
+                .uri(new URI(fullpath))
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build());
+    }
+    private HttpResponse<String> login (HttpClient client, String fullpath, AuthData data, String json) throws Exception {
+
+        return send(client, HttpRequest.newBuilder()
+                .uri(new URI(fullpath))
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build());
+    }
+    private HttpResponse<String> logout (HttpClient client, String fullpath, AuthData data, String json) throws Exception {
+
+        return send(client,HttpRequest.newBuilder()
+                .uri(new URI(fullpath))
+                .DELETE()
+                .header("authorization",data.authToken())
+                .build());
+
+    }
+    private HttpResponse<String> joinGame (HttpClient client, String fullpath, AuthData data, String json) throws Exception {
+        return send(client,HttpRequest.newBuilder()
+                .uri(new URI(fullpath))
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .header("authorization", data.authToken())
+                .build());
+    }
     public HttpResponse<String> requestMaker(RequestType type, String path, String json, AuthData data) throws Exception {
 
 //        server.run(port);
@@ -60,43 +97,27 @@ public class HttpHelper {
             }
             if (type == RequestType.put) {
                 if(Objects.equals(path, "game")){
-                    return send(client,HttpRequest.newBuilder()
-                            .uri(new URI(fullpath))
-                            .POST(HttpRequest.BodyPublishers.ofString(json))
-                            .header("authorization", data.authToken())
-                            .build());
+                    return joinGame(client,fullpath,data,json);
+
                 }
             }
             if (type == RequestType.delete) {
                 if (Objects.equals(path,"session")){
-                    return send(client,HttpRequest.newBuilder()
-                            .uri(new URI(fullpath))
-                            .DELETE()
-                            .header("authorization",data.authToken())
-                            .build());
+                    return logout(client,fullpath,data,json);
+
                 }
 
             }
             if (type == RequestType.post) {
                 if (Objects.equals(path, "session")){
-                    return send(client, HttpRequest.newBuilder()
-                            .uri(new URI(fullpath))
-                            .POST(HttpRequest.BodyPublishers.ofString(json))
-                            .build());
+                    return login(client,fullpath,data,json);
                 }
 
                 if(Objects.equals(path, "user")){
-                    return send(client, HttpRequest.newBuilder()
-                            .uri(new URI(fullpath))
-                            .POST(HttpRequest.BodyPublishers.ofString(json))
-                            .build());
+                    return register(client,fullpath,data,json);
                 }
                 if(Objects.equals(path,"game")){
-                    return send(client, HttpRequest.newBuilder()
-                            .uri(new URI(fullpath))
-                            .POST(HttpRequest.BodyPublishers.ofString(json))
-                            .header("authorization", data.authToken())
-                            .build());
+                    return createGame(client,fullpath,data,json);
                 }
             }
         }
