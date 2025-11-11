@@ -16,27 +16,45 @@ public class HttpHelper {
 
 
 
-    private static int port = 1;
-    private static final Server server = new Server();
+    public static int port = 8080;
+//    private static final Server server = new Server();
 
     public HttpResponse<String> requestMaker(RequestType type, String path, String json, AuthData data) throws Exception {
 
-        server.run(port);
+//        server.run(port);
         try (HttpClient client = HttpClient.newHttpClient()) {
             if (json == null) {
                 json = "{}";
             }
             String fullpath = "http://localhost:"+port+"/" + path;
             if (type == RequestType.get) {
-                var response = send(client, HttpRequest.newBuilder()
-                        .uri(new URI(fullpath))
-                        .GET()
-                        .header("Authorization", "secret1")
-                        .build());
+                if(Objects.equals(path,"game")){
+                    var response = send(client, HttpRequest.newBuilder()
+                            .uri(new URI(fullpath))
+                            .GET()
+                            .header("authorization", data.authToken())
+                            .build());
+                    System.out.print("games were listed");
+                }
+
             }
             if (type == RequestType.put) {
+                if(Objects.equals(path, "game")){
+                    return send(client,HttpRequest.newBuilder()
+                            .uri(new URI(fullpath))
+                            .POST(HttpRequest.BodyPublishers.ofString(json))
+                            .header("authorization", data.authToken())
+                            .build());
+                }
             }
             if (type == RequestType.delete) {
+                if (Objects.equals(path,"session")){
+                    return send(client,HttpRequest.newBuilder()
+                            .uri(new URI(fullpath))
+                            .DELETE()
+                            .header("authorization",data.authToken())
+                            .build());
+                }
 
             }
             if (type == RequestType.post) {
@@ -53,32 +71,18 @@ public class HttpHelper {
                             .POST(HttpRequest.BodyPublishers.ofString(json))
                             .build());
                 }
+                if(Objects.equals(path,"game")){
+                    return send(client, HttpRequest.newBuilder()
+                            .uri(new URI(fullpath))
+                            .POST(HttpRequest.BodyPublishers.ofString(json))
+                            .header("authorization", data.authToken())
+                            .build());
+                }
             }
         }
         return null;
     }
-    public static void main(String[] args) throws Exception {
-        try (HttpClient client = HttpClient.newHttpClient()) {
 
-
-            send(client, HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8080/name/joe"))
-                    .POST(HttpRequest.BodyPublishers.noBody())
-                    .header("Authorization", "secret1")
-                    .build());
-
-            send(client, HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8080/name"))
-                    .PUT(HttpRequest.BodyPublishers.ofString("{\"joe\":\"sue\"}"))
-                    .header("Authorization", "secret1")
-                    .build());
-
-            send(client, HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:8080/name"))
-                    .GET()
-                    .build());
-        }
-    }
 
     private static HttpResponse<String> send(HttpClient client, HttpRequest request) throws Exception {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -90,13 +94,13 @@ public class HttpHelper {
         return null;
 
     }
-    @AfterAll
-    static void stopServer(){
-        server.stop();
-    }
-    @BeforeAll
-    static void startserver(){
-    }
+//    @AfterAll
+//    static void stopServer(){
+//        server.stop();
+//    }
+//    @BeforeAll
+//    static void startserver(){
+//    }
 }
 
 
