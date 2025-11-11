@@ -19,10 +19,12 @@ public class SQLTableControler {
 
 
     }
+    //gameID INT,
     private static final String[] CREATE_STATEMENT_LIST = {
           """  
           CREATE TABLE IF NOT EXISTS gamedata (
-          gameID INT PRIMARY KEY,
+          gamenumber INT AUTO_INCREMENT PRIMARY KEY,
+          gameID int,
           whiteUsername VARCHAR(255),
           blackUsername VARCHAR(255),
           gameName VARCHAR(255),
