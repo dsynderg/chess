@@ -25,6 +25,10 @@ public class Server {
     private final Javalin server;
     AccountService accountService = new AccountService();
     GameService gameService = new GameService();
+    private boolean isRunning = false;
+
+
+
 
     public Server() {
         try {
@@ -48,6 +52,7 @@ public class Server {
 
     private void joinGame(Context ctx) {
         var serializer = new Gson();
+        System.out.println("joingame was made");
         //validates auth
         try {
             if (!validateAuth(ctx)) {
@@ -281,11 +286,18 @@ public class Server {
     }
 
     public int run(int desiredPort) {
-        server.start(desiredPort);
+        if(!isRunning){
+            isRunning = true;
+            server.start(desiredPort);
+        }
         return server.port();
     }
 
     public void stop() {
-        server.stop();
+        if(isRunning){
+            isRunning = false;
+
+            server.stop();
+        }
     }
 }
