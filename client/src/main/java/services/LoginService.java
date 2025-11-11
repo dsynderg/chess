@@ -10,6 +10,7 @@ import java.util.*;
 public class LoginService {
 
     private HttpHelper httpHelper = new HttpHelper();
+    Gson gson = new Gson();
 
     private void help() {
         System.out.println("HELP: Gets list of relevant commands");
@@ -31,7 +32,7 @@ public class LoginService {
 
     }
     private void observe(String id){
-        
+
     }
     private void quit() {
         System.exit(1);
@@ -40,7 +41,7 @@ public class LoginService {
 
 
 
-    public void isLoggedin(AuthData authData) {
+    public void isLoggedin(AuthData authData) throws Exception {
         assert authData != null;
         //will eventually return a user object
         Scanner scanner = new Scanner(System.in);
@@ -53,8 +54,37 @@ public class LoginService {
             if (Objects.equals(line, "quit")) {
                 quit();
             }
-            if( Objects.equals(line,"logout")){
-                return;
+            if (Objects.equals(line, "logout")) {
+                var response = httpHelper.requestMaker(RequestType.delete, "session", gson.toJson(authData), authData);
+                if (response.statusCode() == 200) {
+                    return;
+                }
+                throw new AssertionError();
+            }
+            if (Objects.equals(line, "create game")) {
+                System.out.print("What is the game name? ");
+                String gamename = scanner.nextLine().trim().toLowerCase();
+                String json = "{ \"gameName\":\""+gamename+"\" }";
+                var response = httpHelper.requestMaker(RequestType.post, "game", json, authData);
+
+
+            }
+            if(Objects.equals(line,"list games")){
+                httpHelper.requestMaker(RequestType.get,"game",null,authData);
+
+            }
+            if(Objects.equals(line,"play game")){
+                System.out.print("What game would you like to join? ");
+                String gameID = scanner.nextLine().trim().toLowerCase();
+                System.out.print("Which color would you like to be? ");
+                String gameColor = scanner.nextLine().trim().toLowerCase();
+                String json = "{ \"playerColor\":\""+gameColor+"\", \"gameID\": "+gameID+" }";
+                var response = httpHelper.requestMaker(RequestType.put,"game",json,authData);
+
+            }
+
+            if(Objects.equals(line,"observe game")){
+
             }
         }
 
