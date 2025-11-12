@@ -88,6 +88,8 @@ public class LoginService {
             }
 
             if(Objects.equals(line,"observe game")){
+                System.out.print("Which game would you like to observe");
+                String observedGame = scanner.nextLine().trim().toLowerCase();
                 BoardPrinter.printBoard(new ChessBoard(), ChessGame.TeamColor.WHITE);
 
             }
