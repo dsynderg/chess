@@ -1,5 +1,7 @@
 package services;
 
+import chess.ChessBoard;
+import chess.ChessGame;
 import clientenums.RequestType;
 import com.google.gson.Gson;
 import modules.AuthData;
@@ -80,10 +82,13 @@ public class LoginService {
                 String gameColor = scanner.nextLine().trim().toLowerCase();
                 String json = "{ \"playerColor\":\""+gameColor+"\", \"gameID\": "+gameID+" }";
                 var response = httpHelper.requestMaker(RequestType.put,"game",json,authData);
+                ChessGame.TeamColor side = (gameColor.equals("black"))? ChessGame.TeamColor.BLACK: ChessGame.TeamColor.WHITE;
+                BoardPrinter.printBoard(new ChessBoard(),side);
 
             }
 
             if(Objects.equals(line,"observe game")){
+                BoardPrinter.printBoard(new ChessBoard(), ChessGame.TeamColor.WHITE);
 
             }
 
