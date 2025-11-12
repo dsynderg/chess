@@ -14,15 +14,14 @@ import java.util.ArrayList;
 
 public class SQLGameDatabase {
 
-
-    public static boolean addToDatabase(GameData addObject) throws DataAccessException {
+    public static Boolean updateDatabase(GameData addObject) throws DataAccessException {
         String query = "INSERT INTO gamedata " +
                 "(gameID, whiteUsername, blackUsername, gameName, game) " +
                 "VALUES (?, ?, ?, ?, ?)";
-        if(inDatabase(addObject.gameName())){
+        if (inDatabase(addObject.gameName())) {
             return false;
         }
-        try(Connection conn = DatabaseManager.getConnection()){
+        try (Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(query);
             Gson gson = new Gson();
             String json = gson.toJson(addObject.game());
@@ -32,9 +31,47 @@ public class SQLGameDatabase {
             statement.setString(4, addObject.gameName());
             statement.setString(5, json);
 
-
-            statement.executeUpdate();
+            int sqlRow = statement.executeUpdate();
             return true;
+
+        }
+        catch(SQLException|DataAccessException e){
+            throw new RuntimeException("There was a database connection issue",e);
+        }
+    }
+
+    public static GameData addToDatabase(GameData addObject) throws DataAccessException {
+        String query = "INSERT INTO gamedata " +
+                "(whiteUsername, blackUsername, gameName, game) " +
+                "VALUES ( ?, ?, ?, ?)";
+        String getsname = "SELECT * FROM gamedata WHERE gameName = ?";
+        if(inDatabase(addObject.gameName())){
+            return null;
+        }
+        try(Connection conn = DatabaseManager.getConnection()){
+            PreparedStatement statement = conn.prepareStatement(query);
+            PreparedStatement getgameobject = conn.prepareStatement(getsname);
+            Gson gson = new Gson();
+            String json = gson.toJson(addObject.game());
+//            statement.setString(1, String.valueOf(addObject.gameID()));
+            statement.setString(1, addObject.whiteUsername());
+            statement.setString(2, addObject.blackUsername());
+            statement.setString(3, addObject.gameName());
+            statement.setString(4, json);
+
+            int sqlRow = statement.executeUpdate();
+            getgameobject.setString(1,addObject.gameName());
+            var rs = getgameobject.executeQuery();
+            if(rs.next()){
+                int id = rs.getInt("gameID");
+                String whiteUsername = rs.getString("whiteUsername");
+                String blackUsername = rs.getString("blackUsername");
+                String gameName = rs.getString("gameName");
+                ChessGame game = gson.fromJson(rs.getString("game"), ChessGame.class);
+                addObject = new GameData(id, whiteUsername,blackUsername,gameName,game);
+
+            }
+            return addObject;
         }
         catch(SQLException|DataAccessException e){
             throw new RuntimeException("There was a database connection issue",e);

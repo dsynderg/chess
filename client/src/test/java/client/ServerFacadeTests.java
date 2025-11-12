@@ -19,6 +19,10 @@ public class ServerFacadeTests {
     static void stopServer() {
         server.stop();
     }
+    @Test
+    public void register(){
+
+    }
 
 
     @Test

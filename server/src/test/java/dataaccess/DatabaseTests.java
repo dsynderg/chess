@@ -102,18 +102,22 @@ public class DatabaseTests {
     @Test
     void addToGame() throws SQLException, DataAccessException {
         SQLTableControler.initialize();
+        assert DeleteService.deleteAll();
 
         GameData game = new GameData(1, "asdf", "asdf", "asdf", new ChessGame());
         assert SQLGameDatabase.deleteAll();
-        assert SQLGameDatabase.addToDatabase(game);
+        game = SQLGameDatabase.addToDatabase(game);
+        GameData gameCheck = SQLGameDatabase.inDatabaseID(game.gameID());
+        assert gameCheck.gameID() == game.gameID();
     }
     @Test
-    void joinGame() throws DataAccessException{
+    void joinGame() throws DataAccessException, SQLException {
+        assert DeleteService.deleteAll();
         GameService service = new GameService();
         User user1 = new User("asdf","fjl","a;dslfkj");
         GameData game = new GameData(2136,"bob",null,"best game",new ChessGame());
-        SQLGameDatabase.addToDatabase(game);
-        assert !service.assignColor(user1.username(), ChessGame.TeamColor.WHITE,2136);
+        game = SQLGameDatabase.addToDatabase(game);
+        assert !service.assignColor(user1.username(), ChessGame.TeamColor.WHITE,game.gameID());
     }
 
 
@@ -124,9 +128,9 @@ public class DatabaseTests {
         GameData game1 = new GameData(1, "asdf", "asdfa", "asdfd", new ChessGame());
         GameData game2 = new GameData(2, "asdfb", "asdfs", "asdfs", new ChessGame());
         GameData game3 = new GameData(3, "asdfc", "asdfs", "asdfa", new ChessGame());
-        assert SQLGameDatabase.addToDatabase(game1);
-        assert SQLGameDatabase.addToDatabase(game2);
-        assert SQLGameDatabase.addToDatabase(game3);
+        game1 = SQLGameDatabase.addToDatabase(game1);
+        game2 = SQLGameDatabase.addToDatabase(game2);
+        game3 = SQLGameDatabase.addToDatabase(game3);
         SQLGameDatabase.listDatabase();
     }
     @Test
@@ -142,7 +146,7 @@ public class DatabaseTests {
 
         assert SQLGameDatabase.deleteAll();
         GameData game1 = new GameData(145, "asdf", "asdfa", "asdfd", new ChessGame());
-        assert SQLGameDatabase.addToDatabase(game1);
+        game1 = SQLGameDatabase.addToDatabase(game1);
         assert SQLGameDatabase.inDatabase(game1.gameName());
         assert (SQLGameDatabase.inDatabaseID(game1.gameID()) != null);
         assert SQLGameDatabase.removeFromDatabase(game1);
