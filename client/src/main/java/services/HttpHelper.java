@@ -76,7 +76,7 @@ public class HttpHelper {
     private HttpResponse<String> joinGame (HttpClient client, String fullpath, AuthData data, String json) throws Exception {
         return send(client,HttpRequest.newBuilder()
                 .uri(new URI(fullpath))
-                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .PUT(HttpRequest.BodyPublishers.ofString(json))
                 .header("authorization", data.authToken())
                 .build());
     }

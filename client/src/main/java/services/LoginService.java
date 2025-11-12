@@ -17,7 +17,7 @@ public class LoginService {
         System.out.println("LOGOUT: Logs you out");
         System.out.println("CREATE GAME: Creates a new game");
         System.out.println("LIST GAMES: Prints out all of the joinable games");
-        System.out.println("PLAY GAME: joins a game");
+        System.out.println("JOIN GAME: joins a game");
         System.out.println("OBSERVE GAME: allows you to oberve a game");
         System.out.println("QUIT: Ends your session");
     }
@@ -73,7 +73,7 @@ public class LoginService {
                 httpHelper.requestMaker(RequestType.get,"game",null,authData);
 
             }
-            if(Objects.equals(line,"play game")){
+            if(Objects.equals(line,"join game")){
                 System.out.print("What game would you like to join? ");
                 String gameID = scanner.nextLine().trim().toLowerCase();
                 System.out.print("Which color would you like to be? ");

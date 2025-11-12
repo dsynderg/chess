@@ -69,10 +69,10 @@ public class Server {
                 return;
             }
             ChessGame.TeamColor joinColor;
-            String joinstring = req.get("playerColor").toString();
-            if (Objects.equals(joinstring, "WHITE")) {
+            String joinstring = req.get("playerColor").toString().toLowerCase().trim();
+            if (Objects.equals(joinstring, "white")) {
                 joinColor = ChessGame.TeamColor.WHITE;
-            } else if (Objects.equals(joinstring, "BLACK")) {
+            } else if (Objects.equals(joinstring, "black")) {
                 joinColor = ChessGame.TeamColor.BLACK;
             } else {
                 ctx.status(400);
