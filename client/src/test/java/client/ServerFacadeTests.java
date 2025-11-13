@@ -42,14 +42,14 @@ public class ServerFacadeTests {
     }
 
     public static String generateRandomString() {
-        String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        int LENGTH = 12; // change as needed
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        int length = 12; // change as needed
 
         Random random = new Random();
-        StringBuilder sb = new StringBuilder(LENGTH);
-        for (int i = 0; i < LENGTH; i++) {
-            int index = random.nextInt(CHARACTERS.length());
-            sb.append(CHARACTERS.charAt(index));
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            sb.append(characters.charAt(index));
         }
         return sb.toString();
     }
@@ -87,12 +87,25 @@ public class ServerFacadeTests {
     }
 
 
+    private AuthData registerForAuth() throws Exception {
+        var json = registerJSON();
+        HttpResponse<String> data = helper.requestMaker(RequestType.post,"user",gson.toJson(json),null);
+        assert data.statusCode() == 200;
+        return gson.fromJson(data.body(),AuthData.class);
+
+    }
     @Test
     public void register() throws Exception {
 
         var json = registerJSON();
         HttpResponse<String> data = helper.requestMaker(RequestType.post,"user",gson.toJson(json),null);
         assert data.statusCode() == 200;
+    }
+    @Test
+    public void logout() throws Exception {
+        AuthData data = registerForAuth();
+        var resp = helper.requestMaker(RequestType.delete,"session",null,data);
+        assert resp.statusCode() == 200;
     }
 
 
