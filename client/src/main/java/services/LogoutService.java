@@ -43,7 +43,9 @@ public class LogoutService {
             AuthData authData = new AuthData(authmap.get("authToken"),authmap.get("username"));
             return new AbstractMap.SimpleEntry<>(authData,user);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+//            throw new RuntimeException(e);
+            System.out.println("There was an error logging in, please try again");
+            return null;
         }
     }
 
@@ -69,7 +71,8 @@ public class LogoutService {
             AuthData authData = new AuthData(authmap.get("authToken"),authmap.get("username"));
             return new AbstractMap.SimpleEntry<>(authData,user);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("There was a problem registering, please try again");
+            return null;
         }
 
 
@@ -88,10 +91,12 @@ public class LogoutService {
                 quit();
             }
             if (Objects.equals(line, "login")) {
-                return login();
+                var authtoken = login();
+                if(authtoken!=null) return authtoken;
             }
             if (Objects.equals(line, "register")) {
-                return register();
+                var authtoken = register();
+                if(authtoken!=null) return authtoken;
             }
         }
 

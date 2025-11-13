@@ -19,8 +19,9 @@ public class HttpHelper {
     public static int port = 8080;
 
     //    private static final Server server = new Server();
-    private ArrayList<String> getAllGames(HttpClient client, String fullpath, AuthData data) throws Exception {
+    private ArrayList<com.google.gson.internal.LinkedTreeMap> getAllGames(HttpClient client, AuthData data) throws Exception {
         Gson gson = new Gson();
+        String fullpath = "http://localhost:" + port + "/game";
         var response = send(client, HttpRequest.newBuilder()
                 .uri(new URI(fullpath))
                 .GET()
@@ -29,15 +30,15 @@ public class HttpHelper {
         if (response != null) {
 //            System.out.println("If no player is shown in a game, that means that the seat is open");
             var responsemap = gson.fromJson(response.body(), Map.class);
-            return (ArrayList<String>) responsemap.get("games");
+            return (ArrayList<com.google.gson.internal.LinkedTreeMap>) responsemap.get("games");
         }
         return null;
     }
 
-    private void listgames(HttpClient client, String fullpath, AuthData data) throws Exception {
+    private void listgames(HttpClient client, AuthData data) throws Exception {
         Gson gson = new Gson();
         ;
-        var responselist = getAllGames(client, fullpath, data);
+        var responselist = getAllGames(client, data);
 //                    System.out.println(responselist);
         //
         int counter = 0;
@@ -84,6 +85,17 @@ public class HttpHelper {
     }
 
     private HttpResponse<String> joinGame(HttpClient client, String fullpath, AuthData data, String json) throws Exception {
+        var responselist = getAllGames(client,data);
+        Gson gson = new Gson();
+        var jsonmap = gson.fromJson(json,Map.class);
+        var gameID = ((Double) jsonmap.get("gameID")).intValue()-1;
+        var playerColor = jsonmap.get("playerColor");
+        if(!playerColor.equals("white")&&!playerColor.equals("black")) throw new Exception();;
+        if(gameID>responselist.size()) throw new IndexOutOfBoundsException();
+        var responseobject = (responselist.get(gameID));
+        var responsemap = gson.fromJson(String.valueOf(responseobject),GameData.class);
+        jsonmap.put("gameID",responsemap.gameID());
+        json = gson.toJson(jsonmap);
         return send(client, HttpRequest.newBuilder()
                 .uri(new URI(fullpath))
                 .PUT(HttpRequest.BodyPublishers.ofString(json))
@@ -101,7 +113,7 @@ public class HttpHelper {
             String fullpath = "http://localhost:" + port + "/" + path;
             if (type == RequestType.get) {
                 if (Objects.equals(path, "game")) {
-                    listgames(client, fullpath, data);
+                    listgames(client, data);
 
                 }
 

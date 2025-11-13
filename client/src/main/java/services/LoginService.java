@@ -81,10 +81,14 @@ public class LoginService {
                 System.out.print("Which color would you like to be? ");
                 String gameColor = scanner.nextLine().trim().toLowerCase();
                 String json = "{ \"playerColor\":\""+gameColor+"\", \"gameID\": "+gameID+" }";
-                var response = httpHelper.requestMaker(RequestType.put,"game",json,authData);
-                ChessGame.TeamColor side = (gameColor.equals("black"))? ChessGame.TeamColor.BLACK: ChessGame.TeamColor.WHITE;
-                BoardPrinter.printBoard(new ChessBoard(),side);
-
+                try {
+                    var response = httpHelper.requestMaker(RequestType.put, "game", json, authData);
+                    ChessGame.TeamColor side = (gameColor.equals("black")) ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
+                    BoardPrinter.printBoard(new ChessBoard(), side);
+                }
+                catch (Exception e){
+                    System.out.println("There was a problem joining the game, please check your inputs and try again");
+                }
             }
 
             if(Objects.equals(line,"observe game")){
