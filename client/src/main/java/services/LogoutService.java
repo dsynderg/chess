@@ -53,15 +53,15 @@ public class LogoutService {
     public AbstractMap.SimpleEntry<AuthData, User> register() {
 //        server = new Server();
         Scanner scanner = new Scanner(System.in);
-        final String[] MESSAGES = {"What is your username?", "What is your password?", "What is your email?"};
-        final String[] USERHEADINGS = {"username", "password", "email"};
+        final String[] messages = {"What is your username?", "What is your password?", "What is your email?"};
+        final String[] userheadings = {"username", "password", "email"};
         Map<String, String> userData = new HashMap<>();
 
         for (int i = 0; i < 3; i++) {
-            System.out.println(MESSAGES[i]);
+            System.out.println(messages[i]);
             System.out.print(">>>");
             String line = scanner.nextLine().trim().toLowerCase();
-            userData.put(USERHEADINGS[i], line);
+            userData.put(userheadings[i], line);
         }
         User user = new User(userData.get("username"),userData.get("password"),userData.get("email"));
         Gson gson = new Gson();

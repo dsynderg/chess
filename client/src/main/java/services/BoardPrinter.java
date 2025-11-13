@@ -32,7 +32,8 @@ public class BoardPrinter {
 
 
                 if (piece != null) {
-                    textColor = piece.getTeamColor() == ChessGame.TeamColor.WHITE ? EscapeSequences.SET_TEXT_COLOR_RED : EscapeSequences.SET_TEXT_COLOR_BLUE;
+                    textColor = piece.getTeamColor() == ChessGame.TeamColor.WHITE ?
+                            EscapeSequences.SET_TEXT_COLOR_RED : EscapeSequences.SET_TEXT_COLOR_BLUE;
                     System.out.print(textColor + bgColor + " " + piece + " ");
                 } else {
                     textColor = isEvenSquare ? EscapeSequences.SET_TEXT_COLOR_WHITE : EscapeSequences.SET_TEXT_COLOR_BLACK;

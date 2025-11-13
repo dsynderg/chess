@@ -54,7 +54,7 @@ public class HttpHelper {
         }
     }
 
-    private HttpResponse<String> createGame(HttpClient client, 
+    private HttpResponse<String> createGame(HttpClient client,
                                             String fullpath,
                                             AuthData data,
                                             String json) throws Exception {
@@ -66,7 +66,7 @@ public class HttpHelper {
                 .build());
     }
 
-    private HttpResponse<String> register(HttpClient client, String fullpath, AuthData data, String json) throws Exception {
+    private HttpResponse<String> registerLogin(HttpClient client, String fullpath, AuthData data, String json) throws Exception {
 
         return send(client, HttpRequest.newBuilder()
                 .uri(new URI(fullpath))
@@ -74,13 +74,6 @@ public class HttpHelper {
                 .build());
     }
 
-    private HttpResponse<String> login(HttpClient client, String fullpath, AuthData data, String json) throws Exception {
-
-        return send(client, HttpRequest.newBuilder()
-                .uri(new URI(fullpath))
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build());
-    }
 
     private HttpResponse<String> logout(HttpClient client, String fullpath, AuthData data, String json) throws Exception {
 
@@ -141,11 +134,11 @@ public class HttpHelper {
             }
             if (type == RequestType.post) {
                 if (Objects.equals(path, "session")) {
-                    return login(client, fullpath, data, json);
+                    return registerLogin(client, fullpath, data, json);
                 }
 
                 if (Objects.equals(path, "user")) {
-                    return register(client, fullpath, data, json);
+                    return registerLogin(client, fullpath, data, json);
                 }
                 if (Objects.equals(path, "game")) {
                     return createGame(client, fullpath, data, json);
@@ -159,17 +152,18 @@ public class HttpHelper {
     private static HttpResponse<String> send(HttpClient client, HttpRequest request) throws Exception {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         Gson gson = new Gson();
-        String body = gson.fromJson(response.body(),Map.class).get("message").toString();
         if (response.statusCode() == 200) {
             return response;
         } else if (response.statusCode() == 500) {
+
             System.out.println("There was a server error");
         }
         else if (response.statusCode() == 401){
             System.out.println("You arn't authorized to make this request");
         }
         else {
-        System.out.println(body);
+            String body = gson.fromJson(response.body(),Map.class).get("message").toString();
+            System.out.println(body);
         }
         return null;
 
