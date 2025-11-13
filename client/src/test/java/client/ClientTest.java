@@ -8,10 +8,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import server.Server;
-import services.LogoutService;
 import ui.EscapeSequences;
 
-public class client_tests {
+public class ClientTest {
     static Server server;
     @Test
     void printWhitePieces() {
@@ -66,7 +65,7 @@ public class client_tests {
     }
 
     @Test
-    void ChessBoardInTerm() {
+    void chessBoardInTerm() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 System.out.print(EscapeSequences.SET_BG_COLOR_WHITE);
@@ -87,62 +86,6 @@ public class client_tests {
         }
     }
 
-    @Test
-    void printRealBoard() {
-        //this is the proto type for printing out the board, it will have the lines underneath it as parameters;
-//        ChessBoard board, ChessGame.TeamColor viewPosition
-        ChessBoard board = new ChessBoard();
-        board.resetBoard();
-        board.addPiece(new ChessPosition(4, 5), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
-        ChessGame.TeamColor viewPosition = ChessGame.TeamColor.WHITE;
-        String topbottom = (viewPosition == ChessGame.TeamColor.WHITE) ? "    A  B  C  D  E  F  G  H    " : "    H  G  F  E  D  C  B  A    ";
-
-        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-        System.out.print(topbottom);
-        System.out.println(EscapeSequences.RESET_BG_COLOR);
-        for (int i = 0; i < 8; i++) {
-            int row = (viewPosition == ChessGame.TeamColor.WHITE) ? 8 - i : i + 1;
-            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-            System.out.print(" " + String.valueOf(row) + " ");
-            for (int j = 0; j < 8; j++) {
-
-
-                int col = (viewPosition == ChessGame.TeamColor.WHITE) ? j + 1 : 8 - j;
-                ChessPosition pos = new ChessPosition(row, col);
-                ChessPiece piece = board.getPiece(pos);
-                //if its an even square
-                boolean isEvenSquare = (i + j) % 2 == 0;
-                String bgColor = isEvenSquare ? EscapeSequences.SET_BG_COLOR_WHITE : EscapeSequences.SET_BG_COLOR_BLACK;
-                String textColor;
-
-
-                if (piece != null) {
-                    textColor = piece.getTeamColor() == ChessGame.TeamColor.WHITE ? EscapeSequences.SET_TEXT_COLOR_RED : EscapeSequences.SET_TEXT_COLOR_BLUE;
-                    System.out.print(textColor + bgColor + " " + piece + " ");
-                } else {
-                    textColor = isEvenSquare ? EscapeSequences.SET_TEXT_COLOR_WHITE : EscapeSequences.SET_TEXT_COLOR_BLACK;
-                    System.out.print(bgColor + textColor + " a ");
-
-//                    System.out.print(bgColor + textColor + " \u265F ");
-//                    System.out.print(bgColor + textColor + " aa ");
-                }
-
-
-            }
-            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-            System.out.print(" " + String.valueOf(row) + " ");
-
-            System.out.print(EscapeSequences.RESET_BG_COLOR);
-            System.out.println();
-        }
-        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-        System.out.print(topbottom);
-
-    }
 
     @BeforeAll
     public static void init() {

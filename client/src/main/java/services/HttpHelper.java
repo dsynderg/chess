@@ -166,13 +166,6 @@ public class HttpHelper {
         return null;
 
     }
-//    @AfterAll
-//    static void stopServer(){
-//        server.stop();
-//    }
-//    @BeforeAll
-//    static void startserver(){
-//    }
 }
 
 

@@ -23,18 +23,6 @@ public class LoginService {
         System.out.println("QUIT: Ends your session");
     }
 
-    private void createGame(String name){
-
-    }
-    private void listGames(){
-
-    }
-    private void playGame(String id){
-
-    }
-    private void observe(String id){
-
-    }
     private void quit() {
         System.exit(1);
     }
