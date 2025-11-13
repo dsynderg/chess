@@ -84,7 +84,9 @@ public class LoginService {
                 try {
                     var response = httpHelper.requestMaker(RequestType.put, "game", json, authData);
                     ChessGame.TeamColor side = (gameColor.equals("black")) ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
-                    BoardPrinter.printBoard(new ChessBoard(), side);
+                    ChessBoard board = new ChessBoard();
+                    board.resetBoard();
+                    BoardPrinter.printBoard(board, side);
                 }
                 catch (Exception e){
                     System.out.println("There was a problem joining the game, please check your inputs and try again");
@@ -94,7 +96,9 @@ public class LoginService {
             if(Objects.equals(line,"observe game")){
                 System.out.print("Which game would you like to observe");
                 String observedGame = scanner.nextLine().trim().toLowerCase();
-                BoardPrinter.printBoard(new ChessBoard(), ChessGame.TeamColor.WHITE);
+                ChessBoard board = new ChessBoard();
+                board.resetBoard();
+                BoardPrinter.printBoard(board, ChessGame.TeamColor.WHITE);
 
             }
 
