@@ -16,7 +16,7 @@ import java.util.Objects;
 public class HttpHelper {
 
 
-    public static int port = 8080;
+    public int port = 8080;
 
     //    private static final Server server = new Server();
     private ArrayList<com.google.gson.internal.LinkedTreeMap> getAllGames(HttpClient client, AuthData data) throws Exception {
