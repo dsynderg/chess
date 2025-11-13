@@ -61,13 +61,14 @@ public class LoginService {
                 if (response.statusCode() == 200) {
                     return;
                 }
-                throw new AssertionError();
+//                throw new AssertionError();
             }
             if (Objects.equals(line, "create game")) {
                 System.out.print("What is the game name? ");
                 String gamename = scanner.nextLine().trim().toLowerCase();
                 String json = "{ \"gameName\":\""+gamename+"\" }";
                 var response = httpHelper.requestMaker(RequestType.post, "game", json, authData);
+
 
 
             }

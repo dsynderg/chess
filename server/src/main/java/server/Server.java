@@ -57,7 +57,7 @@ public class Server {
         try {
             if (!validateAuth(ctx)) {
                 ctx.status(401);
-                ctx.result("{ \"message\": \"Error: unauthorized\" }");
+                ctx.result("{ \"message\": \"Error: You can't make that request\" }");
                 return;
             }
             String username;
@@ -82,19 +82,19 @@ public class Server {
             int gameID = ((Double) req.get("gameID")).intValue();
             if (!gameService.checkGameID(gameID)) {
                 ctx.status(400);
-                ctx.result("{ \"message\": \"gameID was invalid\" }");
+                ctx.result("{ \"message\": \"Error: The game that you are trying to join dosn't exist\" }");
                 return;
             }
             if (!gameService.assignColor(username, joinColor, gameID)) {
                 ctx.status(403);
-                ctx.result("{ \"message\": \"Error: already taken\" }");
+                ctx.result("{ \"message\": \"Error: The color is already taken\" }");
                 return;
             }
             ctx.status(200);
             ctx.result("{}");
         } catch (DataAccessException e) {
             ctx.status(500);
-            ctx.result("{ \"message\": \"Error: " + e.toString() + "\" }\n");
+            ctx.result("{ \"message\": \"Error: There was a server error\" }\n");
             return;
         }
     }
@@ -129,7 +129,7 @@ public class Server {
         var req = serializer.fromJson(ctx.body(), Map.class);
         if (req.get("gameName") == null) {
             ctx.status(400);
-            ctx.result("{ \"message\": \"Error: bad request\" }");
+            ctx.result("{ \"message\": \"Error: There was a problem createing your game\" }");
             return;
         }
         try {
@@ -143,7 +143,7 @@ public class Server {
 
             if (gameObject == null) {
                 ctx.status(400);
-                ctx.result("{ \"message\": \"That game name is already taken\" }");
+                ctx.result("{ \"message\": \"Error: That game name is already taken\" }");
                 return;
             }
             String json;
@@ -220,21 +220,21 @@ public class Server {
             // if either the username or password is null
             if (req.get("username") == null || req.get("password") == null) {
                 ctx.status(400);
-                ctx.result("{ \"message\": \"Error: bad request\" }");
+                ctx.result("{ \"message\": \"Error: Your username or password was incorrect\" }");
                 return;
             }
             User userData = new User(req.get("username").toString(), req.get("password").toString(), "");
 
             if (!accountService.checkUsername(userData.username())) {
                 ctx.status(401);
-                ctx.result("{ \"message\": \"Error: bad request\" }");
+                ctx.result("{ \"message\": \"Error: Your username was incorrect\" }");
                 return;
             }
 
 
             if (!accountService.checkPassword(userData.password(), userData)) {
                 ctx.status(401);
-                ctx.result("{ \"message\": \"Error: wrongPassword\" }");
+                ctx.result("{ \"message\": \"Error: You had a wrong Password\" }");
                 return;
             }
 
@@ -259,7 +259,7 @@ public class Server {
             var req = serializer.fromJson(ctx.body(), Map.class);
             if (req.get("username") == null || req.get("password") == null || req.get("email") == null) {
                 ctx.status(400);
-                ctx.result("{ \"message\": \"Error: bad request\" }");
+                ctx.result("{ \"message\": \"Error: There was a problem with your register info\" }");
                 return;
             }
             User userData = new User(req.get("username").toString(), req.get("password").toString(), req.get("email").toString());
@@ -267,7 +267,7 @@ public class Server {
 
             if (!accountService.creatAccont(userData)) {
                 ctx.status(403);
-                ctx.result("{\"message\": \"Error: already taken\"}");
+                ctx.result("{\"message\": \"Error: Your username is already taken\"}");
                 return;
             }
 

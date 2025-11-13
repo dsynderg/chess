@@ -150,10 +150,18 @@ public class HttpHelper {
 
     private static HttpResponse<String> send(HttpClient client, HttpRequest request) throws Exception {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        Gson gson = new Gson();
+        String body = gson.fromJson(response.body(),Map.class).get("message").toString();
         if (response.statusCode() == 200) {
             return response;
-        } else {
-            System.out.println("Error: received status code " + response.statusCode());
+        } else if (response.statusCode() == 500) {
+            System.out.println("There was a server error");
+        }
+        else if (response.statusCode() == 401){
+            System.out.println("You arn't authorized to make this request");
+        }
+        else {
+        System.out.println(body);
         }
         return null;
 
