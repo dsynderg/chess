@@ -31,7 +31,7 @@ public class LogoutService {
             System.out.println(messages[i]);
             System.out.print(">>>");
             String line = scanner.nextLine().trim().toLowerCase();
-            userData.put(userheadings[i], line);
+            userData.put(userHeadings[i], line);
         }
         User user = new User(userData.get("username"),userData.get("password"),null);
         Gson gson = new Gson();
