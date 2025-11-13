@@ -102,10 +102,23 @@ public class ServerFacadeTests {
         assert data.statusCode() == 200;
     }
     @Test
+    public void registerTwice() throws Exception {
+        var json = registerJSON();
+        HttpResponse<String> data = helper.requestMaker(RequestType.post,"user",gson.toJson(json),null);
+        assert data.statusCode() == 200;
+        data = helper.requestMaker(RequestType.post,"user",gson.toJson(json),null);
+        assert data == null;
+    }
+    @Test
     public void logout() throws Exception {
         AuthData data = registerForAuth();
         var resp = helper.requestMaker(RequestType.delete,"session",null,data);
         assert resp.statusCode() == 200;
+    }
+    @Test
+    public void logoutWithoutAuth() throws Exception {
+        var resp = helper.requestMaker(RequestType.delete,"session",null,null);
+        assert resp == null;
     }
 
 

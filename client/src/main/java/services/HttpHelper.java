@@ -108,6 +108,9 @@ public class HttpHelper {
 
 //        server.run(port);
         try (HttpClient client = HttpClient.newHttpClient()) {
+            if(data==null){
+                data = new AuthData("1","none");
+            }
             if (json == null) {
                 json = "{}";
             }
