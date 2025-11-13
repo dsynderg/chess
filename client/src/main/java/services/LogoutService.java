@@ -93,11 +93,11 @@ public class LogoutService {
             }
             if (Objects.equals(line, "login")) {
                 var authtoken = login();
-                if(authtoken!=null) return authtoken;
+                if(authtoken!=null) {return authtoken;}
             }
             if (Objects.equals(line, "register")) {
                 var authtoken = register();
-                if(authtoken!=null) return authtoken;
+                if(authtoken!=null) {return authtoken;}
             }
         }
 

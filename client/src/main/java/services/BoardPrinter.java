@@ -8,12 +8,6 @@ import ui.EscapeSequences;
 
 public class BoardPrinter {
     public static void printBoard(ChessBoard board, ChessGame.TeamColor viewPosition){
-        //this is the proto type for printing out the board, it will have the lines underneath it as parameters;
-//        ChessBoard board, ChessGame.TeamColor viewPosition
-//        ChessBoard board = new ChessBoard();
-//        board.resetBoard();
-//        board.addPiece(new ChessPosition(4,5),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
-//        ChessGame.TeamColor viewPosition = ChessGame.TeamColor.WHITE;
         String topbottom = (viewPosition == ChessGame.TeamColor.WHITE) ? "    A  B  C  D  E  F  G  H    " : "    H  G  F  E  D  C  B  A    ";
 
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
@@ -44,8 +38,6 @@ public class BoardPrinter {
                     textColor = isEvenSquare ? EscapeSequences.SET_TEXT_COLOR_WHITE : EscapeSequences.SET_TEXT_COLOR_BLACK;
                     System.out.print(bgColor + textColor + " a ");
 
-//                    System.out.print(bgColor + textColor + " \u265F ");
-//                    System.out.print(bgColor + textColor + " aa ");
                 }
 
 

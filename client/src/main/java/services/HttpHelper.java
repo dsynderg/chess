@@ -45,11 +45,19 @@ public class HttpHelper {
         for (var game : (Iterable<?>) responselist) {
             counter++;
             GameData gamedata = gson.fromJson(game.toString(), GameData.class);
-            System.out.println(counter + " Name: " + gamedata.gameName() + " White player: " + gamedata.whiteUsername() + " Black player: " + gamedata.blackUsername());
+            System.out.println(counter + " Name: "
+                    + gamedata.gameName()
+                    +" White player: "
+                    + gamedata.whiteUsername()
+                    + " Black player: "
+                    + gamedata.blackUsername());
         }
     }
 
-    private HttpResponse<String> createGame(HttpClient client, String fullpath, AuthData data, String json) throws Exception {
+    private HttpResponse<String> createGame(HttpClient client, 
+                                            String fullpath,
+                                            AuthData data,
+                                            String json) throws Exception {
 
         return send(client, HttpRequest.newBuilder()
                 .uri(new URI(fullpath))
@@ -90,8 +98,8 @@ public class HttpHelper {
         var jsonmap = gson.fromJson(json,Map.class);
         var gameID = ((Double) jsonmap.get("gameID")).intValue()-1;
         var playerColor = jsonmap.get("playerColor");
-        if(!playerColor.equals("white")&&!playerColor.equals("black")) throw new Exception();;
-        if(gameID>responselist.size()) throw new IndexOutOfBoundsException();
+        if(!playerColor.equals("white")&&!playerColor.equals("black")) {throw new Exception();}
+        if(gameID>responselist.size()) {throw new IndexOutOfBoundsException();}
         var responseobject = (responselist.get(gameID));
         var responsemap = gson.fromJson(String.valueOf(responseobject),GameData.class);
         jsonmap.put("gameID",responsemap.gameID());
