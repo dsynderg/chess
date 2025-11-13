@@ -120,6 +120,22 @@ public class ServerFacadeTests {
         var resp = helper.requestMaker(RequestType.delete,"session",null,null);
         assert resp == null;
     }
+    @Test
+    public void login() throws Exception {
+        var usermap = registerJSON();
+        var regResp = helper.requestMaker(RequestType.post,"user",gson.toJson(usermap),null);
+        var logoutResp = helper.requestMaker(RequestType.delete,"session",null,gson.fromJson(regResp.body(),AuthData.class));
+        assert logoutResp.statusCode() == 200;
+        var loginmap = loginJSON(usermap.get("username"),usermap.get("password"));
+        var loginResp = helper.requestMaker(RequestType.post,"session",gson.toJson(loginmap),null);
+        assert loginResp.statusCode()==200;
+
+    }
+    @Test void loginBadCredentials() throws Exception{
+        var loginmap = loginJSON("does not exist","fake password");
+        var loginResp = helper.requestMaker(RequestType.post,"session",gson.toJson(loginmap),null);
+        assert loginResp == null;
+    }
 
 
     @Test
