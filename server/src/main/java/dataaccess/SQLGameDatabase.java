@@ -1,9 +1,7 @@
 package dataaccess;
 
-import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
-import modules.AuthData;
 import modules.GameData;
 
 import java.sql.Connection;

@@ -1,8 +1,5 @@
 package dataaccess;
 
-import chess.ChessGame;
-import com.google.gson.Gson;
-import modules.GameData;
 import modules.User;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -10,7 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Objects;
 
 public class SQLUserDatabase {
     public static boolean inDatabase(String username) throws DataAccessException {

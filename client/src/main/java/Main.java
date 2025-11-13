@@ -1,6 +1,5 @@
 import chess.ChessGame;
 import chess.ChessPiece;
-import clientenums.State;
 import modules.AuthData;
 import modules.User;
 import services.LoginService;

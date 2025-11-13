@@ -5,7 +5,6 @@ import chess.ChessGame;
 import clientenums.RequestType;
 import com.google.gson.Gson;
 import modules.AuthData;
-import modules.User;
 
 import java.util.*;
 

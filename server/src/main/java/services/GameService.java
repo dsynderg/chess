@@ -7,9 +7,6 @@ import dataaccess.memoryimplementaiton.MemDatabaseRegistry;
 import dataaccess.memoryimplementaiton.MemGameDatabase;
 import modules.GameData;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class GameService {

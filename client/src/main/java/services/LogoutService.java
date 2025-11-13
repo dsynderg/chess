@@ -4,7 +4,6 @@ import clientenums.RequestType;
 import com.google.gson.Gson;
 import modules.AuthData;
 import modules.User;
-import server.Server;
 
 import java.util.*;
 
