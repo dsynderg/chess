@@ -39,9 +39,11 @@ public class LogoutService {
         String json = gson.toJson(userData);
         try {
             var response = httpHelper.requestMaker(RequestType.post,"session",json,null);
+            if(response.statusCode()==200){
             Map<String,String> authmap  = gson.fromJson(response.body(),Map.class);
             AuthData authData = new AuthData(authmap.get("authToken"),authmap.get("username"));
-            return new AbstractMap.SimpleEntry<>(authData,user);
+            return new AbstractMap.SimpleEntry<>(authData,user);}
+            return null;
         } catch (Exception e) {
 //            throw new RuntimeException(e);
             System.out.println("There was an error logging in, please try again");

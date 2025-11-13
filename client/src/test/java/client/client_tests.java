@@ -4,13 +4,17 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import server.Server;
 import services.LogoutService;
 import ui.EscapeSequences;
 
 public class client_tests {
+    static Server server;
     @Test
-    void printWhitePieces(){
+    void printWhitePieces() {
         System.out.print(EscapeSequences.SET_BG_COLOR_BLACK); // 44 = blue background, 37 = white text
 
         System.out.println("White King: \u2654");
@@ -21,8 +25,9 @@ public class client_tests {
         System.out.println("White Pawn: \u2659");
 
     }
+
     @Test
-    void printBlackPieces(){
+    void printBlackPieces() {
         System.out.print(EscapeSequences.SET_BG_COLOR_WHITE);
         System.out.println("Black King: \u265A");
         System.out.println("Black Queen: \u265B");
@@ -31,12 +36,13 @@ public class client_tests {
         System.out.println("Black Knight: \u265E");
         System.out.println("Black Pawn: \u265F");
     }
+
     @Test
     void clearTheScreen() throws InterruptedException {
         System.out.println("i want to erase everything");
         System.out.print(EscapeSequences.SET_BG_COLOR_BLACK); // 44 = blue background, 37 = white text
 
-        System.out.println("Black King: "+EscapeSequences.BLACK_KING);
+        System.out.println("Black King: " + EscapeSequences.BLACK_KING);
         System.out.println("Black Queen: \u265B");
         System.out.println("Black Rook: \u265C");
         System.out.println("Black Bishop: \u265D");
@@ -47,6 +53,7 @@ public class client_tests {
         System.out.flush();
         Thread.sleep(1000);
     }
+
     @Test
     void backgroundTest() throws InterruptedException {
         System.out.print(EscapeSequences.SET_BG_COLOR_BLACK); // 44 = blue background, 37 = white text
@@ -57,10 +64,11 @@ public class client_tests {
         System.out.flush();
 //        Thread.sleep(5000);
     }
+
     @Test
-    void ChessBoardInTerm(){
-        for(int i=0; i<4;i++){
-            for(int j=0;j<4;j++) {
+    void ChessBoardInTerm() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
                 System.out.print(EscapeSequences.SET_BG_COLOR_WHITE);
                 System.out.print("   ");
                 System.out.print(EscapeSequences.SET_BG_COLOR_BLACK);
@@ -68,7 +76,7 @@ public class client_tests {
             }
             System.out.print(EscapeSequences.RESET_BG_COLOR);
             System.out.println();
-            for(int j=0;j<4;j++) {
+            for (int j = 0; j < 4; j++) {
                 System.out.print(EscapeSequences.SET_BG_COLOR_BLACK);
                 System.out.print("   ");
                 System.out.print(EscapeSequences.SET_BG_COLOR_WHITE);
@@ -78,13 +86,14 @@ public class client_tests {
             System.out.println();
         }
     }
+
     @Test
-    void printRealBoard(){
+    void printRealBoard() {
         //this is the proto type for printing out the board, it will have the lines underneath it as parameters;
 //        ChessBoard board, ChessGame.TeamColor viewPosition
         ChessBoard board = new ChessBoard();
         board.resetBoard();
-        board.addPiece(new ChessPosition(4,5),new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        board.addPiece(new ChessPosition(4, 5), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         ChessGame.TeamColor viewPosition = ChessGame.TeamColor.WHITE;
         String topbottom = (viewPosition == ChessGame.TeamColor.WHITE) ? "    A  B  C  D  E  F  G  H    " : "    H  G  F  E  D  C  B  A    ";
 
@@ -92,16 +101,16 @@ public class client_tests {
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
         System.out.print(topbottom);
         System.out.println(EscapeSequences.RESET_BG_COLOR);
-        for(int i=0;i<8;i++){
+        for (int i = 0; i < 8; i++) {
             int row = (viewPosition == ChessGame.TeamColor.WHITE) ? 8 - i : i + 1;
             System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
             System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-            System.out.print(" "+String.valueOf(row)+" ");
-            for(int j=0;j<8;j++){
+            System.out.print(" " + String.valueOf(row) + " ");
+            for (int j = 0; j < 8; j++) {
 
 
                 int col = (viewPosition == ChessGame.TeamColor.WHITE) ? j + 1 : 8 - j;
-                ChessPosition pos = new ChessPosition(row,col);
+                ChessPosition pos = new ChessPosition(row, col);
                 ChessPiece piece = board.getPiece(pos);
                 //if its an even square
                 boolean isEvenSquare = (i + j) % 2 == 0;
@@ -124,18 +133,29 @@ public class client_tests {
             }
             System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
             System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-            System.out.print(" "+String.valueOf(row)+" ");
+            System.out.print(" " + String.valueOf(row) + " ");
 
             System.out.print(EscapeSequences.RESET_BG_COLOR);
             System.out.println();
-            }
+        }
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
         System.out.print(topbottom);
 
-        }
-
     }
+
+    @BeforeAll
+    public static void init() {
+        server = new Server();
+        var port = server.run(0);
+        System.out.println("Started test HTTP server on " + port);
+    }
+
+    @AfterAll
+    static void stopServer() {
+        server.stop();
+    }
+}
 
 
 
