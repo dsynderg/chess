@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import server.Server;
 import services.HttpHelper;
 
+import java.lang.reflect.Type;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class ServerFacadeTests {
     private static HttpClient client;
     private static HttpHelper helper;
     private static Gson gson;
+    private Type Map;
 
     @BeforeAll
     public static void init() {
@@ -136,11 +138,31 @@ public class ServerFacadeTests {
         var loginResp = helper.requestMaker(RequestType.post,"session",gson.toJson(loginmap),null);
         assert loginResp == null;
     }
+    @Test void createGame() throws Exception{
 
+        var auth = registerForAuth();
+        var gamejson = createGameJSON();
+        var gameResp = helper.requestMaker(RequestType.post,"game",gson.toJson(gamejson),auth);
+        assert gameResp.statusCode()==200;
 
-    @Test
-    public void sampleTest() {
-        Assertions.assertTrue(true);
     }
+    @Test void createGameInvalidAuth() throws Exception{
+        var gamemap = createGameJSON();
+        var gameResp = helper.requestMaker(RequestType.post,"game",gson.toJson(gamemap),null);
+        assert gameResp == null;
+    }
+
+//    @Test
+//    void joinGame() throws Exception {
+//        var auth = registerForAuth();
+//        var gamejson = createGameJSON();
+//        var gameResp = helper.requestMaker(RequestType.post,"game",gson.toJson(gamejson),auth);
+//        assert gameResp.statusCode()==200;
+//        var gameID = gson.fromJson(gameResp.body(),Map.class);
+//        var joinJson = joinGameJSON("white", 3);
+//        var joinResp = helper.requestMaker(RequestType.put,"game",gson.toJson(joinJson),auth);
+//        assert joinResp.statusCode()==200;
+//    }
+
 
 }
