@@ -24,7 +24,6 @@ public class ServerFacadeTests {
     private static HttpClient client;
     private static HttpHelper helper;
     private static Gson gson;
-    private Type Map;
 
     @BeforeAll
     public static void init() {
@@ -152,17 +151,17 @@ public class ServerFacadeTests {
         assert gameResp == null;
     }
 
-//    @Test
-//    void joinGame() throws Exception {
-//        var auth = registerForAuth();
-//        var gamejson = createGameJSON();
-//        var gameResp = helper.requestMaker(RequestType.post,"game",gson.toJson(gamejson),auth);
-//        assert gameResp.statusCode()==200;
-//        var gameID = gson.fromJson(gameResp.body(),Map.class);
-//        var joinJson = joinGameJSON("white", 3);
+    @Test
+    void joinGame() throws Exception {
+        var auth = registerForAuth();
+        var gamejson = createGameJSON();
+        var gameResp = helper.requestMaker(RequestType.post,"game",gson.toJson(gamejson),auth);
+        assert gameResp.statusCode()==200;
+        var gameID = gson.fromJson(gameResp.body(),Map.class);
+        var joinJson = joinGameJSON("white", 3);
 //        var joinResp = helper.requestMaker(RequestType.put,"game",gson.toJson(joinJson),auth);
 //        assert joinResp.statusCode()==200;
-//    }
+    }
 
 
 }
