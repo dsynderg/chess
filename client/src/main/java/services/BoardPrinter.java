@@ -4,15 +4,16 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import org.junit.jupiter.api.Test;
 import ui.EscapeSequences;
 
 public class BoardPrinter {
     public static void printBoard(ChessBoard board, ChessGame.TeamColor viewPosition){
-        String topbottom = (viewPosition == ChessGame.TeamColor.WHITE) ? "    A  B  C  D  E  F  G  H    " : "    H  G  F  E  D  C  B  A    ";
+        String topBottom = (viewPosition == ChessGame.TeamColor.WHITE) ? "    A  B  C  D  E  F  G  H    " : "    H  G  F  E  D  C  B  A    ";
 
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-        System.out.print(topbottom);
+        System.out.print(topBottom);
         System.out.println(EscapeSequences.RESET_BG_COLOR);
         for(int i=0;i<8;i++){
             int row = (viewPosition == ChessGame.TeamColor.WHITE) ? 8 - i : i + 1;
@@ -52,11 +53,18 @@ public class BoardPrinter {
         }
         System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
-        System.out.print(topbottom);
+        System.out.print(topBottom);
         System.out.print(EscapeSequences.RESET_TEXT_COLOR);
         System.out.println(EscapeSequences.RESET_BG_COLOR);
 
 
+    }
+    void main(){
+        ChessBoard board = new ChessBoard();
+        board.resetBoard();
+        printBoard(board, ChessGame.TeamColor.WHITE);
+        System.out.println();
+        printBoard(board, ChessGame.TeamColor.BLACK);
     }
 
 }
