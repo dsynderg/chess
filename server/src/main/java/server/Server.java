@@ -6,6 +6,7 @@ import dataaccess.DataAccessException;
 import dataaccess.SQLTableControler;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.websocket.WsConfig;
 import modules.AuthData;
 import modules.GameData;
 import modules.User;
@@ -46,8 +47,18 @@ public class Server {
         server.get("game", this::listGames);
         server.post("game", this::createGame);
         server.put("game", this::joinGame);
+        server.ws("echo",this::echo);
         // Register your endpoints and exception handlers here.
 
+    }
+
+    private void echo(WsConfig ws) {
+        ws.onConnect(ctx -> {
+            ctx.enableAutomaticPings();
+            System.out.println("Websocket connected");
+        });
+        ws.onMessage(ctx -> ctx.send("WebSocket response:" + ctx.message()));
+        ws.onClose(_ -> System.out.println("Websocket closed"));
     }
 
     private void joinGame(Context ctx) {
