@@ -55,13 +55,12 @@ public class Server {
     private void echo(WsConfig ws) {
         ws.onConnect(ctx -> {
             ctx.enableAutomaticPings();
-//            sendPeriodicMessages(ctx);
-            //ctx.send(stuff) is how you send notifications etc
             System.out.println("Websocket connected");
         });
         ws.onMessage(ctx -> ctx.send("WebSocket response:" + ctx.message()));
         ws.onClose(_ -> System.out.println("Websocket closed"));
     }
+
 
     private void joinGame(Context ctx) {
         var serializer = new Gson();
