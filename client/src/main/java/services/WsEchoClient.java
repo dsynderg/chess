@@ -27,7 +27,7 @@ public class WsEchoClient extends Endpoint {
 
     public WsEchoClient(int port) throws Exception {
         String portString = Integer.toString(port);
-        URI uri = new URI("ws://localhost:"+portString+"/echo");
+        URI uri = new URI("ws://localhost:"+portString+"/echo/bobsgame");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         session = container.connectToServer(this, uri);
 

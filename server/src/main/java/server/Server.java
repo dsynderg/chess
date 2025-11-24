@@ -7,6 +7,7 @@ import dataaccess.SQLTableControler;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.websocket.WsConfig;
+import io.javalin.websocket.WsContext;
 import modules.AuthData;
 import modules.GameData;
 import modules.User;
@@ -27,6 +28,7 @@ public class Server {
     AccountService accountService = new AccountService();
     GameService gameService = new GameService();
     private boolean isRunning = false;
+    Map<String, ArrayList<WsContext>> Notification_map;
 
 
 
@@ -47,15 +49,22 @@ public class Server {
         server.get("game", this::listGames);
         server.post("game", this::createGame);
         server.put("game", this::joinGame);
-        server.ws("echo",this::echo);
+        server.ws("echo/{gamename}",this::echo);
         // Register your endpoints and exception handlers here.
 
     }
 
     private void echo(WsConfig ws) {
         ws.onConnect(ctx -> {
+            String gamename = ctx.pathParam("gamename");
+            System.out.println("a connection was made to " +gamename);
+            Notification_map.computeIfAbsent(gamename, k -> new ArrayList<>());
+            Notification_map.get(gamename).add(ctx);
             ctx.enableAutomaticPings();
             System.out.println("Websocket connected");
+            for(var context:Notification_map.get(gamename)){
+                context.send("someone else connected");
+            }
         });
         ws.onMessage(ctx -> ctx.send("WebSocket response:" + ctx.message()));
         ws.onClose(_ -> System.out.println("Websocket closed"));
@@ -301,6 +310,7 @@ public class Server {
         if(!isRunning){
             isRunning = true;
             server.start(desiredPort);
+            Notification_map = new HashMap<>();
         }
         return server.port();
     }

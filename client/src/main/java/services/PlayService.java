@@ -16,11 +16,11 @@ public class PlayService {
     }
     private static  void help(){
         System.out.println("HELP: Gets list of relevant commands");
-        System.out.println("DRAWBOARD: Logs you out");
-        System.out.println("LEAVE: Creates a new game");
-        System.out.println("RESIGN: Prints out all of the joinable games");
-        System.out.println("MAKEMOVE: joins a game");
-        System.out.println("HIGHLIGHT: allows you to oberve a game");
+        System.out.println("DRAWBOARD: Redraws the board");
+        System.out.println("LEAVE: Step away from the chess board");
+        System.out.println("RESIGN: You automaticly loose");
+        System.out.println("MAKEMOVE: You make a chess move");
+        System.out.println("HIGHLIGHT: You give a piece on the board and it shows you the possible moves");
     }
     private static void leave(){}
     private static void resign(){}
@@ -35,7 +35,8 @@ public class PlayService {
                 help();
             }
             if (Objects.equals(line, "leave")) {
-                leave();
+                //do the proper back end to remove the player from the chess game object
+                return;
             }
             if (Objects.equals(line, "resign")) {
                 resign();
