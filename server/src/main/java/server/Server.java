@@ -50,8 +50,25 @@ public class Server {
         server.post("game", this::createGame);
         server.put("game", this::joinGame);
         server.ws("echo/{gamename}",this::echo);
+        server.ws("game/{gamename}",this.connectGame);
         // Register your endpoints and exception handlers here.
 
+    }
+    private void connectGame(WsConfig ws){
+        ws.onConnect(ctx -> {
+            String gamename = ctx.pathParam("gamename");
+            System.out.println("a connection was made to " +gamename);
+            Notification_map.computeIfAbsent(gamename, k -> new ArrayList<>());
+            Notification_map.get(gamename).add(ctx);
+            ctx.enableAutomaticPings();
+            System.out.println("Websocket connected");
+            String playerName = "player name will be gotten from context";
+            for(var context:Notification_map.get(gamename)){
+                context.send(playerName+" connected");
+            }
+        });
+        ws.onMessage(ctx -> ctx.send("WebSocket response:" + ctx.message()));
+        ws.onClose(_ -> System.out.println("Websocket closed"));
     }
 
     private void echo(WsConfig ws) {
