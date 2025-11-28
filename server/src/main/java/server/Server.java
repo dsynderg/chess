@@ -50,7 +50,7 @@ public class Server {
         server.post("game", this::createGame);
         server.put("game", this::joinGame);
         server.ws("echo/{gamename}",this::echo);
-        server.ws("game/{gamename}",this::connectGame);
+        server.ws("game/{gamename}/{playername}",this::connectGame);
         // Register your endpoints and exception handlers here.
 
     }
@@ -62,7 +62,7 @@ public class Server {
             Notification_map.get(gamename).add(ctx);
             ctx.enableAutomaticPings();
             System.out.println("Websocket connected");
-            String playerName = "player name will be gotten from context";
+            String playerName = ctx.pathParam("playername");
             for(var context:Notification_map.get(gamename)){
                 System.out.println(context);
                 context.send(playerName+" connected");
@@ -70,7 +70,7 @@ public class Server {
         });
         ws.onMessage(ctx -> ctx.send("WebSocket response:" + ctx.message()));
         ws.onClose(ctx -> {System.out.println("Websocket closed");
-            Notification_map.get(ctx.pathParam("gamename")).remove(ctx);
+            Notification_map.get(ctx.pathParam("gamename")).removeIf(c-> c.sessionId().equals(ctx.sessionId()));
         });
     }
 

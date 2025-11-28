@@ -17,28 +17,34 @@ public class HttpHelper {
 
 
     public int port = 8080;
+    private HttpClient client;
+
+
 
     //    private static final Server server = new Server();
-    private ArrayList<com.google.gson.internal.LinkedTreeMap> getAllGames(HttpClient client, AuthData data) throws Exception {
-        Gson gson = new Gson();
-        String fullpath = "http://localhost:" + port + "/game";
-        var response = send(client, HttpRequest.newBuilder()
-                .uri(new URI(fullpath))
-                .GET()
-                .header("authorization", data.authToken())
-                .build());
-        if (response != null) {
+    public ArrayList<com.google.gson.internal.LinkedTreeMap> getAllGames(AuthData data) throws Exception {
+        try(HttpClient client = HttpClient.newHttpClient()) {
+            Gson gson = new Gson();
+            String fullpath = "http://localhost:" + port + "/game";
+            var response = send(client, HttpRequest.newBuilder()
+                    .uri(new URI(fullpath))
+                    .GET()
+                    .header("authorization", data.authToken())
+                    .build());
+            if (response != null) {
 //            System.out.println("If no player is shown in a game, that means that the seat is open");
-            var responsemap = gson.fromJson(response.body(), Map.class);
-            return (ArrayList<com.google.gson.internal.LinkedTreeMap>) responsemap.get("games");
+                var responsemap = gson.fromJson(response.body(), Map.class);
+                return (ArrayList<com.google.gson.internal.LinkedTreeMap>) responsemap.get("games");
+            }
+            return null;
         }
-        return null;
     }
+
 
     private void listgames(HttpClient client, AuthData data) throws Exception {
         Gson gson = new Gson();
         ;
-        var responselist = getAllGames(client, data);
+        var responselist = getAllGames(data);
 //                    System.out.println(responselist);
         //
         int counter = 0;
@@ -86,7 +92,7 @@ public class HttpHelper {
     }
 
     private HttpResponse<String> joinGame(HttpClient client, String fullpath, AuthData data, String json) throws Exception {
-        var responselist = getAllGames(client,data);
+        var responselist = getAllGames(data);
         Gson gson = new Gson();
         var jsonmap = gson.fromJson(json,Map.class);
         var gameID = ((Double) jsonmap.get("gameID")).intValue()-1;

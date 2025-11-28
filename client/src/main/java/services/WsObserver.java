@@ -31,6 +31,7 @@ public class WsObserver extends Endpoint {
         URI uri = new URI("ws://localhost:"+portString+"/game/chess");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         session = container.connectToServer(this,uri);
+
         session.getBasicRemote().sendText("logged in");
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {

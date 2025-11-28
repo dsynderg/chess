@@ -86,6 +86,7 @@ public class LoginService {
             if(Objects.equals(line,"observe game")){
                 System.out.print("Which game would you like to observe");
                 String observedGame = scanner.nextLine().trim().toLowerCase();
+                var gameslist = httpHelper.getAllGames(new AuthData("asdf","sdfh"));
                 ChessBoard board = new ChessBoard();
                 board.resetBoard();
                 BoardPrinter.printBoard(board, ChessGame.TeamColor.WHITE);
