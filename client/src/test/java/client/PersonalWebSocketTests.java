@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import server.Server;
 import services.WsEchoClient;
 import services.WsObserver;
+import websocket.commands.UserGameCommand;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,11 +39,13 @@ public class PersonalWebSocketTests {
     public static void close(){server.stop();}
     @Test
     void multiplewebsocketConnection() throws Exception {
-        var newobserver = new WsObserver(8080,"game","bob");
+        var newobserver = new WsObserver(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"564","bob",123));
 
-        assert true;
-        var extraobserver = new WsObserver(8080,"game","bob");
-
+        var extraobserver = new WsObserver(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"4569","don",123));
+//        assert newobserver.hasRecivedMessage;
+        assert !extraobserver.hasRecivedMessage;
+        var newobserverdiffgame = new WsObserver(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"sldfkj","fill",789));
+        assert !extraobserver.hasRecivedMessage;
     }
     @Test
     public void echoTest() throws Exception {

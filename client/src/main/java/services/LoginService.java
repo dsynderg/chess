@@ -5,6 +5,7 @@ import chess.ChessGame;
 import clientenums.RequestType;
 import com.google.gson.Gson;
 import modules.AuthData;
+import websocket.commands.UserGameCommand;
 
 import java.util.*;
 
@@ -86,10 +87,13 @@ public class LoginService {
             if(Objects.equals(line,"observe game")){
                 System.out.print("Which game would you like to observe");
                 String observedGame = scanner.nextLine().trim().toLowerCase();
-                var gameslist = httpHelper.getAllGames(new AuthData("asdf","sdfh"));
-                ChessBoard board = new ChessBoard();
-                board.resetBoard();
-                BoardPrinter.printBoard(board, ChessGame.TeamColor.WHITE);
+                var gameslist = httpHelper.getAllGames(authData);
+                int gameToObserve = (int) gameslist.get((Integer.parseInt(observedGame)-1)).get("gameID");
+                UserGameCommand connect = new UserGameCommand(UserGameCommand.CommandType.CONNECT
+                        ,authData.authToken()
+                        ,authData.username()
+                        ,gameToObserve);
+                PlayService.playRepl(connect, true);
 
             }
 

@@ -4,6 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import jakarta.websocket.*;
+import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -14,9 +15,10 @@ import java.util.Scanner;
 public class WsObserver extends Endpoint {
     public Session session;
     private static Gson gson;
-    public static boolean hasRecivedMessage = false;
+    public boolean hasRecivedMessage = false;
     public static void main(String[] args) throws Exception {
-        WsObserver client = new WsObserver(8080,"game","chess");
+
+        WsObserver client = new WsObserver(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"123","bob",123));
 
         Scanner scanner = new Scanner(System.in);
 
@@ -25,10 +27,10 @@ public class WsObserver extends Endpoint {
             client.send(scanner.nextLine());
         }
     }
-    public WsObserver(int port, String path,String game) throws Exception{
+    public WsObserver(int port, UserGameCommand command) throws Exception{
         String portString = Integer.toString(port);
         gson = new Gson();
-        URI uri = new URI("ws://localhost:"+portString+"/game/chess");
+        URI uri = new URI("ws://localhost:"+portString+"/game/"+command.getGameID().toString()+"/"+ command.getUsername());
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         session = container.connectToServer(this,uri);
 
