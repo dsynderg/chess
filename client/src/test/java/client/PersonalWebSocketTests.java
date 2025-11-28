@@ -1,17 +1,14 @@
 package client;
 
-import jakarta.websocket.ContainerProvider;
-import jakarta.websocket.WebSocketContainer;
 import org.eclipse.jetty.websocket.api.Session;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import server.Server;
 import services.WsEchoClient;
-import services.WsObserver;
+import services.WsHelper;
 import websocket.commands.UserGameCommand;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 public class PersonalWebSocketTests {
@@ -39,12 +36,12 @@ public class PersonalWebSocketTests {
     public static void close(){server.stop();}
     @Test
     void multiplewebsocketConnection() throws Exception {
-        var newobserver = new WsObserver(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"564","bob",123));
+        var newobserver = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"564","bob",123),true);
 
-        var extraobserver = new WsObserver(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"4569","don",123));
+        var extraobserver = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"4569","don",123),true);
 //        assert newobserver.hasRecivedMessage;
         assert !extraobserver.hasRecivedMessage;
-        var newobserverdiffgame = new WsObserver(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"sldfkj","fill",789));
+        var newobserverdiffgame = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"sldfkj","fill",789),true);
         assert !extraobserver.hasRecivedMessage;
     }
     @Test

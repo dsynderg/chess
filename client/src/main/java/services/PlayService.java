@@ -4,7 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
-import modules.AuthData;
+import com.google.gson.Gson;
 import websocket.commands.UserGameCommand;
 
 import java.util.Objects;
@@ -12,6 +12,8 @@ import java.util.Scanner;
 
 public class PlayService {
     private static ChessBoard board;
+    private static WsHelper helper;
+    private static Gson gson;
     private static  void drawboard(ChessBoard board){
         BoardPrinter.printBoard(board, ChessGame.TeamColor.WHITE);
     }
@@ -29,8 +31,16 @@ public class PlayService {
     private static void resign(){}
     private static void makeMove(ChessMove move){}
     private static void hilightLegalMoves(ChessPosition position){}
-    public static void playRepl(UserGameCommand command, Boolean isPlayer){
+    public static void playRepl(UserGameCommand command, Boolean isPlayer) throws Exception {
+
         //if isPlayer is false then he is an observer
+        if(!isPlayer){
+            helper = new WsHelper(8080,command,false);
+        }
+        else if(isPlayer){
+            helper = new WsHelper(8080,command,true);
+
+        }
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print("LOGGED_OUT>>>");
@@ -40,9 +50,16 @@ public class PlayService {
             }
             if (Objects.equals(line, "leave")) {
                 //do the proper back end to remove the player from the chess game object
+                helper.close();
                 return;
             }
             if (Objects.equals(line, "drawboard")) {
+                UserGameCommand drawCommand = new UserGameCommand(UserGameCommand.CommandType.LOAD_GAME,
+                        command.getAuthToken(),
+                        command.getUsername(),
+                        command.getGameID());
+                gson = new Gson();
+                helper.send(gson.toJson(drawCommand));
                 drawboard(new ChessBoard());
             }
             if(isPlayer) {

@@ -12,13 +12,14 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Scanner;
 
-public class WsObserver extends Endpoint {
+public class WsHelper extends Endpoint {
+    public ChessBoard board = new ChessBoard();
     public Session session;
     private static Gson gson;
     public boolean hasRecivedMessage = false;
     public static void main(String[] args) throws Exception {
 
-        WsObserver client = new WsObserver(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"123","bob",123));
+        WsHelper client = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"123","bob",123),true);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -27,7 +28,8 @@ public class WsObserver extends Endpoint {
             client.send(scanner.nextLine());
         }
     }
-    public WsObserver(int port, UserGameCommand command) throws Exception{
+
+    public WsHelper(int port, UserGameCommand command,boolean isPlayer) throws Exception{
         String portString = Integer.toString(port);
         gson = new Gson();
         URI uri = new URI("ws://localhost:"+portString+"/game/"+command.getGameID().toString()+"/"+ command.getUsername());
@@ -43,7 +45,8 @@ public class WsObserver extends Endpoint {
             }
         });
     }
-    private static void printmessage(String message){
+
+    private static void messageHandler(String message){
        var jsonMessage = gson.fromJson(message, Map.class);
        if(jsonMessage.get("messagetype")== ServerMessage.ServerMessageType.LOAD_GAME){
            if(jsonMessage.get("gameboard")==null){return;}
@@ -62,12 +65,17 @@ public class WsObserver extends Endpoint {
            System.out.println("There was a problem with the server");
        }
     }
+
     public void send(String message) throws IOException {
         session.getBasicRemote().sendText(message);
     }
 
+
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
 
+    }
+    public void close() throws IOException {
+        session.close();
     }
 }

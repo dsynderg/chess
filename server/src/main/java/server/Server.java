@@ -71,6 +71,7 @@ public class Server {
         });
         ws.onMessage(ctx -> {
 
+
         });
         ws.onClose(ctx -> {System.out.println("Websocket closed");
             Notification_map.get(ctx.pathParam("gameID")).removeIf(c-> c.sessionId().equals(ctx.sessionId()));
