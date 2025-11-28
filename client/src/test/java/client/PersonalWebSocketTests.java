@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import server.Server;
 import services.WsEchoClient;
+import services.WsObserver;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,8 +16,9 @@ import java.net.URISyntaxException;
 public class PersonalWebSocketTests {
     static Server server;
     public static Session session;
-    static WsEchoClient client;
-    URI uri = new URI("ws://localhost:0/ws");
+    private static int port;
+//    static WsEchoClient client;
+//    URI uri = new URI("ws://localhost:0/ws");
 
     public PersonalWebSocketTests() throws URISyntaxException {
     }
@@ -25,13 +27,26 @@ public class PersonalWebSocketTests {
 
     public static void init() throws Exception {
         server = new Server();
-        var port = server.run(0);
+        port = server.run(8080);
         System.out.println("Started test HTTP server on " + port);
-        client = new WsEchoClient(0);
+//        client = new WsEchoClient(0);
     }
+
+
+
     @AfterAll
     public static void close(){server.stop();}
     @Test
-    public void echoTest() {}
+    void multiplewebsocketConnection() throws Exception {
+        var newobserver = new WsObserver(8080,"game","bob");
+
+        assert true;
+        var extraobserver = new WsObserver(8080,"game","bob");
+
+    }
+    @Test
+    public void echoTest() throws Exception {
+        var echoclient = new WsEchoClient(8080);
+    }
 
 }

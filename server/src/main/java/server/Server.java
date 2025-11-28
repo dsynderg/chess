@@ -50,7 +50,7 @@ public class Server {
         server.post("game", this::createGame);
         server.put("game", this::joinGame);
         server.ws("echo/{gamename}",this::echo);
-        server.ws("game/{gamename}",this.connectGame);
+        server.ws("game/{gamename}",this::connectGame);
         // Register your endpoints and exception handlers here.
 
     }
@@ -64,11 +64,13 @@ public class Server {
             System.out.println("Websocket connected");
             String playerName = "player name will be gotten from context";
             for(var context:Notification_map.get(gamename)){
+                System.out.println(context);
                 context.send(playerName+" connected");
             }
         });
         ws.onMessage(ctx -> ctx.send("WebSocket response:" + ctx.message()));
-        ws.onClose(_ -> System.out.println("Websocket closed"));
+        ws.onClose(_ -> {System.out.println("Websocket closed");
+        });
     }
 
     private void echo(WsConfig ws) {

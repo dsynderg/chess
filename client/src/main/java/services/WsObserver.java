@@ -3,28 +3,40 @@ package services;
 import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
-import jakarta.websocket.ContainerProvider;
-import jakarta.websocket.MessageHandler;
-import jakarta.websocket.Session;
-import jakarta.websocket.WebSocketContainer;
+import jakarta.websocket.*;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
+import java.util.Scanner;
 
-public class WsObserver {
+public class WsObserver extends Endpoint {
     public Session session;
     private static Gson gson;
+    public static boolean hasRecivedMessage = false;
+    public static void main(String[] args) throws Exception {
+        WsObserver client = new WsObserver(8080,"game","chess");
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter a message you want to echo:");
+        while(true) {
+            client.send(scanner.nextLine());
+        }
+    }
     public WsObserver(int port, String path,String game) throws Exception{
         String portString = Integer.toString(port);
         gson = new Gson();
-        URI uri = new URI("ws://localhost:"+portString+"/"+path+"/"+game);
+        URI uri = new URI("ws://localhost:"+portString+"/game/chess");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         session = container.connectToServer(this,uri);
+        session.getBasicRemote().sendText("logged in");
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
-                printmessage(message);
+//                printmessage(message);
+                System.out.println(message);
+                hasRecivedMessage = true;
             }
         });
     }
@@ -49,5 +61,10 @@ public class WsObserver {
     }
     public void send(String message) throws IOException {
         session.getBasicRemote().sendText(message);
+    }
+
+    @Override
+    public void onOpen(Session session, EndpointConfig endpointConfig) {
+
     }
 }
