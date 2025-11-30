@@ -68,14 +68,17 @@ public class Server {
             String playerName = ctx.pathParam("playername");
             for(var context:Notification_map.get(gameID)){
                 System.out.println(context);
-                context.send(playerName+" connected");
+                ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\""+playerName+" connected\"}");
+                context.send(serverMessage);
             }
             Notification_map.get(gameID).add(ctx);
         });
         ws.onMessage(ctx -> {
             UserGameCommand command;
             Gson gson = new Gson();
-            var ctxMap = gson.fromJson(ctx.message(),Map.class);
+            String message = ctx.message();
+            System.out.println(message);
+            var ctxMap = gson.fromJson(message,Map.class);
             if (ctxMap.get("commandType")!= UserGameCommand.CommandType.MAKE_MOVE){
                  command = gson.fromJson(ctx.message(), UserGameCommand.class);
             }
@@ -97,8 +100,8 @@ public class Server {
                 for(var game:games){
                     if(game.gameID()==command.getGameID()){
                         for(var context:Notification_map.get(String.valueOf(game.gameID()))){
-                            ServerMessage message = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME,gson.toJson(game));
-                            context.send(gson.toJson(message));
+                            ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME,gson.toJson(game));
+                            context.send(gson.toJson(serverMessage));
                         }
 
                     }

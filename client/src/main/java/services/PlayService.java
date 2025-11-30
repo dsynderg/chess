@@ -60,8 +60,8 @@ public class PlayService {
                         command.getGameID());
                 gson = new Gson();
                 var drawcommandjson = gson.toJson(drawCommand);
-                helper.send(gson.toJson(drawCommand));
-                drawboard(new ChessBoard());
+                helper.send(drawcommandjson);
+//                drawboard(new ChessBoard());
             }
             if(isPlayer) {
                 if (Objects.equals(line, "resign")) {

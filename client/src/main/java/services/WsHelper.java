@@ -11,6 +11,7 @@ import websocket.messages.ServerMessage;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class WsHelper extends Endpoint {
@@ -25,9 +26,9 @@ public class WsHelper extends Endpoint {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Enter a message you want to echo:");
+//        System.out.println("Enter a message you want to echo:");
         while(true) {
-            client.send(scanner.nextLine());
+            var bob = scanner.nextLine();
         }
     }
 
@@ -39,10 +40,9 @@ public class WsHelper extends Endpoint {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         session = container.connectToServer(this,uri);
 
-        session.getBasicRemote().sendText("logged in");
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
-//                printmessage(message);
+                messageHandler(message);
                 System.out.println(message);
                 hasRecivedMessage = true;
             }
@@ -53,8 +53,10 @@ public class WsHelper extends Endpoint {
        var jsonMessage = gson.fromJson(message, ServerMessage.class);
        if(jsonMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
            var game = gson.fromJson(jsonMessage.getMessage(), GameData.class);
-           if(username == game.blackUsername()){
+           System.out.println();
+           if(Objects.equals(username, game.blackUsername())){
                //print from the black side
+
                BoardPrinter.printBoard(game.game().getBoard(), ChessGame.TeamColor.BLACK );
            }
            else{
@@ -62,15 +64,15 @@ public class WsHelper extends Endpoint {
            }
 
        }
-//       if(jsonMessage.get("messagetype")== ServerMessage.ServerMessageType.ERROR){
-//           System.out.println((String)jsonMessage.get("error"));
-//       }
-//       if(jsonMessage.get("messagetype")== ServerMessage.ServerMessageType.NOTIFICATION){
-//           System.out.println((String) jsonMessage.get("notification"));
-//       }
-//       else{
-//           System.out.println("There was a problem with the server");
-//       }
+       if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.ERROR){
+           System.out.println("Error: "+jsonMessage.getMessage());
+       }
+       if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.NOTIFICATION){
+           System.out.println("Notification: "+ jsonMessage.getMessage());
+       }
+       else{
+           System.out.println("There was a problem with the server");
+       }
     }
 
     public void send(String message) throws IOException {

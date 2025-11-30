@@ -95,7 +95,7 @@ public class LoginService {
                         ,authData.username()
                         ,gameToObserveInt);
 
-                PlayService.playRepl(connect, true);
+                PlayService.playRepl(connect, false);
 
             }
 

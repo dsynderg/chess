@@ -64,8 +64,14 @@ public class LogoutService {
             userData.put(userheadings[i], line);
         }
         User user = new User(userData.get("username"),userData.get("password"),userData.get("email"));
+        return registerLogic(user);
+
+
+
+    }
+    public AbstractMap.SimpleEntry<AuthData,User> registerLogic(User user ){
         Gson gson = new Gson();
-        String json = gson.toJson(userData);
+        String json = gson.toJson(user);
         try {
             var response = httpHelper.requestMaker(RequestType.post,"user",json,null);
             Map<String,String> authmap  = gson.fromJson(response.body(),Map.class);
@@ -75,12 +81,6 @@ public class LogoutService {
             System.out.println("There was a problem registering, please try again");
             return null;
         }
-
-
-    }
-    public AbstractMap.SimpleEntry<AuthData,User> registerLogic(User user ){
-
-        return null;
     }
 
     public AbstractMap.SimpleEntry<AuthData,User> isLoggedout() {
