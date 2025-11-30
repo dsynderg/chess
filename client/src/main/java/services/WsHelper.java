@@ -4,6 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import jakarta.websocket.*;
+import modules.GameData;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
@@ -17,6 +18,7 @@ public class WsHelper extends Endpoint {
     public Session session;
     private static Gson gson;
     public boolean hasRecivedMessage = false;
+    private static String username;
     public static void main(String[] args) throws Exception {
 
         WsHelper client = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"123","bob",123),true);
@@ -32,6 +34,7 @@ public class WsHelper extends Endpoint {
     public WsHelper(int port, UserGameCommand command,boolean isPlayer) throws Exception{
         String portString = Integer.toString(port);
         gson = new Gson();
+        username = command.getUsername();
         URI uri = new URI("ws://localhost:"+portString+"/game/"+command.getGameID().toString()+"/"+ command.getUsername());
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         session = container.connectToServer(this,uri);
@@ -47,23 +50,27 @@ public class WsHelper extends Endpoint {
     }
 
     private static void messageHandler(String message){
-       var jsonMessage = gson.fromJson(message, Map.class);
-       if(jsonMessage.get("messagetype")== ServerMessage.ServerMessageType.LOAD_GAME){
-           if(jsonMessage.get("gameboard")==null){return;}
-           ChessGame.TeamColor color = gson.fromJson((String)jsonMessage.get("teamColor"),ChessGame.TeamColor.class);
-           ChessBoard board = gson.fromJson((String) jsonMessage.get("gameboard"),ChessBoard.class);
-           BoardPrinter.printBoard(board,color);
+       var jsonMessage = gson.fromJson(message, ServerMessage.class);
+       if(jsonMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
+           var game = gson.fromJson(jsonMessage.getMessage(), GameData.class);
+           if(username == game.blackUsername()){
+               //print from the black side
+               BoardPrinter.printBoard(game.game().getBoard(), ChessGame.TeamColor.BLACK );
+           }
+           else{
+               BoardPrinter.printBoard((game.game().getBoard()), ChessGame.TeamColor.WHITE);
+           }
 
        }
-       if(jsonMessage.get("messagetype")== ServerMessage.ServerMessageType.ERROR){
-           System.out.println((String)jsonMessage.get("error"));
-       }
-       if(jsonMessage.get("messagetype")== ServerMessage.ServerMessageType.NOTIFICATION){
-           System.out.println((String) jsonMessage.get("notification"));
-       }
-       else{
-           System.out.println("There was a problem with the server");
-       }
+//       if(jsonMessage.get("messagetype")== ServerMessage.ServerMessageType.ERROR){
+//           System.out.println((String)jsonMessage.get("error"));
+//       }
+//       if(jsonMessage.get("messagetype")== ServerMessage.ServerMessageType.NOTIFICATION){
+//           System.out.println((String) jsonMessage.get("notification"));
+//       }
+//       else{
+//           System.out.println("There was a problem with the server");
+//       }
     }
 
     public void send(String message) throws IOException {

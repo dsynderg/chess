@@ -78,6 +78,10 @@ public class LogoutService {
 
 
     }
+    public AbstractMap.SimpleEntry<AuthData,User> registerLogic(User user ){
+
+        return null;
+    }
 
     public AbstractMap.SimpleEntry<AuthData,User> isLoggedout() {
         //will eventually return a user object

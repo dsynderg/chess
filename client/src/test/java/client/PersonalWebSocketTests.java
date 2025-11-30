@@ -48,5 +48,9 @@ public class PersonalWebSocketTests {
     public void echoTest() throws Exception {
         var echoclient = new WsEchoClient(8080);
     }
+    @Test
+    public void loadGame() throws Exception {
+//        var
+    }
 
 }

@@ -85,14 +85,16 @@ public class LoginService {
             }
 
             if(Objects.equals(line,"observe game")){
-                System.out.print("Which game would you like to observe");
+                System.out.print("Which game would you like to observe? ");
                 String observedGame = scanner.nextLine().trim().toLowerCase();
                 var gameslist = httpHelper.getAllGames(authData);
-                int gameToObserve = (int) gameslist.get((Integer.parseInt(observedGame)-1)).get("gameID");
+                Double gameToObserveDouble = (Double) gameslist.get((Integer.parseInt(observedGame)-1)).get("gameID");
+                int gameToObserveInt = (int) gameToObserveDouble.intValue();
                 UserGameCommand connect = new UserGameCommand(UserGameCommand.CommandType.CONNECT
                         ,authData.authToken()
                         ,authData.username()
-                        ,gameToObserve);
+                        ,gameToObserveInt);
+
                 PlayService.playRepl(connect, true);
 
             }

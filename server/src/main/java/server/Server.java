@@ -14,6 +14,9 @@ import modules.User;
 import services.AccountService;
 import services.DeleteService;
 import services.GameService;
+import websocket.commands.MakeMoveCommand;
+import websocket.commands.UserGameCommand;
+import websocket.messages.ServerMessage;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -56,20 +59,51 @@ public class Server {
     }
     private void connectGame(WsConfig ws){
         ws.onConnect(ctx -> {
-            String gamename = ctx.pathParam("gameID");
-            System.out.println("a connection was made to " +gamename);
-            Notification_map.computeIfAbsent(gamename, k -> new ArrayList<>());
+            String gameID = ctx.pathParam("gameID");
+            System.out.println("a connection was made to " +gameID);
+            Notification_map.computeIfAbsent(gameID, k -> new ArrayList<>());
 
             ctx.enableAutomaticPings();
             System.out.println("Websocket connected");
             String playerName = ctx.pathParam("playername");
-            for(var context:Notification_map.get(gamename)){
+            for(var context:Notification_map.get(gameID)){
                 System.out.println(context);
                 context.send(playerName+" connected");
             }
-            Notification_map.get(gamename).add(ctx);
+            Notification_map.get(gameID).add(ctx);
         });
         ws.onMessage(ctx -> {
+            UserGameCommand command;
+            Gson gson = new Gson();
+            var ctxMap = gson.fromJson(ctx.message(),Map.class);
+            if (ctxMap.get("commandType")!= UserGameCommand.CommandType.MAKE_MOVE){
+                 command = gson.fromJson(ctx.message(), UserGameCommand.class);
+            }
+            else{
+                 command = gson.fromJson(ctx.message(), MakeMoveCommand.class);
+                 // do the make move logic
+            }
+            if(!accountService.checkAuth(command.getAuthToken())){
+                //return an error
+            }
+            if(command.getCommandType()== UserGameCommand.CommandType.LEAVE){
+
+            }
+            else if (command.getCommandType()== UserGameCommand.CommandType.RESIGN){
+
+            }
+            else if (command.getCommandType() == UserGameCommand.CommandType.LOAD_GAME){
+                var games = gameService.getGames();
+                for(var game:games){
+                    if(game.gameID()==command.getGameID()){
+                        for(var context:Notification_map.get(String.valueOf(game.gameID()))){
+                            ServerMessage message = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME,gson.toJson(game));
+                            context.send(gson.toJson(message));
+                        }
+
+                    }
+                }
+            }
 
 
         });

@@ -43,7 +43,7 @@ public class PlayService {
         }
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.print("LOGGED_OUT>>>");
+            System.out.print("PLAY GAME>>> ");
             String line = scanner.nextLine().trim().toLowerCase();
             if (Objects.equals(line, "help")) {
                 help(isPlayer);
@@ -59,6 +59,7 @@ public class PlayService {
                         command.getUsername(),
                         command.getGameID());
                 gson = new Gson();
+                var drawcommandjson = gson.toJson(drawCommand);
                 helper.send(gson.toJson(drawCommand));
                 drawboard(new ChessBoard());
             }
