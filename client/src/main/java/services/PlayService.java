@@ -30,6 +30,29 @@ public class PlayService {
     private static void leave(){}
     private static void resign(){}
     private static void makeMove(ChessMove move){}
+    private static int columnMakeMoveHelper(char column) {
+        column = Character.toLowerCase(column);
+        switch (column) {
+            case 'a':
+                return 1;
+            case 'b':
+                return 2;
+            case 'c':
+                return 3;
+            case 'd':
+                return 4;
+            case 'e':
+                return 5;
+            case 'f':
+                return 6;
+            case 'g':
+                return 7;
+            case 'h':
+                return 8;
+        }
+        return 100;
+    }
+
     private static void hilightLegalMoves(ChessPosition position){}
     public static void playRepl(UserGameCommand command, Boolean isPlayer) throws Exception {
 
@@ -50,6 +73,13 @@ public class PlayService {
             }
             if (Objects.equals(line, "leave")) {
                 //do the proper back end to remove the player from the chess game object
+                UserGameCommand leaveCommand = new UserGameCommand(UserGameCommand.CommandType.LEAVE,
+                        command.getAuthToken(),
+                        command.getUsername(),
+                        command.getGameID());
+                gson = new Gson();
+                var leaveJson = gson.toJson(leaveCommand);
+                helper.send(leaveJson);
                 helper.close();
                 return;
             }

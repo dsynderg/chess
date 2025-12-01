@@ -23,6 +23,7 @@ public class WsHelper extends Endpoint {
     public static void main(String[] args) throws Exception {
 
         WsHelper client = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"123","bob",123),true);
+        WsHelper client2 = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"4444123","bob2",123),true);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -65,17 +66,19 @@ public class WsHelper extends Endpoint {
 
        }
        if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.ERROR){
-           System.out.println("Error: "+jsonMessage.getMessage());
+           String notificaitonMessage = gson.fromJson(jsonMessage.getMessage(),Map.class).get("error").toString();
+           System.out.println("Error: "+notificaitonMessage);
        }
        if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.NOTIFICATION){
-           System.out.println("Notification: "+ jsonMessage.getMessage());
+           String notificaitonMessage = gson.fromJson(jsonMessage.getMessage(),Map.class).get("notification").toString();
+           System.out.println("Notification: "+notificaitonMessage);
        }
        else{
            System.out.println("There was a problem with the server");
        }
     }
 
-    public void send(String message) throws IOException {
+    public void send(String message/*this should be a json'ed userGameCommand*/) throws IOException {
         session.getBasicRemote().sendText(message);
     }
 

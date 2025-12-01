@@ -69,7 +69,8 @@ public class Server {
             for(var context:Notification_map.get(gameID)){
                 System.out.println(context);
                 ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\""+playerName+" connected\"}");
-                context.send(serverMessage);
+                String sendingMessage = new Gson().toJson(serverMessage);
+                context.send(sendingMessage);
             }
             Notification_map.get(gameID).add(ctx);
         });
@@ -79,17 +80,27 @@ public class Server {
             String message = ctx.message();
             System.out.println(message);
             var ctxMap = gson.fromJson(message,Map.class);
+
             if (ctxMap.get("commandType")!= UserGameCommand.CommandType.MAKE_MOVE){
                  command = gson.fromJson(ctx.message(), UserGameCommand.class);
             }
             else{
                  command = gson.fromJson(ctx.message(), MakeMoveCommand.class);
+                if(!accountService.checkAuth(command.getAuthToken())){
+                    System.out.println(ctx);
+                    ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR,"{\"notification\":\"You aren't authorized to make this connection connected\"}");
+                    String sendingMessage = new Gson().toJson(serverMessage);
+                    ctx.send(sendingMessage);
+                }
                  // do the make move logic
             }
             if(!accountService.checkAuth(command.getAuthToken())){
-                //return an error
+                System.out.println(ctx);
+                ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR,"{\"notification\":\"You aren't authorized to make this connection connected\"}");
+                String sendingMessage = new Gson().toJson(serverMessage);
+                ctx.send(sendingMessage);
             }
-            if(command.getCommandType()== UserGameCommand.CommandType.LEAVE){
+            else if(command.getCommandType()== UserGameCommand.CommandType.LEAVE){
 
             }
             else if (command.getCommandType()== UserGameCommand.CommandType.RESIGN){

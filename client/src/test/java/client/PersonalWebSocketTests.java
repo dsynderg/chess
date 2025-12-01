@@ -37,9 +37,11 @@ public class PersonalWebSocketTests {
     @Test
     void multiplewebsocketConnection() throws Exception {
         var newobserver = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"564","bob",123),true);
+        Thread.sleep(500);
 
         var extraobserver = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"4569","don",123),true);
-//        assert newobserver.hasRecivedMessage;
+        Thread.sleep(500);
+        assert newobserver.hasRecivedMessage;
         assert !extraobserver.hasRecivedMessage;
         var newobserverdiffgame = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"sldfkj","fill",789),true);
         assert !extraobserver.hasRecivedMessage;
