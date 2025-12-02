@@ -12,6 +12,7 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessGame {
+    private TeamColor hasWon;
     private TeamColor turnColor = TeamColor.WHITE;
     private ChessBoard board = new ChessBoard();
 
@@ -27,6 +28,10 @@ public class ChessGame {
         }
         ChessGame chessGame = (ChessGame) o;
         return turnColor == chessGame.turnColor && Objects.equals(board, chessGame.board);
+    }
+
+    public TeamColor hasWon(){
+        return hasWon;
     }
 
     @Override
@@ -105,15 +110,17 @@ public class ChessGame {
     }
 
     public void updateBoardState(ChessMove move) {
-        ChessPosition start = move.getStartPosition();
-        ChessPosition end = move.getEndPosition();
-        ChessPiece.PieceType promotion = move.getPromotionPiece();
-        ChessPiece movingPiece = board.getPiece(start);
-        board.addPiece(start, null);
-        if (promotion == null) {
-            board.addPiece(end, movingPiece);
-        } else {
-            board.addPiece(end, new ChessPiece(movingPiece.getTeamColor(), promotion));
+        if (hasWon == null) {
+            ChessPosition start = move.getStartPosition();
+            ChessPosition end = move.getEndPosition();
+            ChessPiece.PieceType promotion = move.getPromotionPiece();
+            ChessPiece movingPiece = board.getPiece(start);
+            board.addPiece(start, null);
+            if (promotion == null) {
+                board.addPiece(end, movingPiece);
+            } else {
+                board.addPiece(end, new ChessPiece(movingPiece.getTeamColor(), promotion));
+            }
         }
     }
 
@@ -155,7 +162,14 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
 
-        return isInCheck(teamColor) && allMoves(teamColor).isEmpty();
+        if (isInCheck(teamColor) && allMoves(teamColor).isEmpty()) {
+            switch (teamColor) {
+                case WHITE -> hasWon = TeamColor.BLACK;
+                case BLACK -> hasWon = TeamColor.WHITE;
+            }
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -45,6 +45,7 @@ public class WsHelper extends Endpoint {
             public void onMessage(String message) {
                 messageHandler(message);
                 System.out.println(message);
+                System.out.println("PLAY GAME>>>");
                 hasRecivedMessage = true;
             }
         });
@@ -65,11 +66,11 @@ public class WsHelper extends Endpoint {
            }
 
        }
-       if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.ERROR){
+       else if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.ERROR){
            String notificaitonMessage = gson.fromJson(jsonMessage.getMessage(),Map.class).get("error").toString();
            System.out.println("Error: "+notificaitonMessage);
        }
-       if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.NOTIFICATION){
+       else if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.NOTIFICATION){
            String notificaitonMessage = gson.fromJson(jsonMessage.getMessage(),Map.class).get("notification").toString();
            System.out.println("Notification: "+notificaitonMessage);
        }

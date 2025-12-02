@@ -73,13 +73,15 @@ public class PlayService {
             }
             if (Objects.equals(line, "leave")) {
                 //do the proper back end to remove the player from the chess game object
-                UserGameCommand leaveCommand = new UserGameCommand(UserGameCommand.CommandType.LEAVE,
-                        command.getAuthToken(),
-                        command.getUsername(),
-                        command.getGameID());
-                gson = new Gson();
-                var leaveJson = gson.toJson(leaveCommand);
-                helper.send(leaveJson);
+                if(isPlayer) {
+                    UserGameCommand leaveCommand = new UserGameCommand(UserGameCommand.CommandType.LEAVE,
+                            command.getAuthToken(),
+                            command.getUsername(),
+                            command.getGameID());
+                    gson = new Gson();
+                    var leaveJson = gson.toJson(leaveCommand);
+                    helper.send(leaveJson);
+                }
                 helper.close();
                 return;
             }

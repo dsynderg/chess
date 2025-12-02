@@ -50,7 +50,8 @@ public class HttpHelper {
         int counter = 0;
         for (var game : (Iterable<?>) responselist) {
             counter++;
-            GameData gamedata = gson.fromJson(game.toString(), GameData.class);
+            String gamejson = gson.toJson(game);
+            GameData gamedata = gson.fromJson(gamejson, GameData.class);
             System.out.println(counter + " Name: "
                     + gamedata.gameName()
                     +" White player: "
@@ -100,7 +101,8 @@ public class HttpHelper {
         if(!playerColor.equals("white")&&!playerColor.equals("black")) {throw new Exception();}
         if(gameID>responselist.size()) {throw new IndexOutOfBoundsException();}
         var responseobject = (responselist.get(gameID));
-        var responsemap = gson.fromJson(String.valueOf(responseobject),GameData.class);
+        String responseobjectJson = gson.toJson(responseobject);
+        var responsemap = gson.fromJson(responseobjectJson,GameData.class);
         jsonmap.put("gameID",responsemap.gameID());
         json = gson.toJson(jsonmap);
         return send(client, HttpRequest.newBuilder()

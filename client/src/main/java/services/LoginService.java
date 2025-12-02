@@ -77,6 +77,16 @@ public class LoginService {
                         ChessBoard board = new ChessBoard();
                         board.resetBoard();
                         BoardPrinter.printBoard(board, side);
+                        var gameslist = httpHelper.getAllGames(authData);
+                        Double gameToObserveDouble = (Double) gameslist.get((Integer.parseInt(gameID)-1)).get("gameID");
+                        int gameToJoin = (int) gameToObserveDouble.intValue();        var games = httpHelper.getAllGames(authData);
+//                        var game = games.get(gameID);
+                        UserGameCommand connect = new UserGameCommand(UserGameCommand.CommandType.CONNECT
+                                ,authData.authToken()
+                                ,authData.username()
+                                ,gameToJoin);
+
+                        PlayService.playRepl(connect, true);
                     }
                 }
                 catch (Exception e){

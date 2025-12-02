@@ -85,10 +85,12 @@ public class Server {
                  command = gson.fromJson(ctx.message(), UserGameCommand.class);
             }
             else{
+                //this is if the command type is make move. Its different because it
+                //implements a differnt class
                  command = gson.fromJson(ctx.message(), MakeMoveCommand.class);
                 if(!accountService.checkAuth(command.getAuthToken())){
                     System.out.println(ctx);
-                    ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR,"{\"notification\":\"You aren't authorized to make this connection connected\"}");
+                    ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You aren't authorized to make this connection connected\"}");
                     String sendingMessage = new Gson().toJson(serverMessage);
                     ctx.send(sendingMessage);
                 }
@@ -96,11 +98,31 @@ public class Server {
             }
             if(!accountService.checkAuth(command.getAuthToken())){
                 System.out.println(ctx);
-                ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR,"{\"notification\":\"You aren't authorized to make this connection connected\"}");
+                ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You aren't authorized to make this connection connected\"}");
                 String sendingMessage = new Gson().toJson(serverMessage);
                 ctx.send(sendingMessage);
             }
             else if(command.getCommandType()== UserGameCommand.CommandType.LEAVE){
+                GameData gameData = gameService.inDatabaseID(command.getGameID());
+                ServerMessage serverMessage;
+                if (Objects.equals(gameData.whiteUsername(), command.getUsername())){
+                    gameService.assignColor(null, ChessGame.TeamColor.WHITE,command.getGameID());
+                    serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notificaiton\":\""+command.getUsername()+" left the game\"}");
+                }
+
+                if (Objects.equals(gameData.blackUsername(), command.getUsername())) {
+                    gameService.assignColor(null, ChessGame.TeamColor.BLACK, command.getGameID());
+                    serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notificaiton\":\""+command.getUsername()+" left the game\"}");
+                }
+                else{
+                    serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You aren't authorized to make this connection connected\"}");
+                }
+                for(var context:Notification_map.get(command.getGameID())){
+                    System.out.println(context);
+                    String sendingMessage = new Gson().toJson(serverMessage);
+                    context.send(sendingMessage);
+                }
+
 
             }
             else if (command.getCommandType()== UserGameCommand.CommandType.RESIGN){
@@ -110,11 +132,10 @@ public class Server {
                 var games = gameService.getGames();
                 for(var game:games){
                     if(game.gameID()==command.getGameID()){
-                        for(var context:Notification_map.get(String.valueOf(game.gameID()))){
-                            ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME,gson.toJson(game));
-                            context.send(gson.toJson(serverMessage));
-                        }
-
+                        gson = new Gson();
+                        String gameJson = gson.toJson(game);
+                        ServerMessage returnmessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME,gameJson);
+                        ctx.send(gson.toJson(returnmessage));
                     }
                 }
             }
