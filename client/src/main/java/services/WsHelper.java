@@ -50,21 +50,24 @@ public class WsHelper extends Endpoint {
             }
         });
     }
+    public void Load_board(GameData game){
+        System.out.println();
+        if(Objects.equals(username, game.blackUsername())){
+            //print from the black side
 
-    private static void messageHandler(String message){
+            BoardPrinter.printBoard(game.game().getBoard(), ChessGame.TeamColor.BLACK );
+        }
+        else{
+            BoardPrinter.printBoard((game.game().getBoard()), ChessGame.TeamColor.WHITE);
+        }
+
+    }
+
+    private void messageHandler(String message){
        var jsonMessage = gson.fromJson(message, ServerMessage.class);
        if(jsonMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
            var game = gson.fromJson(jsonMessage.getMessage(), GameData.class);
-           System.out.println();
-           if(Objects.equals(username, game.blackUsername())){
-               //print from the black side
-
-               BoardPrinter.printBoard(game.game().getBoard(), ChessGame.TeamColor.BLACK );
-           }
-           else{
-               BoardPrinter.printBoard((game.game().getBoard()), ChessGame.TeamColor.WHITE);
-           }
-
+           this.Load_board(game);
        }
        else if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.ERROR){
            String notificaitonMessage = gson.fromJson(jsonMessage.getMessage(),Map.class).get("error").toString();

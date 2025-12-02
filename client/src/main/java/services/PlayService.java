@@ -7,6 +7,7 @@ import chess.ChessPosition;
 import com.google.gson.Gson;
 import websocket.commands.UserGameCommand;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -27,7 +28,19 @@ public class PlayService {
             System.out.println("HIGHLIGHT: You give a piece on the board and it shows you the possible moves");
         }
     }
-    private static void leave(){}
+    private static void leave(boolean isPlayer, UserGameCommand command, WsHelper helper) throws IOException {
+        if(isPlayer) {
+            UserGameCommand leaveCommand = new UserGameCommand(UserGameCommand.CommandType.LEAVE,
+                    command.getAuthToken(),
+                    command.getUsername(),
+                    command.getGameID());
+            gson = new Gson();
+            var leaveJson = gson.toJson(leaveCommand);
+            helper.send(leaveJson);
+        }
+        helper.close();
+    }
+
     private static void resign(){}
     private static void makeMove(ChessMove move){}
     private static int columnMakeMoveHelper(char column) {
@@ -73,16 +86,17 @@ public class PlayService {
             }
             if (Objects.equals(line, "leave")) {
                 //do the proper back end to remove the player from the chess game object
-                if(isPlayer) {
-                    UserGameCommand leaveCommand = new UserGameCommand(UserGameCommand.CommandType.LEAVE,
-                            command.getAuthToken(),
-                            command.getUsername(),
-                            command.getGameID());
-                    gson = new Gson();
-                    var leaveJson = gson.toJson(leaveCommand);
-                    helper.send(leaveJson);
-                }
-                helper.close();
+                leave(isPlayer,command,helper);
+//                if(isPlayer) {
+//                    UserGameCommand leaveCommand = new UserGameCommand(UserGameCommand.CommandType.LEAVE,
+//                            command.getAuthToken(),
+//                            command.getUsername(),
+//                            command.getGameID());
+//                    gson = new Gson();
+//                    var leaveJson = gson.toJson(leaveCommand);
+//                    helper.send(leaveJson);
+//                }
+//                helper.close();
                 return;
             }
             if (Objects.equals(line, "drawboard")) {
