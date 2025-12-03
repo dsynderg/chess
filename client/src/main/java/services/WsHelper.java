@@ -44,8 +44,8 @@ public class WsHelper extends Endpoint {
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {
                 messageHandler(message);
-                System.out.println(message);
-                System.out.println("PLAY GAME>>>");
+//                System.out.println(message);
+                System.out.print("PLAY GAME>>>");
                 hasRecivedMessage = true;
             }
         });

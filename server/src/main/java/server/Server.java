@@ -57,6 +57,13 @@ public class Server {
         // Register your endpoints and exception handlers here.
 
     }
+    private void notificationSender(String gameID, ServerMessage serverMessage){
+        for(var context:Notification_map.get(gameID)){
+            System.out.println(context);
+            String sendingMessage = new Gson().toJson(serverMessage);
+            context.send(sendingMessage);
+        }
+    }
     private void connectGame(WsConfig ws){
         ws.onConnect(ctx -> {
             String gameID = ctx.pathParam("gameID");
@@ -66,12 +73,9 @@ public class Server {
             ctx.enableAutomaticPings();
             System.out.println("Websocket connected");
             String playerName = ctx.pathParam("playername");
-            for(var context:Notification_map.get(gameID)){
-                System.out.println(context);
-                ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\""+playerName+" connected\"}");
-                String sendingMessage = new Gson().toJson(serverMessage);
-                context.send(sendingMessage);
-            }
+
+            ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\""+playerName+" connected\"}");
+            notificationSender(gameID,serverMessage);
             Notification_map.get(gameID).add(ctx);
         });
         ws.onMessage(ctx -> {
@@ -129,14 +133,13 @@ public class Server {
                 var games = gameService.getGames();
                 for(var game:games){
                     ChessGame.TeamColor winningColor;
-                    if (game.whiteUsername()==command.getUsername()){
+                    if (Objects.equals(game.whiteUsername(), command.getUsername())){
                        winningColor = ChessGame.TeamColor.BLACK;
                     }
                     else {
                         winningColor = ChessGame.TeamColor.WHITE;
                     }
                     if (game.gameID() == command.getGameID()){
-                        gson=new Gson();
                         ChessGame chessGame = game.game();
                         chessGame.winSetter(winningColor);
                         GameData updatedBoard = new GameData(game.gameID(),game.whiteUsername(),game.blackUsername(),game.gameName(),chessGame);
