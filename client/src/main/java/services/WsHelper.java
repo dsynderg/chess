@@ -68,6 +68,8 @@ public class WsHelper extends Endpoint {
        if(jsonMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
            var game = gson.fromJson(jsonMessage.getMessage(), GameData.class);
            this.Load_board(game);
+           System.out.println("test");
+           System.out.println(message);
        }
        else if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.ERROR){
            String notificaitonMessage = gson.fromJson(jsonMessage.getMessage(),Map.class).get("error").toString();

@@ -33,6 +33,10 @@ public class ChessGame {
     public TeamColor hasWon(){
         return hasWon;
     }
+    public void winSetter(TeamColor winningColor){
+        hasWon = winningColor;
+
+    }
 
     @Override
     public int hashCode() {

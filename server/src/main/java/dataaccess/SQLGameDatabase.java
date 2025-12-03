@@ -22,12 +22,12 @@ public class SQLGameDatabase {
         try (Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(query);
             Gson gson = new Gson();
-            String json = gson.toJson(addObject.game());
+            String gamejson = gson.toJson(addObject.game());
             statement.setString(1, String.valueOf(addObject.gameID()));
             statement.setString(2, addObject.whiteUsername());
             statement.setString(3, addObject.blackUsername());
             statement.setString(4, addObject.gameName());
-            statement.setString(5, json);
+            statement.setString(5, gamejson);
 
             int sqlRow = statement.executeUpdate();
             return true;

@@ -126,6 +126,24 @@ public class Server {
 
             }
             else if (command.getCommandType()== UserGameCommand.CommandType.RESIGN){
+                var games = gameService.getGames();
+                for(var game:games){
+                    ChessGame.TeamColor winningColor;
+                    if (game.whiteUsername()==command.getUsername()){
+                       winningColor = ChessGame.TeamColor.BLACK;
+                    }
+                    else {
+                        winningColor = ChessGame.TeamColor.WHITE;
+                    }
+                    if (game.gameID() == command.getGameID()){
+                        gson=new Gson();
+                        ChessGame chessGame = game.game();
+                        chessGame.winSetter(winningColor);
+                        GameData updatedBoard = new GameData(game.gameID(),game.whiteUsername(),game.blackUsername(),game.gameName(),chessGame);
+                        gameService.updateBoard(updatedBoard);
+
+                    }
+                }
 
             }
             else if (command.getCommandType() == UserGameCommand.CommandType.LOAD_GAME){

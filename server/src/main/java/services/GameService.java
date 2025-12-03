@@ -22,6 +22,12 @@ public class GameService {
         }
     }
 
+    public void updateBoard(GameData updateData) throws DataAccessException {
+        GameData gameDataToRemove = SQLGameDatabase.inDatabaseID(updateData.gameID());
+        assert gameDataToRemove != null;
+        SQLGameDatabase.removeFromDatabase(gameDataToRemove);
+        SQLGameDatabase.updateDatabase(updateData);
+    }
     public boolean checkGameID(int gameID) throws DataAccessException {
         if (isMemoryImplemntation) {
             return (gameDatabase.inDatabaseID(gameID) != null);
