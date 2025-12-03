@@ -20,6 +20,7 @@ public class WsHelper extends Endpoint {
     private static Gson gson;
     public boolean hasRecivedMessage = false;
     private static String username;
+    private boolean isOver =false;
     public static void main(String[] args) throws Exception {
 
         WsHelper client = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"123","bob",123),true);
@@ -40,6 +41,8 @@ public class WsHelper extends Endpoint {
         URI uri = new URI("ws://localhost:"+portString+"/game/"+command.getGameID().toString()+"/"+ command.getUsername());
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         session = container.connectToServer(this,uri);
+        String connectCommand = gson.toJson(command);
+        send(connectCommand);
 
         this.session.addMessageHandler(new MessageHandler.Whole<String>() {
             public void onMessage(String message) {

@@ -58,9 +58,10 @@ public class Server {
 
     }
     private void notificationSender(String gameID, ServerMessage serverMessage){
+        Gson gson = new Gson();
         for(var context:Notification_map.get(gameID)){
             System.out.println(context);
-            String sendingMessage = new Gson().toJson(serverMessage);
+            String sendingMessage = gson.toJson(serverMessage);
             context.send(sendingMessage);
         }
     }
@@ -111,43 +112,45 @@ public class Server {
                 ServerMessage serverMessage;
                 if (Objects.equals(gameData.whiteUsername(), command.getUsername())){
                     gameService.assignColor(null, ChessGame.TeamColor.WHITE,command.getGameID());
-                    serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notificaiton\":\""+command.getUsername()+" left the game\"}");
+                    serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\""+command.getUsername()+" left the game\"}");
                 }
 
-                if (Objects.equals(gameData.blackUsername(), command.getUsername())) {
+                else if (Objects.equals(gameData.blackUsername(), command.getUsername())) {
                     gameService.assignColor(null, ChessGame.TeamColor.BLACK, command.getGameID());
-                    serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notificaiton\":\""+command.getUsername()+" left the game\"}");
+                    serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\""+command.getUsername()+" left the game\"}");
                 }
                 else{
                     serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You aren't authorized to make this connection connected\"}");
                 }
-                for(var context:Notification_map.get(command.getGameID())){
-                    System.out.println(context);
-                    String sendingMessage = new Gson().toJson(serverMessage);
-                    context.send(sendingMessage);
-                }
+                notificationSender(String.valueOf(command.getGameID()),serverMessage);
 
 
             }
             else if (command.getCommandType()== UserGameCommand.CommandType.RESIGN){
                 var games = gameService.getGames();
+                ChessGame.TeamColor winningColor = null;
                 for(var game:games){
-                    ChessGame.TeamColor winningColor;
-                    if (Objects.equals(game.whiteUsername(), command.getUsername())){
-                       winningColor = ChessGame.TeamColor.BLACK;
-                    }
-                    else {
-                        winningColor = ChessGame.TeamColor.WHITE;
-                    }
-                    if (game.gameID() == command.getGameID()){
-                        ChessGame chessGame = game.game();
-                        chessGame.winSetter(winningColor);
-                        GameData updatedBoard = new GameData(game.gameID(),game.whiteUsername(),game.blackUsername(),game.gameName(),chessGame);
-                        gameService.updateBoard(updatedBoard);
+                    if(game.gameID()== command.getGameID()) {
+                        if (Objects.equals(game.whiteUsername(), command.getUsername())) {
+                            winningColor = ChessGame.TeamColor.BLACK;
+                        } else {
+                            winningColor = ChessGame.TeamColor.WHITE;
+                        }
+                        if (game.gameID() == command.getGameID()) {
+                            ChessGame chessGame = game.game();
+                            chessGame.winSetter(winningColor);
+                            GameData updatedBoard = new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), chessGame);
+                            gameService.updateBoard(updatedBoard);
 
+                        }
                     }
                 }
-
+                String winnerString = (winningColor== ChessGame.TeamColor.WHITE) ? "White":"Black";
+                ServerMessage declareWinner = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "{\"notification\":\""+winnerString + " has won the game!!!!\"}");
+                notificationSender(String.valueOf(command.getGameID()),declareWinner);
+                // {
+                ServerMessage gameOver = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,  "{\"notification\":\"The game is over\"}");
+                notificationSender(String.valueOf(command.getGameID()),gameOver);
             }
             else if (command.getCommandType() == UserGameCommand.CommandType.LOAD_GAME){
                 var games = gameService.getGames();
