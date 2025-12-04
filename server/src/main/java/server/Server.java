@@ -66,7 +66,9 @@ public class Server {
         for(var context:Notification_map.get(gameID)){
             System.out.println(context);
             String sendingMessage = gson.toJson(serverMessage);
-            context.send(sendingMessage);
+            if(context.session.isOpen()) {
+                context.send(sendingMessage);
+            }
         }
     }
 
@@ -76,7 +78,9 @@ public class Server {
             System.out.println(context);
             if(!context.equals(ctx)) {
                 String sendingMessage = gson.toJson(message);
-                context.send(sendingMessage);
+                if(context.session.isOpen()) {
+                    context.send(sendingMessage);
+                }
             }
         }
     }
@@ -173,11 +177,12 @@ public class Server {
             if(command.getCommandType()== UserGameCommand.CommandType.LEAVE){
                 GameData gameData = gameService.inDatabaseID(command.getGameID());
                 NotificationMessage serverMessage;
-                if (Objects.equals(gameData.whiteUsername(), command.getUsername())){
+                var username = accountService.getUsernameFromAuth(command.getAuthToken());
+                if (Objects.equals(gameData.whiteUsername(), username)){
                     gameService.assignColor(null, ChessGame.TeamColor.WHITE,command.getGameID());
                 }
 
-                else if (Objects.equals(gameData.blackUsername(), command.getUsername())) {
+                else if (Objects.equals(gameData.blackUsername(), username)) {
                     gameService.assignColor(null, ChessGame.TeamColor.BLACK, command.getGameID());
                 }
 
