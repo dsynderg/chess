@@ -10,7 +10,7 @@ import java.util.Objects;
  */
 public class ServerMessage {
     ServerMessageType serverMessageType;
-    String message;
+//    String message;
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -20,13 +20,13 @@ public class ServerMessage {
 
     public ServerMessage(ServerMessageType type, String messagejson) {
         this.serverMessageType = type;
-        this.message=messagejson;
+//        this.message =messagejson;
     }
 
     public ServerMessageType getServerMessageType() {
         return this.serverMessageType;
     }
-    public String getMessage(){return this.message;}
+//    public String getMessage(){return this.message;}
 
     @Override
     public boolean equals(Object o) {

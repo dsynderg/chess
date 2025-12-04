@@ -6,6 +6,9 @@ import com.google.gson.Gson;
 import jakarta.websocket.*;
 import modules.GameData;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -38,7 +41,7 @@ public class WsHelper extends Endpoint {
         String portString = Integer.toString(port);
         gson = new Gson();
         username = command.getUsername();
-        URI uri = new URI("ws://localhost:"+portString+"/game/"+command.getGameID().toString()+"/"+ command.getUsername());
+        URI uri = new URI("ws://localhost:"+portString+"/ws");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         session = container.connectToServer(this,uri);
         String connectCommand = gson.toJson(command);
@@ -48,7 +51,12 @@ public class WsHelper extends Endpoint {
             public void onMessage(String message) {
                 messageHandler(message);
 //                System.out.println(message);
-                System.out.print("PLAY GAME>>>");
+                if (!isOver) {
+                    System.out.print("PLAY GAME>>>");
+                }
+                else{
+                    System.out.print("Press Enter");
+                }
                 hasRecivedMessage = true;
             }
         });
@@ -69,22 +77,31 @@ public class WsHelper extends Endpoint {
     private void messageHandler(String message){
        var jsonMessage = gson.fromJson(message, ServerMessage.class);
        if(jsonMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
-           var game = gson.fromJson(jsonMessage.getMessage(), GameData.class);
+           var loadjsonMessage = gson.fromJson(message, LoadGameMessage.class);
+           var game = gson.fromJson(loadjsonMessage.getGame(), GameData.class);
            this.Load_board(game);
            System.out.println("test");
            System.out.println(message);
        }
        else if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.ERROR){
-           String notificaitonMessage = gson.fromJson(jsonMessage.getMessage(),Map.class).get("error").toString();
+           var errorjsonMessage = gson.fromJson(message, ErrorMessage.class);
+           String notificaitonMessage = gson.fromJson(errorjsonMessage.getErrorMessage(),Map.class).get("error").toString();
            System.out.println("Error: "+notificaitonMessage);
        }
        else if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.NOTIFICATION){
-           String notificaitonMessage = gson.fromJson(jsonMessage.getMessage(),Map.class).get("notification").toString();
+           var notificationjsonMessage = gson.fromJson(message, NotificationMessage.class);
+           String notificaitonMessage = gson.fromJson(notificationjsonMessage.getMessage(),Map.class).get("notification").toString();
            System.out.println("Notification: "+notificaitonMessage);
+           if(Objects.equals(notificaitonMessage, "The game is over")){
+               isOver = true;
+           }
        }
        else{
            System.out.println("There was a problem with the server");
        }
+    }
+    boolean getIsOver(){
+        return isOver;
     }
 
     public void send(String message/*this should be a json'ed userGameCommand*/) throws IOException {

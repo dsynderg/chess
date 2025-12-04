@@ -16,6 +16,9 @@ import services.DeleteService;
 import services.GameService;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.sql.SQLException;
@@ -53,7 +56,7 @@ public class Server {
         server.post("game", this::createGame);
         server.put("game", this::joinGame);
         server.ws("echo/{gamename}",this::echo);
-        server.ws("game/{gameID}/{playername}",this::connectGame);
+        server.ws("ws",this::connectGame);
         // Register your endpoints and exception handlers here.
 
     }
@@ -67,17 +70,8 @@ public class Server {
     }
     private void connectGame(WsConfig ws){
         ws.onConnect(ctx -> {
-            String gameID = ctx.pathParam("gameID");
-            System.out.println("a connection was made to " +gameID);
-            Notification_map.computeIfAbsent(gameID, k -> new ArrayList<>());
 
-            ctx.enableAutomaticPings();
             System.out.println("Websocket connected");
-            String playerName = ctx.pathParam("playername");
-
-            ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\""+playerName+" connected\"}");
-            notificationSender(gameID,serverMessage);
-            Notification_map.get(gameID).add(ctx);
         });
         ws.onMessage(ctx -> {
             UserGameCommand command;
@@ -86,46 +80,52 @@ public class Server {
             System.out.println(message);
             var ctxMap = gson.fromJson(message,Map.class);
 
-            if (ctxMap.get("commandType")!= UserGameCommand.CommandType.MAKE_MOVE){
-                 command = gson.fromJson(ctx.message(), UserGameCommand.class);
-            }
-            else{
-                //this is if the command type is make move. Its different because it
-                //implements a differnt class
-                 command = gson.fromJson(ctx.message(), MakeMoveCommand.class);
-                if(!accountService.checkAuth(command.getAuthToken())){
+
+
+
+            if (ctxMap.get("commandType") == UserGameCommand.CommandType.MAKE_MOVE) {
+                // this is if the command type is make move. It's different because it
+                // implements a different class
+                command = gson.fromJson(ctx.message(), MakeMoveCommand.class);
+
+                if (!accountService.checkAuth(command.getAuthToken())) {
                     System.out.println(ctx);
-                    ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You aren't authorized to make this connection connected\"}");
+                    ServerMessage serverMessage = new ErrorMessage(
+                            ServerMessage.ServerMessageType.ERROR,
+                            "{\"error\":\"You aren't authorized to make this connection connected\"}"
+                    );
                     String sendingMessage = new Gson().toJson(serverMessage);
                     ctx.send(sendingMessage);
                 }
-                 // do the make move logic
+
+                // do the make move logic
+            }
+            else {
+                command = gson.fromJson(ctx.message(), UserGameCommand.class);
             }
             if(!accountService.checkAuth(command.getAuthToken())){
                 System.out.println(ctx);
-                ServerMessage serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You aren't authorized to make this connection connected\"}");
+                ErrorMessage serverMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You aren't authorized to make this connection connected\"}");
                 String sendingMessage = new Gson().toJson(serverMessage);
                 ctx.send(sendingMessage);
+                return;
             }
-            else if(command.getCommandType()== UserGameCommand.CommandType.LEAVE){
+            if(command.getCommandType()== UserGameCommand.CommandType.LEAVE){
                 GameData gameData = gameService.inDatabaseID(command.getGameID());
-                ServerMessage serverMessage;
+                NotificationMessage serverMessage;
                 if (Objects.equals(gameData.whiteUsername(), command.getUsername())){
                     gameService.assignColor(null, ChessGame.TeamColor.WHITE,command.getGameID());
-                    serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\""+command.getUsername()+" left the game\"}");
                 }
 
                 else if (Objects.equals(gameData.blackUsername(), command.getUsername())) {
                     gameService.assignColor(null, ChessGame.TeamColor.BLACK, command.getGameID());
-                    serverMessage = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\""+command.getUsername()+" left the game\"}");
                 }
-                else{
-                    serverMessage = new ServerMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You aren't authorized to make this connection connected\"}");
-                }
+
+                serverMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\""+command.getUsername()+" left the game\"}");
                 notificationSender(String.valueOf(command.getGameID()),serverMessage);
-
-
+                Notification_map.get(command.getGameID()).removeIf(c-> c.sessionId().equals(ctx.sessionId()));
             }
+
             else if (command.getCommandType()== UserGameCommand.CommandType.RESIGN){
                 var games = gameService.getGames();
                 ChessGame.TeamColor winningColor = null;
@@ -152,14 +152,46 @@ public class Server {
                 ServerMessage gameOver = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,  "{\"notification\":\"The game is over\"}");
                 notificationSender(String.valueOf(command.getGameID()),gameOver);
             }
+
             else if (command.getCommandType() == UserGameCommand.CommandType.LOAD_GAME){
                 var games = gameService.getGames();
                 for(var game:games){
                     if(game.gameID()==command.getGameID()){
                         gson = new Gson();
                         String gameJson = gson.toJson(game);
-                        ServerMessage returnmessage = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME,gameJson);
+                        LoadGameMessage returnmessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME,gameJson);
                         ctx.send(gson.toJson(returnmessage));
+                    }
+                }
+            }
+
+            else if(command.getCommandType() == UserGameCommand.CommandType.CONNECT){
+                String gameID = String.valueOf(command.getGameID());
+                boolean gameExists = gameService.checkGameID(command.getGameID());
+                if(!gameExists) { gson = new Gson();
+                    //"{"error":"Your gameID is bad please try again"}"
+                    ErrorMessage returnmessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "{\"error\":\"Your gameID is bad please try again\"}");
+                    ctx.send(gson.toJson(returnmessage));
+                }
+                else{
+                    System.out.println("a connection was made to " + gameID);
+                    Notification_map.computeIfAbsent(gameID, k -> new ArrayList<>());
+
+                    ctx.enableAutomaticPings();
+                    String playerName = command.getUsername();
+                    NotificationMessage serverMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "{\"notification\":\"" + playerName + " connected as white\"}");
+                    notificationSender(gameID, serverMessage);
+                    Notification_map.get(gameID).add(ctx);
+                    var games = gameService.getGames();
+                    boolean gameIDfound = false;
+                    for (var game : games) {
+                        if (game.gameID() == command.getGameID()) {
+                            gson = new Gson();
+                            String gameJson = gson.toJson(game);
+                            LoadGameMessage returnmessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameJson);
+                            ctx.send(gson.toJson(returnmessage));
+                            System.out.println(returnmessage);
+                        }
                     }
                 }
             }
@@ -167,7 +199,6 @@ public class Server {
 
         });
         ws.onClose(ctx -> {System.out.println("Websocket closed");
-            Notification_map.get(ctx.pathParam("gameID")).removeIf(c-> c.sessionId().equals(ctx.sessionId()));
         });
     }
 
@@ -208,6 +239,7 @@ public class Server {
             }
             ChessGame.TeamColor joinColor;
             String joinstring = req.get("playerColor").toString().toLowerCase().trim();
+
             if (Objects.equals(joinstring, "white")) {
                 joinColor = ChessGame.TeamColor.WHITE;
             } else if (Objects.equals(joinstring, "black")) {
@@ -217,6 +249,16 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: playerColor was wrong\" }");
                 return;
             }
+//            switch (joinstring) {
+//                case "white" -> joinColor = ChessGame.TeamColor.WHITE;
+//                case "black" -> joinColor = ChessGame.TeamColor.BLACK;
+//                default -> {
+//                    ctx.status(400);
+//                    ctx.result("{ \"message\": \"Error: playerColor was wrong\" }");
+//                    return;
+//                }
+//            }
+
             int gameID = ((Double) req.get("gameID")).intValue();
             if (!gameService.checkGameID(gameID)) {
                 ctx.status(400);

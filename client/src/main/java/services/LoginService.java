@@ -96,6 +96,7 @@ public class LoginService {
 
             if(Objects.equals(line,"observe game")){
                 System.out.print("Which game would you like to observe? ");
+
                 String observedGame = scanner.nextLine().trim().toLowerCase();
                 var gameslist = httpHelper.getAllGames(authData);
                 Double gameToObserveDouble = (Double) gameslist.get((Integer.parseInt(observedGame)-1)).get("gameID");
