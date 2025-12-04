@@ -293,7 +293,7 @@ public class Server {
             }
         });
         ws.onMessage(ctx -> ctx.send("WebSocket response:" + ctx.message()));
-        ws.onClose(_ -> System.out.println("Websocket closed"));
+        ws.onClose(ctx -> System.out.println("Websocket closed"));
     }
 
 
