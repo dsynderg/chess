@@ -1,6 +1,7 @@
 package server;
 
 import chess.ChessGame;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.SQLTableControler;
@@ -68,13 +69,24 @@ public class Server {
             context.send(sendingMessage);
         }
     }
+
+    private void notificationSenderminusOne(String gameID, ServerMessage message, WsContext ctx){
+        Gson gson = new Gson();
+        for(var context:Notification_map.get(gameID)){
+            System.out.println(context);
+            if(!context.equals(ctx)) {
+                String sendingMessage = gson.toJson(message);
+                context.send(sendingMessage);
+            }
+        }
+    }
     private void connectGame(WsConfig ws){
         ws.onConnect(ctx -> {
 
             System.out.println("Websocket connected");
         });
         ws.onMessage(ctx -> {
-            UserGameCommand command;
+            UserGameCommand command = null;
             Gson gson = new Gson();
             String message = ctx.message();
             System.out.println(message);
@@ -83,12 +95,12 @@ public class Server {
 
 
 
-            if (ctxMap.get("commandType") == UserGameCommand.CommandType.MAKE_MOVE) {
+            if ( "MAKE_MOVE".equals(ctxMap.get("commandType"))) {
                 // this is if the command type is make move. It's different because it
                 // implements a different class
-                command = gson.fromJson(ctx.message(), MakeMoveCommand.class);
+                var moveCommand = gson.fromJson(ctx.message(), MakeMoveCommand.class);
 
-                if (!accountService.checkAuth(command.getAuthToken())) {
+                if (!accountService.checkAuth(moveCommand.getAuthToken())) {
                     System.out.println(ctx);
                     ServerMessage serverMessage = new ErrorMessage(
                             ServerMessage.ServerMessageType.ERROR,
@@ -97,12 +109,36 @@ public class Server {
                     String sendingMessage = new Gson().toJson(serverMessage);
                     ctx.send(sendingMessage);
                 }
+                var move = moveCommand.getMove();
+                GameData gameData = gameService.inDatabaseID(moveCommand.getGameID());
+                ChessGame chessGame = gameData.game();
+                try{
+                    chessGame.makeMove(move);
+                    GameData newGameData = new GameData(gameData.gameID(),gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(),chessGame);
+                    var games = gameService.getGames();
+
+                    for(var game:games){
+                        if(game.gameID()==moveCommand.getGameID()){
+                            gson = new Gson();
+                            String gameJson = gson.toJson(game);
+                            LoadGameMessage returnmessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME,gameJson);
+                            notificationSender(String.valueOf(game.gameID()),returnmessage);
+                            //"{"notification": playerColor +" has made a move"}"
+                            NotificationMessage notificationMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\"White has made a move\"}");
+                            notificationSenderminusOne(String.valueOf(game.gameID()),notificationMessage,ctx);
+
+//                            ctx.send(gson.toJson(returnmessage));
+                        }
+                    }
+                }
+                catch (InvalidMoveException e){
+                    System.out.println("that was a bad move G");
+
+                }
 
                 // do the make move logic
             }
-            else {
-                command = gson.fromJson(ctx.message(), UserGameCommand.class);
-            }
+            command = gson.fromJson(ctx.message(), UserGameCommand.class);
             if(!accountService.checkAuth(command.getAuthToken())){
                 System.out.println(ctx);
                 ErrorMessage serverMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You aren't authorized to make this connection connected\"}");
