@@ -16,9 +16,9 @@ public class SQLGameDatabase {
         String query = "INSERT INTO gamedata " +
                 "(gameID, whiteUsername, blackUsername, gameName, game) " +
                 "VALUES (?, ?, ?, ?, ?)";
-        if (inDatabase(addObject.gameName())) {
-            return false;
-        }
+//        if (inDatabase(addObject.gameName())) {
+//            return false;
+//        }
         try (Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(query);
             Gson gson = new Gson();

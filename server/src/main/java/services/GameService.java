@@ -8,6 +8,7 @@ import dataaccess.memoryimplementaiton.MemGameDatabase;
 import modules.GameData;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GameService {
     MemGameDatabase gameDatabase = MemDatabaseRegistry.getGameDb();
@@ -82,6 +83,9 @@ public class GameService {
 
 
         if (joinColor == ChessGame.TeamColor.WHITE) {
+            if(Objects.equals(username, data.whiteUsername())){
+                return true;
+            }
             if (data.whiteUsername() == null ||username==null) {
                 GameData updatedData = new GameData(
                         data.gameID(),
@@ -101,6 +105,9 @@ public class GameService {
             }
         }
         if (joinColor == ChessGame.TeamColor.BLACK) {
+            if (Objects.equals(username, data.blackUsername())){
+                return true;
+            }
             if (data.blackUsername() == null||username==null) {
                 GameData updatedData = new GameData(
                         data.gameID(),
