@@ -113,6 +113,12 @@ public class Server {
                 GameData gameData = gameService.inDatabaseID(moveCommand.getGameID());
                 ChessGame chessGame = gameData.game();
                 try{
+                    String username = accountService.getUsernameFromAuth(moveCommand.getAuthToken());
+                    var playersColor = (Objects.equals(username, gameData.whiteUsername())) ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK;
+                    var board = chessGame.getBoard();
+                    if(playersColor!= board.getColor(move.getStartPosition())){
+                        throw new InvalidMoveException("");
+                    }
                     chessGame.makeMove(move);
                     GameData newGameData = new GameData(gameData.gameID(),gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(),chessGame);
                     var games = gameService.getGames();
@@ -123,6 +129,7 @@ public class Server {
                             if(!Objects.equals(moversUsername, game.whiteUsername()) && !Objects.equals(moversUsername, game.blackUsername())){
                                 throw new InvalidMoveException("");
                             }
+
                             gson = new Gson();
                             String gameJson = gson.toJson(game);
                             LoadGameMessage returnmessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME,gameJson);
@@ -177,8 +184,14 @@ public class Server {
                     if(game.gameID()== command.getGameID()) {
                         if (Objects.equals(game.whiteUsername(), command.getUsername())) {
                             winningColor = ChessGame.TeamColor.BLACK;
-                        } else {
+                        }
+                        else if(Objects.equals(game.blackUsername(), command.getUsername())) {
                             winningColor = ChessGame.TeamColor.WHITE;
+                        }
+                        else {
+                            //{"error":"You arnt authroized to resign"}
+                            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You arnt authroized to resign\"}");
+                            ctx.send(gson.toJson(errorMessage));
                         }
                         if (game.gameID() == command.getGameID()) {
                             ChessGame chessGame = game.game();

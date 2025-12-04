@@ -82,7 +82,7 @@ public class GameService {
 
 
         if (joinColor == ChessGame.TeamColor.WHITE) {
-//            if (data.whiteUsername() == null) {
+            if (data.whiteUsername() == null ||username==null) {
                 GameData updatedData = new GameData(
                         data.gameID(),
                         username,               // new whiteUsername
@@ -98,10 +98,10 @@ public class GameService {
                     SQLGameDatabase.updateDatabase(updatedData);
                 }
                 return true;
-//            }
+            }
         }
         if (joinColor == ChessGame.TeamColor.BLACK) {
-//            if (data.blackUsername() == null) {
+            if (data.blackUsername() == null||username==null) {
                 GameData updatedData = new GameData(
                         data.gameID(),
                         data.whiteUsername(),               // new whiteUsername
@@ -118,7 +118,7 @@ public class GameService {
                 }
                 return true;
 
-//            }
+            }
 
         }
         return false;
