@@ -100,14 +100,20 @@ public class Server {
                 // implements a different class
                 var moveCommand = gson.fromJson(ctx.message(), MakeMoveCommand.class);
 
-                if (!accountService.checkAuth(moveCommand.getAuthToken())) {
-                    System.out.println(ctx);
-                    ServerMessage serverMessage = new ErrorMessage(
-                            ServerMessage.ServerMessageType.ERROR,
-                            "{\"error\":\"You aren't authorized to make this connection connected\"}"
-                    );
-                    String sendingMessage = new Gson().toJson(serverMessage);
-                    ctx.send(sendingMessage);
+                try {
+                    if (!accountService.checkAuth(moveCommand.getAuthToken())) {
+                        System.out.println(ctx);
+                        ServerMessage serverMessage = new ErrorMessage(
+                                ServerMessage.ServerMessageType.ERROR,
+                                "{\"error\":\"You aren't authorized to make this connection connected\"}"
+                        );
+                        String sendingMessage = new Gson().toJson(serverMessage);
+                        ctx.send(sendingMessage);
+                        throw new Exception();
+                    }
+                }
+                catch (Exception e){
+
                 }
                 var move = moveCommand.getMove();
                 GameData gameData = gameService.inDatabaseID(moveCommand.getGameID());
@@ -153,7 +159,9 @@ public class Server {
 
                 // do the make move logic
             }
+
             command = gson.fromJson(ctx.message(), UserGameCommand.class);
+
             if(!accountService.checkAuth(command.getAuthToken())){
                 System.out.println(ctx);
                 ErrorMessage serverMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You aren't authorized to make this connection connected\"}");
@@ -161,6 +169,7 @@ public class Server {
                 ctx.send(sendingMessage);
                 return;
             }
+
             if(command.getCommandType()== UserGameCommand.CommandType.LEAVE){
                 GameData gameData = gameService.inDatabaseID(command.getGameID());
                 NotificationMessage serverMessage;
@@ -173,8 +182,8 @@ public class Server {
                 }
 
                 serverMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\""+command.getUsername()+" left the game\"}");
+                Notification_map.get(String.valueOf(command.getGameID())).removeIf(c-> c.sessionId().equals(ctx.sessionId()));
                 notificationSender(String.valueOf(command.getGameID()),serverMessage);
-                Notification_map.get(command.getGameID()).removeIf(c-> c.sessionId().equals(ctx.sessionId()));
             }
 
             else if (command.getCommandType()== UserGameCommand.CommandType.RESIGN){
