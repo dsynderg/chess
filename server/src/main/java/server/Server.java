@@ -119,15 +119,16 @@ public class Server {
                 try {
                     if (!accountService.checkAuth(moveCommand.getAuthToken())) {
                         System.out.println(ctx);
-                        ServerMessage serverMessage = new ErrorMessage(
-                                ServerMessage.ServerMessageType.ERROR,
-                                "{\"error\":\"You aren't authorized to make this connection connected\"}"
-                        );
-                        String sendingMessage = new Gson().toJson(serverMessage);
-                        ctx.send(sendingMessage);
+
                         throw new Exception();
                     }
                 } catch (Exception e) {
+                    ServerMessage serverMessage = new ErrorMessage(
+                            ServerMessage.ServerMessageType.ERROR,
+                            "{\"error\":\"You aren't authorized to make this connection connected\"}"
+                    );
+                    String sendingMessage = new Gson().toJson(serverMessage);
+                    ctx.send(sendingMessage);
 
                 }
                 var move = moveCommand.getMove();
