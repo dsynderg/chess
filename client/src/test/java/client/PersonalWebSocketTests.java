@@ -45,15 +45,16 @@ public class PersonalWebSocketTests {
 
     @Test
     void multiplewebsocketConnection() throws Exception {
-        var newobserver = new WsHelper(8080, new UserGameCommand(UserGameCommand.CommandType.CONNECT, "564", "bob", 123), true);
+        var newobserver = new WsHelper(port, new UserGameCommand(UserGameCommand.CommandType.CONNECT, "564", "bob", 123), true);
         Thread.sleep(500);
 
-        var extraobserver = new WsHelper(8080, new UserGameCommand(UserGameCommand.CommandType.CONNECT, "4569", "don", 123), true);
+        var extraobserver = new WsHelper(port, new UserGameCommand(UserGameCommand.CommandType.CONNECT, "4569", "don", 123), true);
         Thread.sleep(500);
         assert newobserver.hasRecivedMessage;
-        assert !extraobserver.hasRecivedMessage;
-        var newobserverdiffgame = new WsHelper(8080, new UserGameCommand(UserGameCommand.CommandType.CONNECT, "sldfkj", "fill", 789), true);
-        assert !extraobserver.hasRecivedMessage;
+        Thread.sleep(500);
+        assert extraobserver.hasRecivedMessage;
+        var newobserverdiffgame = new WsHelper(port, new UserGameCommand(UserGameCommand.CommandType.CONNECT, "sldfkj", "fill", 789), true);
+        assert extraobserver.hasRecivedMessage;
     }
 
     @Test
@@ -65,7 +66,7 @@ public class PersonalWebSocketTests {
 
     @Test
     public void echoTest() throws Exception {
-        var echoclient = new WsEchoClient(8080);
+        var echoclient = new WsEchoClient(port);
     }
 
     @Test

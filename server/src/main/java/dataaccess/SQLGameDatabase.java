@@ -43,9 +43,9 @@ public class SQLGameDatabase {
                 "(whiteUsername, blackUsername, gameName, game) " +
                 "VALUES ( ?, ?, ?, ?)";
         String getsname = "SELECT * FROM gamedata WHERE gameName = ?";
-        if(inDatabase(addObject.gameName())){
-            return null;
-        }
+//        if(inDatabase(addObject.gameName())){
+//            return null;
+//        }
         try(Connection conn = DatabaseManager.getConnection()){
             PreparedStatement statement = conn.prepareStatement(query);
             PreparedStatement getgameobject = conn.prepareStatement(getsname);

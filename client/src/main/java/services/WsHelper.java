@@ -16,6 +16,8 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WsHelper extends Endpoint {
     public ChessBoard board = new ChessBoard();
@@ -91,8 +93,10 @@ public class WsHelper extends Endpoint {
        else if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.NOTIFICATION){
            var notificationjsonMessage = gson.fromJson(message, NotificationMessage.class);
            String notificaitonMessage = gson.fromJson(notificationjsonMessage.getMessage(),Map.class).get("notification").toString();
+           Pattern p = Pattern.compile("^(.+)\\s+has won the game!!!!$");
+           Matcher m = p.matcher(notificaitonMessage);
            System.out.println("Notification: "+notificaitonMessage);
-           if(Objects.equals(notificaitonMessage, "The game is over")){
+           if(m.matches()){
                isOver = true;
            }
        }
