@@ -136,6 +136,9 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition start = move.getStartPosition();
+        if(hasWon!=null){
+            throw new InvalidMoveException("The Game has already ended");
+        }
         if (validMoves(start).contains(move) && board.getColor(start) == turnColor) {
             updateBoardState(move);
             switchTurn();

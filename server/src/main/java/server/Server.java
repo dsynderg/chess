@@ -119,11 +119,16 @@ public class Server {
 
                     for(var game:games){
                         if(game.gameID()==moveCommand.getGameID()){
+                            String moversUsername = accountService.getUsernameFromAuth(moveCommand.getAuthToken());
+                            if(!Objects.equals(moversUsername, game.whiteUsername()) && !Objects.equals(moversUsername, game.blackUsername())){
+                                throw new InvalidMoveException("");
+                            }
                             gson = new Gson();
                             String gameJson = gson.toJson(game);
                             LoadGameMessage returnmessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME,gameJson);
                             notificationSender(String.valueOf(game.gameID()),returnmessage);
                             //"{"notification": playerColor +" has made a move"}"
+                            gameService.updateBoard(newGameData);
                             NotificationMessage notificationMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,"{\"notification\":\"White has made a move\"}");
                             notificationSenderminusOne(String.valueOf(game.gameID()),notificationMessage,ctx);
 
@@ -133,6 +138,9 @@ public class Server {
                 }
                 catch (InvalidMoveException e){
                     System.out.println("that was a bad move G");
+                    //{"error":"The move that you tried to make was invalid"}
+                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"The move that you tried to make was invalid\"}");
+                    ctx.send(gson.toJson(errorMessage));
 
                 }
 
@@ -182,11 +190,11 @@ public class Server {
                     }
                 }
                 String winnerString = (winningColor== ChessGame.TeamColor.WHITE) ? "White":"Black";
-                ServerMessage declareWinner = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "{\"notification\":\""+winnerString + " has won the game!!!!\"}");
-                notificationSender(String.valueOf(command.getGameID()),declareWinner);
+                ServerMessage declareWinner = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "{\"notification\":\""+winnerString + " has won the game!!!!\"}");
+//                notificationSenderminusOne(String.valueOf(command.getGameID()),declareWinner,ctx);
                 // {
-                ServerMessage gameOver = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,  "{\"notification\":\"The game is over\"}");
-                notificationSender(String.valueOf(command.getGameID()),gameOver);
+//                ServerMessage gameOver = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,  "{\"notification\":\"The game is over\"}");
+                notificationSender(String.valueOf(command.getGameID()),declareWinner);
             }
 
             else if (command.getCommandType() == UserGameCommand.CommandType.LOAD_GAME){
