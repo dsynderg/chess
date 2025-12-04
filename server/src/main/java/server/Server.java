@@ -181,11 +181,17 @@ public class Server {
                 var games = gameService.getGames();
                 ChessGame.TeamColor winningColor = null;
                 for(var game:games){
+
                     if(game.gameID()== command.getGameID()) {
-                        if (Objects.equals(game.whiteUsername(), command.getUsername())) {
+                        if(game.game().hasWon()!=null){
+                            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,"{\"error\":\"You cant resign the gam\"}");
+                            ctx.send(gson.toJson(errorMessage));
+                        }
+                        var username = accountService.getUsernameFromAuth(command.getAuthToken());
+                        if (Objects.equals(game.whiteUsername(), username)) {
                             winningColor = ChessGame.TeamColor.BLACK;
                         }
-                        else if(Objects.equals(game.blackUsername(), command.getUsername())) {
+                        else if(Objects.equals(game.blackUsername(), username)) {
                             winningColor = ChessGame.TeamColor.WHITE;
                         }
                         else {
