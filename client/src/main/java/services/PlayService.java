@@ -1,10 +1,8 @@
 package services;
 
-import chess.ChessBoard;
-import chess.ChessMove;
-import chess.ChessPosition;
+import chess.*;
 import com.google.gson.Gson;
-import org.glassfish.grizzly.utils.Pair;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 
 import java.io.IOException;
@@ -60,38 +58,60 @@ public class PlayService {
 
     }
 
-    private static void makeMove(ChessMove move) {
+    private static void makeMove(ChessMove move,UserGameCommand command, WsHelper helper) throws IOException {
+
+        MakeMoveCommand moveCommand = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE, command.getAuthToken(), command.getUsername(), command.getGameID(), move);
+        gson = new Gson();
+        String moveJson = gson.toJson(moveCommand);
+        helper.send(moveJson);
     }
 
-    private static Pair<Integer, Integer> makeMoveHelper(String move) {
+    public static int[] makeMoveHelper(String move) {
         var moveList = move.chars()
                 .mapToObj(c -> (char) c)
                 .toList();
         char column = moveList.get(0);
-        Character.toLowerCase(column);
+        column = Character.toLowerCase(column);
         int columnInt;
         switch (column) {
             case 'a':
                 columnInt = 1;
+                break;
             case 'b':
                 columnInt = 2;
+                break;
             case 'c':
                 columnInt = 3;
+
+                break;
             case 'd':
                 columnInt = 4;
+
+                break;
             case 'e':
                 columnInt = 5;
+
+                break;
             case 'f':
                 columnInt = 6;
+
+                break;
             case 'g':
                 columnInt = 7;
+
+                break;
             case 'h':
                 columnInt = 8;
+
+                break;
             default:
                 columnInt = 100;
 
         }
-        return new Pair<>(columnInt, Integer.parseInt(String.valueOf(move.charAt(1))));
+        int[] returnlist = new int[2];
+        returnlist[0] = (columnInt);
+        returnlist[1] = (Integer.parseInt(String.valueOf(move.charAt(1))));
+        return returnlist;
 
     }
 
@@ -139,8 +159,42 @@ public class PlayService {
                 case "makemove" -> {
                     if (isPlayer) {
                         // eventually you need to add a way for the user to give their own move
-                        System.out.println("What is the position of the peice you want to move?");
-                        makeMove(new ChessMove(new ChessPosition(1, 1), new ChessPosition(1, 1), null));
+                        System.out.println("What move do you want to make (start) (end) (pawn promotion)?");
+                        String moveString = scanner.nextLine().trim().toLowerCase();
+                        String[] moveParts = moveString.split(" ");
+                        String startingPosition = moveParts[0];
+                        String endPosition = moveParts [1];
+                        String promoteString=null;
+                        ChessPiece.PieceType promotionPeice = null;
+                        var movePair = makeMoveHelper(startingPosition);
+                        if ((0 > movePair[0] || movePair[0] > 9) ||  (0 > movePair[1] || movePair[1] > 9)) {
+                            break;
+
+                        }
+                       var endPair = makeMoveHelper(endPosition);
+                        if ((0 > endPair[0] || endPair[0] > 9) || (0 > endPair[1] || endPair[1] > 9)) {
+                            break;
+
+                        }
+                        if(moveParts.length==3){
+                           promoteString = moveParts[2];
+                           switch (promoteString){
+                               case "queen":
+                                   promotionPeice = ChessPiece.PieceType.QUEEN;
+                                   break;
+                               case "rook":
+                                   promotionPeice = ChessPiece.PieceType.ROOK;
+                                   break;
+                               case "bishop":
+                                   promotionPeice = ChessPiece.PieceType.BISHOP;
+                                   break;
+                               case "knight":
+                                   promotionPeice = ChessPiece.PieceType.KNIGHT;
+                                   break;
+
+                           }
+                        }
+                        makeMove(new ChessMove(new ChessPosition(movePair[0],movePair[1]), new ChessPosition(endPair[0], endPair[1]), promotionPeice),command,helper);
                     }
                 }
 
