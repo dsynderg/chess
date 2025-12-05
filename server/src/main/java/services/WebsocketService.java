@@ -108,13 +108,33 @@ public class WebsocketService {
                     String gameJson = gson.toJson(game);
                     String playerColor = (Objects.equals(moveCommand.getUsername(), newGameData.whiteUsername())) ? "White" : "Black";
                     gameService.updateBoard(newGameData);
-                    String updatedGameJson = gson.toJson(newGameData);
-                    Thread.sleep(300);
-                    LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, updatedGameJson);
-                    notificationSender(String.valueOf(game.gameID()), loadGameMessage);
-                    NotificationMessage notificationMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                            "{\"notification\":\""+playerColor+ " has made a move\"}");
-                    notificationSenderminusOne(String.valueOf(game.gameID()), notificationMessage, ctx);
+                    var updatedGame = newGameData.game();
+
+
+                        String updatedGameJson = gson.toJson(newGameData);
+                        Thread.sleep(300);
+                        LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, updatedGameJson);
+                        notificationSender(String.valueOf(game.gameID()), loadGameMessage);
+
+
+                    if(updatedGame.hasWon()!= null){
+                        NotificationMessage hasWonNotification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                                moveCommand.getUsername()+" has won the game!!!!");
+                        notificationSender(String.valueOf(game.gameID()),hasWonNotification);
+                    }
+                    else if(updatedGame.isInCheck(ChessGame.TeamColor.WHITE) || updatedGame.isInCheck(ChessGame.TeamColor.BLACK)){
+
+                        String opponentColor = (Objects.equals(moveCommand.getUsername(), newGameData.whiteUsername())) ? "Black" : "White";
+                        NotificationMessage hasWonNotification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                                opponentColor+" is in check");
+                        String haswonJson = gson.toJson(hasWonNotification);
+                        ctx.send(haswonJson);
+                    }
+                    else{
+                        NotificationMessage notificationMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                                "{\"notification\":\"" + playerColor + " has made a move" + move + "\"}");
+                        notificationSenderminusOne(String.valueOf(game.gameID()), notificationMessage, ctx);
+                    }
                 }
             }
         } catch (InvalidMoveException e) {
@@ -186,7 +206,7 @@ public class WebsocketService {
         }
         String winnerString = (winningColor == ChessGame.TeamColor.WHITE) ? "White" : "Black";
         ServerMessage declareWinner = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                "{\"notification\":\"" + winnerString + " has won the game!!!!\"}");
+                "{\"notification\":\"" + command.getUsername() + " has won the game!!!!\"}");
 //
         notificationSender(String.valueOf(command.getGameID()), declareWinner);
     }
