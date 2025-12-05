@@ -142,7 +142,11 @@ public class Server {
                         throw new InvalidMoveException("");
                     }
                     chessGame.makeMove(move);
-                    GameData newGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), chessGame);
+                    GameData newGameData = new GameData(gameData.gameID(),
+                            gameData.whiteUsername(),
+                            gameData.blackUsername(),
+                            gameData.gameName(),
+                            chessGame);
                     var games = gameService.getGames();
 
                     for (var game : games) {
@@ -258,8 +262,8 @@ public class Server {
                 boolean gameExists = gameService.checkGameID(command.getGameID());
                 if (!gameExists) {
                     gson = new Gson();
-                    //"{"error":"Your gameID is bad please try again"}"
-                    ErrorMessage returnmessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "{\"error\":\"Your gameID is bad please try again\"}");
+                    ErrorMessage returnmessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,
+                            "{\"error\":\"Your gameID is bad please try again\"}");
                     ctx.send(gson.toJson(returnmessage));
                 } else {
                     System.out.println("a connection was made to " + gameID);
@@ -267,7 +271,8 @@ public class Server {
 
                     ctx.enableAutomaticPings();
                     String playerName = command.getUsername();
-                    NotificationMessage serverMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "{\"notification\":\"" + playerName + " connected as white\"}");
+                    NotificationMessage serverMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                            "{\"notification\":\"" + playerName + " connected as white\"}");
                     notificationSender(gameID, serverMessage);
                     notificationMap.get(gameID).add(ctx);
                     var games = gameService.getGames();

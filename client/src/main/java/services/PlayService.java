@@ -60,7 +60,11 @@ public class PlayService {
 
     private static void makeMove(ChessMove move,UserGameCommand command, WsHelper helper) throws IOException {
 
-        MakeMoveCommand moveCommand = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE, command.getAuthToken(), command.getUsername(), command.getGameID(), move);
+        MakeMoveCommand moveCommand = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE,
+                command.getAuthToken(),
+                command.getUsername(),
+                command.getGameID(),
+                move);
         gson = new Gson();
         String moveJson = gson.toJson(moveCommand);
         helper.send(moveJson);

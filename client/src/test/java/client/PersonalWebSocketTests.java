@@ -74,48 +74,5 @@ public class PersonalWebSocketTests {
 //        var
     }
 
-    @Test
-    public void getMoveTest() {
-        System.out.println("What move do you want to make (start) (end) (pawn promotion)?");
-        String moveString = "a1 g8 knight";
-        String[] moveParts = moveString.split(" ");
-        String startingPosition = moveParts[0];
-        String endPosition = moveParts[1];
-        String promoteString = null;
-        ChessPiece.PieceType promotionPeice = null;
-        var movePair = makeMoveHelper(startingPosition);
-        if ((0 > movePair[0] || movePair[0] > 9) || (0 > movePair[1] || movePair[1] > 9)) {
 
-            return;
-
-        }
-        var endPair = makeMoveHelper(endPosition);
-        if ((0 > endPair[0] || endPair[0] > 9) || (0 > endPair[1] || endPair[1] > 9)) {
-
-            return;
-        }
-        if (moveParts.length == 3) {
-            promoteString = moveParts[2];
-            switch (promoteString) {
-                case "queen":
-                    promotionPeice = ChessPiece.PieceType.QUEEN;
-                    break;
-                case "rook":
-                    promotionPeice = ChessPiece.PieceType.ROOK;
-                    break;
-                case "bishop":
-                    promotionPeice = ChessPiece.PieceType.BISHOP;
-                    break;
-                case "knight":
-                    promotionPeice = ChessPiece.PieceType.KNIGHT;
-                    break;
-
-            }
-        }
-        assert promotionPeice == ChessPiece.PieceType.KNIGHT;
-        assert movePair[0] == 1;
-        assert movePair[1] == 1;
-        assert endPair[0]== 7;
-        assert endPair[1] == 8;
-    }
 }
