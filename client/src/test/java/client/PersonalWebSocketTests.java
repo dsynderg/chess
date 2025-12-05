@@ -64,10 +64,7 @@ public class PersonalWebSocketTests {
         assert positionPair != null;
     }
 
-    @Test
-    public void echoTest() throws Exception {
-        var echoclient = new WsEchoClient(port);
-    }
+    
 
     @Test
     public void loadGame() throws Exception {
