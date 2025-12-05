@@ -63,7 +63,7 @@ public class WsHelper extends Endpoint {
             }
         });
     }
-    public void Load_board(GameData game){
+    public void loadBoard(GameData game){
         System.out.println();
         if(Objects.equals(username, game.blackUsername())){
             //print from the black side
@@ -81,7 +81,7 @@ public class WsHelper extends Endpoint {
        if(jsonMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
            var loadjsonMessage = gson.fromJson(message, LoadGameMessage.class);
            var game = gson.fromJson(loadjsonMessage.getGame(), GameData.class);
-           this.Load_board(game);
+           this.loadBoard(game);
            System.out.println("test");
            System.out.println(message);
        }

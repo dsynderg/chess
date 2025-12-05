@@ -35,7 +35,7 @@ public class Server {
     AccountService accountService = new AccountService();
     GameService gameService = new GameService();
     private boolean isRunning = false;
-    Map<String, ArrayList<WsContext>> Notification_map;
+    Map<String, ArrayList<WsContext>> notificationMap;
 
 
     public Server() {
@@ -62,7 +62,7 @@ public class Server {
 
     private void notificationSender(String gameID, ServerMessage serverMessage) {
         Gson gson = new Gson();
-        var sessions = new ArrayList<>(Notification_map.get(gameID));
+        var sessions = new ArrayList<>(notificationMap.get(gameID));
         for (var context : sessions) {
             System.out.println(context);
             String sendingMessage = gson.toJson(serverMessage);
@@ -70,9 +70,9 @@ public class Server {
                 context.send(sendingMessage);
             }
             else {
-                var newsessions = Notification_map.get(gameID);
+                var newsessions = notificationMap.get(gameID);
                 newsessions.remove(context);
-                Notification_map.put(gameID, newsessions);
+                notificationMap.put(gameID, newsessions);
 
             }
         }
@@ -80,7 +80,7 @@ public class Server {
 
     private void notificationSenderminusOne(String gameID, ServerMessage message, WsContext ctx) {
         Gson gson = new Gson();
-        var sessions = new ArrayList<>(Notification_map.get(gameID));
+        var sessions = new ArrayList<>(notificationMap.get(gameID));
 
         for (var context : sessions) {
             System.out.println(context);
@@ -89,9 +89,9 @@ public class Server {
                 if (context.session.isOpen()) {
                     context.send(sendingMessage);
                 } else {
-                    var newsessions = Notification_map.get(gameID);
+                    var newsessions = notificationMap.get(gameID);
                     newsessions.remove(context);
-                    Notification_map.put(gameID, newsessions);
+                    notificationMap.put(gameID, newsessions);
 
                 }
             }
@@ -156,9 +156,9 @@ public class Server {
                             String gameJson = gson.toJson(game);
                             LoadGameMessage returnmessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameJson);
                             notificationSender(String.valueOf(game.gameID()), returnmessage);
-                            //"{"notification": playerColor +" has made a move"}"
                             gameService.updateBoard(newGameData);
-                            NotificationMessage notificationMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "{\"notification\":\"White has made a move\"}");
+                            NotificationMessage notificationMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                                    "{\"notification\":\"White has made a move\"}");
                             notificationSenderminusOne(String.valueOf(game.gameID()), notificationMessage, ctx);
 
 //                            ctx.send(gson.toJson(returnmessage));
@@ -167,7 +167,8 @@ public class Server {
                 } catch (InvalidMoveException e) {
                     System.out.println("that was a bad move G");
                     //{"error":"The move that you tried to make was invalid"}
-                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "{\"error\":\"The move that you tried to make was invalid\"}");
+                    ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,
+                            "{\"error\":\"The move that you tried to make was invalid\"}");
                     ctx.send(gson.toJson(errorMessage));
 
                 }
@@ -179,7 +180,8 @@ public class Server {
 
             if (!accountService.checkAuth(command.getAuthToken())) {
                 System.out.println(ctx);
-                ErrorMessage serverMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "{\"error\":\"You aren't authorized to make this connection connected\"}");
+                ErrorMessage serverMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,
+                        "{\"error\":\"You aren't authorized to make this connection connected\"}");
                 String sendingMessage = new Gson().toJson(serverMessage);
                 if(ctx.session.isOpen()){
                     ctx.send(sendingMessage);
@@ -197,8 +199,9 @@ public class Server {
                     gameService.assignColor(null, ChessGame.TeamColor.BLACK, command.getGameID());
                 }
 
-                serverMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "{\"notification\":\"" + command.getUsername() + " left the game\"}");
-                Notification_map.get(String.valueOf(command.getGameID())).removeIf(c -> c.sessionId().equals(ctx.sessionId()));
+                serverMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                        "{\"notification\":\"" + command.getUsername() + " left the game\"}");
+                notificationMap.get(String.valueOf(command.getGameID())).removeIf(c -> c.sessionId().equals(ctx.sessionId()));
                 notificationSender(String.valueOf(command.getGameID()), serverMessage);
             } else if (command.getCommandType() == UserGameCommand.CommandType.RESIGN) {
                 var games = gameService.getGames();
@@ -207,7 +210,8 @@ public class Server {
 
                     if (game.gameID() == command.getGameID()) {
                         if (game.game().hasWon() != null) {
-                            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "{\"error\":\"You cant resign the gam\"}");
+                            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,
+                                    "{\"error\":\"You cant resign the gam\"}");
                             ctx.send(gson.toJson(errorMessage));
                         }
                         var username = accountService.getUsernameFromAuth(command.getAuthToken());
@@ -216,24 +220,27 @@ public class Server {
                         } else if (Objects.equals(game.blackUsername(), username)) {
                             winningColor = ChessGame.TeamColor.WHITE;
                         } else {
-                            //{"error":"You arnt authroized to resign"}
-                            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, "{\"error\":\"You arnt authroized to resign\"}");
+                            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,
+                                    "{\"error\":\"You arnt authroized to resign\"}");
                             ctx.send(gson.toJson(errorMessage));
                         }
                         if (game.gameID() == command.getGameID()) {
                             ChessGame chessGame = game.game();
                             chessGame.winSetter(winningColor);
-                            GameData updatedBoard = new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), chessGame);
+                            GameData updatedBoard = new GameData(game.gameID(),
+                                    game.whiteUsername(),
+                                    game.blackUsername(),
+                                    game.gameName(),
+                                    chessGame);
                             gameService.updateBoard(updatedBoard);
 
                         }
                     }
                 }
                 String winnerString = (winningColor == ChessGame.TeamColor.WHITE) ? "White" : "Black";
-                ServerMessage declareWinner = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "{\"notification\":\"" + winnerString + " has won the game!!!!\"}");
-//                notificationSenderminusOne(String.valueOf(command.getGameID()),declareWinner,ctx);
-                // {
-//                ServerMessage gameOver = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,  "{\"notification\":\"The game is over\"}");
+                ServerMessage declareWinner = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                        "{\"notification\":\"" + winnerString + " has won the game!!!!\"}");
+//
                 notificationSender(String.valueOf(command.getGameID()), declareWinner);
             } else if (command.getCommandType() == UserGameCommand.CommandType.LOAD_GAME) {
                 var games = gameService.getGames();
@@ -245,7 +252,8 @@ public class Server {
                         ctx.send(gson.toJson(returnmessage));
                     }
                 }
-            } else if (command.getCommandType() == UserGameCommand.CommandType.CONNECT) {
+            }
+            else if (command.getCommandType() == UserGameCommand.CommandType.CONNECT) {
                 String gameID = String.valueOf(command.getGameID());
                 boolean gameExists = gameService.checkGameID(command.getGameID());
                 if (!gameExists) {
@@ -255,13 +263,13 @@ public class Server {
                     ctx.send(gson.toJson(returnmessage));
                 } else {
                     System.out.println("a connection was made to " + gameID);
-                    Notification_map.computeIfAbsent(gameID, k -> new ArrayList<>());
+                    notificationMap.computeIfAbsent(gameID, k -> new ArrayList<>());
 
                     ctx.enableAutomaticPings();
                     String playerName = command.getUsername();
                     NotificationMessage serverMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION, "{\"notification\":\"" + playerName + " connected as white\"}");
                     notificationSender(gameID, serverMessage);
-                    Notification_map.get(gameID).add(ctx);
+                    notificationMap.get(gameID).add(ctx);
                     var games = gameService.getGames();
                     boolean gameIDfound = false;
                     for (var game : games) {
@@ -288,11 +296,11 @@ public class Server {
         ws.onConnect(ctx -> {
             String gamename = ctx.pathParam("gamename");
             System.out.println("a connection was made to " + gamename);
-            Notification_map.computeIfAbsent(gamename, k -> new ArrayList<>());
-            Notification_map.get(gamename).add(ctx);
+            notificationMap.computeIfAbsent(gamename, k -> new ArrayList<>());
+            notificationMap.get(gamename).add(ctx);
             ctx.enableAutomaticPings();
             System.out.println("Websocket connected");
-            for (var context : Notification_map.get(gamename)) {
+            for (var context : notificationMap.get(gamename)) {
                 context.send("someone else connected");
             }
         });
@@ -524,7 +532,9 @@ public class Server {
                 ctx.result("{ \"message\": \"Error: There was a problem with your register info\" }");
                 return;
             }
-            User userData = new User(req.get("username").toString(), req.get("password").toString(), req.get("email").toString());
+            User userData = new User(req.get("username").toString(),
+                    req.get("password").toString(),
+                    req.get("email").toString());
 
 
             if (!accountService.creatAccont(userData)) {
@@ -551,7 +561,7 @@ public class Server {
         if (!isRunning) {
             isRunning = true;
             server.start(desiredPort);
-            Notification_map = new HashMap<>();
+            notificationMap = new HashMap<>();
         }
         return server.port();
     }

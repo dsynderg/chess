@@ -130,12 +130,12 @@ public class GameService {
         }
         return false;
     }
-    public GameData inDatabaseID(int ID) throws DataAccessException {
+    public GameData inDatabaseID(int gameID) throws DataAccessException {
         if (isMemoryImplemntation){
-           return gameDatabase.inDatabaseID(ID);
+           return gameDatabase.inDatabaseID(gameID);
         }
         else {
-            return SQLGameDatabase.inDatabaseID(ID);
+            return SQLGameDatabase.inDatabaseID(gameID);
         }
     }
 }

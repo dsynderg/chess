@@ -16,9 +16,6 @@ public class SQLGameDatabase {
         String query = "INSERT INTO gamedata " +
                 "(gameID, whiteUsername, blackUsername, gameName, game) " +
                 "VALUES (?, ?, ?, ?, ?)";
-//        if (inDatabase(addObject.gameName())) {
-//            return false;
-//        }
         try (Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(query);
             Gson gson = new Gson();
@@ -43,9 +40,7 @@ public class SQLGameDatabase {
                 "(whiteUsername, blackUsername, gameName, game) " +
                 "VALUES ( ?, ?, ?, ?)";
         String getsname = "SELECT * FROM gamedata WHERE gameName = ?";
-//        if(inDatabase(addObject.gameName())){
-//            return null;
-//        }
+//
         try(Connection conn = DatabaseManager.getConnection()){
             PreparedStatement statement = conn.prepareStatement(query);
             PreparedStatement getgameobject = conn.prepareStatement(getsname);

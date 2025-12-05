@@ -194,7 +194,9 @@ public class PlayService {
 
                            }
                         }
-                        makeMove(new ChessMove(new ChessPosition(movePair[0],movePair[1]), new ChessPosition(endPair[0], endPair[1]), promotionPeice),command,helper);
+                        makeMove(new ChessMove(new ChessPosition(movePair[0],movePair[1]),
+                                new ChessPosition(endPair[0],endPair[1]),
+                                promotionPeice),command,helper);
                     }
                 }
 
