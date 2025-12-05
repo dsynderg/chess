@@ -24,14 +24,17 @@ public class PlayService {
         helper.send(drawcommandjson);
     }
 
+    private static void drawWithMove(ChessPosition pos,ChessGame.TeamColor color){
+        BoardPrinter.printBoardWithMove(helper.gameData.game(), color,pos);
+    }
     private static void help(Boolean isPlayer) {
         System.out.println("HELP: Gets list of relevant commands");
         System.out.println("DRAWBOARD: Redraws the board");
         System.out.println("LEAVE: Step away from the chess board");
+        System.out.println("HIGHLIGHT: You give a piece on the board and it shows you the possible moves");
         if (isPlayer) {
             System.out.println("RESIGN: You automaticly loose");
             System.out.println("MAKEMOVE: You make a chess move");
-            System.out.println("HIGHLIGHT: You give a piece on the board and it shows you the possible moves");
         }
     }
 
@@ -75,7 +78,7 @@ public class PlayService {
         var moveList = move.chars()
                 .mapToObj(c -> (char) c)
                 .toList();
-        char column = moveList.get(0);
+        char column = moveList.getFirst();
         column = Character.toLowerCase(column);
         int columnInt;
         switch (column) {
@@ -114,8 +117,8 @@ public class PlayService {
 
         }
         int[] returnlist = new int[2];
-        returnlist[0] = (columnInt);
-        returnlist[1] = (Integer.parseInt(String.valueOf(move.charAt(1))));
+        returnlist[1] = (columnInt);
+        returnlist[0] = (Integer.parseInt(String.valueOf(move.charAt(1))));
         return returnlist;
 
     }
@@ -123,7 +126,7 @@ public class PlayService {
     private static void hilightLegalMoves(ChessPosition position) {
     }
 
-    public static void playRepl(UserGameCommand command, Boolean isPlayer) throws Exception {
+    public static void playRepl(UserGameCommand command, Boolean isPlayer, ChessGame.TeamColor color) throws Exception {
         //if isPlayer is false then he is an observer
 
         Scanner scanner = new Scanner(System.in);
@@ -137,12 +140,19 @@ public class PlayService {
         String connectJson = gson.toJson(command);
         helper.send(connectJson);
 //        drawboard(command,helper);
-        drawboard(command, helper);
+//        drawboard(command, helper);
         while (!helper.getIsOver()) {
             System.out.print("PLAY GAME>>> ");
             String line = scanner.nextLine().trim().toLowerCase();
             switch (line) {
                 case "help" -> help(isPlayer);
+                case "highlight" -> {
+                    System.out.print("Which position do you want to highlight? ");
+                    String posString = scanner.nextLine();
+                    var posList = makeMoveHelper(posString);
+                    ChessPosition pos = new ChessPosition(posList[0],posList[1]);
+                    drawWithMove(pos,color);
+                }
 
                 case "leave" -> {
                     // do the proper back end to remove the player from the chess game object
@@ -164,16 +174,14 @@ public class PlayService {
 
                 case "makemove" -> {
                     if (isPlayer) {
-                       makeMoveHelper(command);
+                       try {makeMoveHelper(command);}
+                       catch (Exception e){
+                           System.out.println("You made an invalid move");
+                        }
                     }
                 }
 
-                case "highlight" -> {
-                    if (isPlayer) {
-                        // get the chess position from the player
-                        hilightLegalMoves(new ChessPosition(1, 1));
-                    }
-                }
+
 
 
             }
@@ -195,6 +203,9 @@ public class PlayService {
         String promoteString=null;
         ChessPiece.PieceType promotionPeice = null;
         var movePair = makeMoveHelper(startingPosition);
+        if (movePair.length < 2){
+            System.out.println("The you need a valid move");
+        }
         if ((0 > movePair[0] || movePair[0] > 9) ||  (0 > movePair[1] || movePair[1] > 9)) {
 
             return;
@@ -204,6 +215,7 @@ public class PlayService {
 
             return;
         }
+
         if(moveParts.length==3){
             promoteString = moveParts[2];
             switch (promoteString){

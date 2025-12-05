@@ -76,7 +76,7 @@ public class LoginService {
                         ChessGame.TeamColor side = (gameColor.equals("black")) ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
                         ChessBoard board = new ChessBoard();
                         board.resetBoard();
-                        BoardPrinter.printBoard(board, side);
+//                        BoardPrinter.printBoard(board, side);
                         var gameslist = httpHelper.getAllGames(authData);
                         Double gameToObserveDouble = (Double) gameslist.get((Integer.parseInt(gameID)-1)).get("gameID");
                         int gameToJoin = (int) gameToObserveDouble.intValue();        var games = httpHelper.getAllGames(authData);
@@ -86,7 +86,7 @@ public class LoginService {
                                 ,authData.username()
                                 ,gameToJoin);
 
-                        PlayService.playRepl(connect, true);
+                        PlayService.playRepl(connect, true,side);
                     }
                 }
                 catch (Exception e){
@@ -106,7 +106,7 @@ public class LoginService {
                         ,authData.username()
                         ,gameToObserveInt);
 
-                PlayService.playRepl(connect, false);
+                PlayService.playRepl(connect, false, ChessGame.TeamColor.WHITE);
 
             }
 

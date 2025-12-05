@@ -14,28 +14,24 @@ import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class WebsocketService {
     GameService gameService = new GameService();
     AccountService accountService = new AccountService();
     Gson gson = new Gson();
 
-    Map<String, ArrayList<WsContext>> notificationMap = new HashMap<>();
+    Map<String, HashSet<WsContext>> notificationMap = new HashMap<>();
 
     private void notificationSender(String gameID, ServerMessage serverMessage) {
+
         Gson gson = new Gson();
-        var sessions = new ArrayList<>(notificationMap.get(gameID));
+        var sessions = new HashSet<>(notificationMap.get(gameID));
         for (var context : sessions) {
-            System.out.println(context);
             String sendingMessage = gson.toJson(serverMessage);
             if (context.session.isOpen()) {
                 context.send(sendingMessage);
-            }
-            else {
+            } else {
                 var newsessions = notificationMap.get(gameID);
                 newsessions.remove(context);
                 notificationMap.put(gameID, newsessions);
@@ -46,7 +42,7 @@ public class WebsocketService {
 
     private void notificationSenderminusOne(String gameID, ServerMessage message, WsContext ctx) {
         Gson gson = new Gson();
-        var sessions = new ArrayList<>(notificationMap.get(gameID));
+        var sessions = new HashSet<>(notificationMap.get(gameID));
 
         for (var context : sessions) {
             System.out.println(context);
@@ -63,6 +59,7 @@ public class WebsocketService {
             }
         }
     }
+
     public void makeMove(WsMessageContext ctx) throws DataAccessException {
         Gson gson = new Gson();
         var moveCommand = gson.fromJson(ctx.message(), MakeMoveCommand.class);
@@ -109,14 +106,15 @@ public class WebsocketService {
 
                     gson = new Gson();
                     String gameJson = gson.toJson(game);
-                    LoadGameMessage returnmessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameJson);
-                    notificationSender(String.valueOf(game.gameID()), returnmessage);
+                    String playerColor = (Objects.equals(moveCommand.getUsername(), newGameData.whiteUsername())) ? "White" : "Black";
                     gameService.updateBoard(newGameData);
+                    String updatedGameJson = gson.toJson(newGameData);
+                    Thread.sleep(300);
+                    LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, updatedGameJson);
+                    notificationSender(String.valueOf(game.gameID()), loadGameMessage);
                     NotificationMessage notificationMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                            "{\"notification\":\"White has made a move\"}");
+                            "{\"notification\":\""+playerColor+ " has made a move\"}");
                     notificationSenderminusOne(String.valueOf(game.gameID()), notificationMessage, ctx);
-
-//                            ctx.send(gson.toJson(returnmessage));
                 }
             }
         } catch (InvalidMoveException e) {
@@ -126,6 +124,8 @@ public class WebsocketService {
                     "{\"error\":\"The move that you tried to make was invalid\"}");
             ctx.send(gson.toJson(errorMessage));
 
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
         // do the make move logic
@@ -148,6 +148,7 @@ public class WebsocketService {
         notificationMap.get(String.valueOf(command.getGameID())).removeIf(c -> c.sessionId().equals(ctx.sessionId()));
         notificationSender(String.valueOf(command.getGameID()), serverMessage);
     }
+
     public void resign(WsMessageContext ctx) throws DataAccessException {
         var command = gson.fromJson(ctx.message(), UserGameCommand.class);
         var games = gameService.getGames();
@@ -167,7 +168,7 @@ public class WebsocketService {
                     winningColor = ChessGame.TeamColor.WHITE;
                 } else {
                     ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR,
-                            "{\"error\":\"You arnt authroized to resign\"}");
+                            "{\"error\":\"You arnt authorized to resign\"}");
                     ctx.send(gson.toJson(errorMessage));
                 }
                 if (game.gameID() == command.getGameID()) {
@@ -190,7 +191,7 @@ public class WebsocketService {
         notificationSender(String.valueOf(command.getGameID()), declareWinner);
     }
 
-    public void loadGame(WsMessageContext ctx) throws DataAccessException{
+    public void loadGame(WsMessageContext ctx) throws DataAccessException {
         var command = gson.fromJson(ctx.message(), UserGameCommand.class);
         var games = gameService.getGames();
         for (var game : games) {
@@ -202,7 +203,8 @@ public class WebsocketService {
             }
         }
     }
-    public void connect(WsMessageContext ctx) throws DataAccessException{
+
+    public void connect(WsMessageContext ctx) throws DataAccessException {
         var command = gson.fromJson(ctx.message(), UserGameCommand.class);
         String gameID = String.valueOf(command.getGameID());
         boolean gameExists = gameService.checkGameID(command.getGameID());
@@ -213,18 +215,21 @@ public class WebsocketService {
             ctx.send(gson.toJson(returnmessage));
         } else {
             System.out.println("a connection was made to " + gameID);
-            notificationMap.computeIfAbsent(gameID, k -> new ArrayList<>());
+            notificationMap.computeIfAbsent(gameID, k -> new HashSet<>());
 
             ctx.enableAutomaticPings();
             String playerName = command.getUsername();
-            NotificationMessage serverMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                    "{\"notification\":\"" + playerName + " connected as white\"}");
-            notificationSender(gameID, serverMessage);
-            notificationMap.get(gameID).add(ctx);
+
+
             var games = gameService.getGames();
             boolean gameIDfound = false;
             for (var game : games) {
                 if (game.gameID() == command.getGameID()) {
+                    String playerPosition = (Objects.equals(command.getUsername(), game.whiteUsername())) ? "white": (Objects.equals(command.getUsername(),game.blackUsername())) ? "black": "observer";
+                    NotificationMessage serverMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                            "{\"notification\":\"" + playerName + " connected as "+playerPosition+"\"}");
+                    notificationSender(gameID, serverMessage);
+                    notificationMap.get(gameID).add(ctx);
                     gson = new Gson();
                     String gameJson = gson.toJson(game);
                     LoadGameMessage returnmessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameJson);

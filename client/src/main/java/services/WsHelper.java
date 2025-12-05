@@ -26,6 +26,7 @@ public class WsHelper extends Endpoint {
     public boolean hasRecivedMessage = false;
     private static String username;
     private boolean isOver =false;
+    public GameData gameData;
     public static void main(String[] args) throws Exception {
 
         WsHelper client = new WsHelper(8080,new UserGameCommand(UserGameCommand.CommandType.CONNECT,"123","bob",123),true);
@@ -80,10 +81,9 @@ public class WsHelper extends Endpoint {
        var jsonMessage = gson.fromJson(message, ServerMessage.class);
        if(jsonMessage.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
            var loadjsonMessage = gson.fromJson(message, LoadGameMessage.class);
-           var game = gson.fromJson(loadjsonMessage.getGame(), GameData.class);
-           this.loadBoard(game);
-           System.out.println("test");
-           System.out.println(message);
+           gameData = gson.fromJson(loadjsonMessage.getGame(), GameData.class);
+           this.loadBoard(gameData);
+
        }
        else if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.ERROR){
            var errorjsonMessage = gson.fromJson(message, ErrorMessage.class);

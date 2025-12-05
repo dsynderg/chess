@@ -1,9 +1,6 @@
 package services;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 import org.junit.jupiter.api.Test;
 import ui.EscapeSequences;
 
@@ -59,12 +56,74 @@ public class BoardPrinter {
 
 
     }
+    public static void printBoardWithMove(ChessGame game,ChessGame.TeamColor viewPosition, ChessPosition highlightPosition){
+        var board = game.getBoard();
+//        printBoard(board, ChessGame.TeamColor.WHITE);
+        var validMoves = game.validMoves(highlightPosition);
+        board = game.getBoard();
+//        printBoard(board, ChessGame.TeamColor.WHITE);
+        String topBottom = (viewPosition == ChessGame.TeamColor.WHITE) ? "    A  B  C  D  E  F  G  H    " : "    H  G  F  E  D  C  B  A    ";
+
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+        System.out.print(topBottom);
+        System.out.println(EscapeSequences.RESET_BG_COLOR);
+        for(int i=0;i<8;i++){
+            int row = (viewPosition == ChessGame.TeamColor.WHITE) ? 8 - i : i + 1;
+            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+            System.out.print(" "+String.valueOf(row)+" ");
+            for(int j=0;j<8;j++){
+
+
+                int col = (viewPosition == ChessGame.TeamColor.WHITE) ? j + 1 : 8 - j;
+                ChessPosition pos = new ChessPosition(row,col);
+                ChessPiece piece = board.getPiece(pos);
+                //if its an even square
+                boolean isEvenSquare = (i + j) % 2 == 0;
+                var endPostition = new ChessPosition(row,col);
+                String bgColor = "";
+                for (var move :validMoves){
+                    if(endPostition.equals(move.getEndPosition())){
+                        bgColor = isEvenSquare ? EscapeSequences.SET_BG_COLOR_GREEN : EscapeSequences.SET_BG_COLOR_DARK_GREEN;
+                        break;
+                    }
+                    bgColor = isEvenSquare ? EscapeSequences.SET_BG_COLOR_WHITE : EscapeSequences.SET_BG_COLOR_BLACK;
+                }
+                String textColor;
+
+
+                if (piece != null) {
+                    textColor = piece.getTeamColor() == ChessGame.TeamColor.WHITE ?
+                            EscapeSequences.SET_TEXT_COLOR_RED : EscapeSequences.SET_TEXT_COLOR_BLUE;
+                    System.out.print(textColor + bgColor + " " + piece + " ");
+                } else {
+                    textColor = isEvenSquare ? EscapeSequences.SET_TEXT_COLOR_WHITE : EscapeSequences.SET_TEXT_COLOR_BLACK;
+                    System.out.print(bgColor + textColor + "   ");
+
+                }
+
+
+            }
+            System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+            System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+            System.out.print(" "+String.valueOf(row)+" ");
+
+            System.out.print(EscapeSequences.RESET_BG_COLOR);
+            System.out.println();
+        }
+        System.out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+        System.out.print(EscapeSequences.SET_TEXT_COLOR_BLACK);
+        System.out.print(topBottom);
+        System.out.print(EscapeSequences.RESET_TEXT_COLOR);
+        System.out.println(EscapeSequences.RESET_BG_COLOR);
+
+
+    }
     void main(){
-        ChessBoard board = new ChessBoard();
-        board.resetBoard();
-        printBoard(board, ChessGame.TeamColor.WHITE);
-        System.out.println();
-        printBoard(board, ChessGame.TeamColor.BLACK);
+        ChessGame game = new ChessGame();
+//        printBoard(game.getBoard(), ChessGame.TeamColor.WHITE);
+        printBoardWithMove(game, ChessGame.TeamColor.BLACK,new ChessPosition(8,7));
     }
 
 }

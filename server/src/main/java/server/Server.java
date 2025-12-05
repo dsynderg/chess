@@ -94,7 +94,7 @@ public class Server {
                 return;
             }
 
-            if (command.getCommandType() == UserGameCommand.CommandType.LEAVE) {
+            else if (command.getCommandType() == UserGameCommand.CommandType.LEAVE) {
                 websocketService.leave(ctx);
             } else if (command.getCommandType() == UserGameCommand.CommandType.RESIGN) {
                websocketService.resign(ctx);
