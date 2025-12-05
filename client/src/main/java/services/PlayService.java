@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class PlayService {
+
     private static ChessBoard board;
     private static WsHelper helper;
     private static Gson gson;
@@ -124,6 +125,8 @@ public class PlayService {
 
     public static void playRepl(UserGameCommand command, Boolean isPlayer) throws Exception {
         //if isPlayer is false then he is an observer
+
+        Scanner scanner = new Scanner(System.in);
         gson = new Gson();
         if (!isPlayer) {
             helper = new WsHelper(8080, command, false);
@@ -134,7 +137,6 @@ public class PlayService {
         String connectJson = gson.toJson(command);
         helper.send(connectJson);
 //        drawboard(command,helper);
-        Scanner scanner = new Scanner(System.in);
         drawboard(command, helper);
         while (!helper.getIsOver()) {
             System.out.print("PLAY GAME>>> ");
@@ -162,45 +164,7 @@ public class PlayService {
 
                 case "makemove" -> {
                     if (isPlayer) {
-                        // eventually you need to add a way for the user to give their own move
-                        System.out.println("What move do you want to make (start) (end) (pawn promotion)?");
-                        String moveString = scanner.nextLine().trim().toLowerCase();
-                        String[] moveParts = moveString.split(" ");
-                        String startingPosition = moveParts[0];
-                        String endPosition = moveParts [1];
-                        String promoteString=null;
-                        ChessPiece.PieceType promotionPeice = null;
-                        var movePair = makeMoveHelper(startingPosition);
-                        if ((0 > movePair[0] || movePair[0] > 9) ||  (0 > movePair[1] || movePair[1] > 9)) {
-                            break;
-
-                        }
-                       var endPair = makeMoveHelper(endPosition);
-                        if ((0 > endPair[0] || endPair[0] > 9) || (0 > endPair[1] || endPair[1] > 9)) {
-                            break;
-
-                        }
-                        if(moveParts.length==3){
-                           promoteString = moveParts[2];
-                           switch (promoteString){
-                               case "queen":
-                                   promotionPeice = ChessPiece.PieceType.QUEEN;
-                                   break;
-                               case "rook":
-                                   promotionPeice = ChessPiece.PieceType.ROOK;
-                                   break;
-                               case "bishop":
-                                   promotionPeice = ChessPiece.PieceType.BISHOP;
-                                   break;
-                               case "knight":
-                                   promotionPeice = ChessPiece.PieceType.KNIGHT;
-                                   break;
-
-                           }
-                        }
-                        makeMove(new ChessMove(new ChessPosition(movePair[0],movePair[1]),
-                                new ChessPosition(endPair[0],endPair[1]),
-                                promotionPeice),command,helper);
+                       makeMoveHelper(command);
                     }
                 }
 
@@ -218,6 +182,49 @@ public class PlayService {
         }
         helper.close();
         return;
+    }
+    private static void makeMoveHelper(UserGameCommand command) throws IOException {
+
+        Scanner scanner = new Scanner(System.in);
+        // eventually you need to add a way for the user to give their own move
+        System.out.println("What move do you want to make (start) (end) (pawn promotion)?");
+        String moveString = scanner.nextLine().trim().toLowerCase();
+        String[] moveParts = moveString.split(" ");
+        String startingPosition = moveParts[0];
+        String endPosition = moveParts [1];
+        String promoteString=null;
+        ChessPiece.PieceType promotionPeice = null;
+        var movePair = makeMoveHelper(startingPosition);
+        if ((0 > movePair[0] || movePair[0] > 9) ||  (0 > movePair[1] || movePair[1] > 9)) {
+
+            return;
+        }
+        var endPair = makeMoveHelper(endPosition);
+        if ((0 > endPair[0] || endPair[0] > 9) || (0 > endPair[1] || endPair[1] > 9)) {
+
+            return;
+        }
+        if(moveParts.length==3){
+            promoteString = moveParts[2];
+            switch (promoteString){
+                case "queen":
+                    promotionPeice = ChessPiece.PieceType.QUEEN;
+                    break;
+                case "rook":
+                    promotionPeice = ChessPiece.PieceType.ROOK;
+                    break;
+                case "bishop":
+                    promotionPeice = ChessPiece.PieceType.BISHOP;
+                    break;
+                case "knight":
+                    promotionPeice = ChessPiece.PieceType.KNIGHT;
+                    break;
+
+            }
+        }
+        makeMove(new ChessMove(new ChessPosition(movePair[0],movePair[1]),
+                new ChessPosition(endPair[0],endPair[1]),
+                promotionPeice),command,helper);
     }
 
 }
