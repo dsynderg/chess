@@ -93,7 +93,7 @@ public class WsHelper extends Endpoint {
        else if(jsonMessage.getServerMessageType()== ServerMessage.ServerMessageType.NOTIFICATION){
            var notificationjsonMessage = gson.fromJson(message, NotificationMessage.class);
            String notificaitonMessage = gson.fromJson(notificationjsonMessage.getMessage(),Map.class).get("notification").toString();
-           Pattern p = Pattern.compile("^(.+)\\s+has won the game!!!!$");
+           Pattern p = Pattern.compile("^(.+?) has won the game\\. (.+?) is in Checkmate$");
            Matcher m = p.matcher(notificaitonMessage);
            System.out.println("Notification: "+notificaitonMessage);
            if(m.matches()){

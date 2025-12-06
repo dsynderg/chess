@@ -14,7 +14,10 @@ import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 
 public class WebsocketService {
     GameService gameService = new GameService();
@@ -107,34 +110,37 @@ public class WebsocketService {
                     gson = new Gson();
                     String gameJson = gson.toJson(game);
                     String playerColor = (Objects.equals(moveCommand.getUsername(), newGameData.whiteUsername())) ? "White" : "Black";
+                    var opponentColorc = (Objects.equals(moveCommand.getUsername(), newGameData.whiteUsername())) ? ChessGame.TeamColor.BLACK : ChessGame.TeamColor.WHITE;
                     gameService.updateBoard(newGameData);
                     var updatedGame = newGameData.game();
+                    var inCheckmate = updatedGame.isInCheckmate(opponentColorc);
 
 
-                        String updatedGameJson = gson.toJson(newGameData);
-                        Thread.sleep(300);
-                        LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, updatedGameJson);
-                        notificationSender(String.valueOf(game.gameID()), loadGameMessage);
+                    String updatedGameJson = gson.toJson(newGameData);
+                    Thread.sleep(300);
+                    LoadGameMessage loadGameMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, updatedGameJson);
+                    notificationSender(String.valueOf(game.gameID()), loadGameMessage);
 
 
-                    if(updatedGame.hasWon()!= null){
+                    if (inCheckmate) {
+                        String oponentName = (Objects.equals(moveCommand.getUsername(), newGameData.whiteUsername())) ?
+                                newGameData.blackUsername():newGameData.whiteUsername();
                         NotificationMessage hasWonNotification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                                moveCommand.getUsername()+" has won the game!!!!");
-                        notificationSender(String.valueOf(game.gameID()),hasWonNotification);
-                    }
-                    else if(updatedGame.isInCheck(ChessGame.TeamColor.WHITE) || updatedGame.isInCheck(ChessGame.TeamColor.BLACK)){
+                                "{\"notification\":\"" + moveCommand.getUsername() + " has won the game. "+oponentName+" is in Checkmate\"}");
+                        notificationSender(String.valueOf(game.gameID()), hasWonNotification);
+                    } else if (updatedGame.isInCheck(ChessGame.TeamColor.WHITE) || updatedGame.isInCheck(ChessGame.TeamColor.BLACK)) {
 
                         String opponentColor = (Objects.equals(moveCommand.getUsername(), newGameData.whiteUsername())) ? "Black" : "White";
                         NotificationMessage hasWonNotification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                                opponentColor+" is in check");
+                                opponentColor + " is in check");
                         String haswonJson = gson.toJson(hasWonNotification);
                         ctx.send(haswonJson);
                     }
-                    else{
-                        NotificationMessage notificationMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                                "{\"notification\":\"" + playerColor + " has made a move" + move + "\"}");
-                        notificationSenderminusOne(String.valueOf(game.gameID()), notificationMessage, ctx);
-                    }
+
+                    NotificationMessage notificationMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                            "{\"notification\":\"" + playerColor + " has made a move" + move + "\"}");
+                    notificationSenderminusOne(String.valueOf(game.gameID()), notificationMessage, ctx);
+
                 }
             }
         } catch (InvalidMoveException e) {
@@ -200,15 +206,20 @@ public class WebsocketService {
                             game.gameName(),
                             chessGame);
                     gameService.updateBoard(updatedBoard);
+                    String winnerString = (winningColor == ChessGame.TeamColor.WHITE) ? "White" : "Black";
+                    ServerMessage declareWinner = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                            "{\"notification\":\"" + command.getUsername() + " has won the game!!!!\"}");
+                    String oponentName = (Objects.equals(command.getUsername(), game.whiteUsername())) ?
+                            game.blackUsername():game.whiteUsername();
+                    NotificationMessage hasWonNotification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                            "{\"notification\":\"" + command.getUsername() + " has won the game. "+oponentName+" is in Checkmate\"}");
+//
+                    notificationSender(String.valueOf(command.getGameID()), hasWonNotification);
 
                 }
             }
         }
-        String winnerString = (winningColor == ChessGame.TeamColor.WHITE) ? "White" : "Black";
-        ServerMessage declareWinner = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                "{\"notification\":\"" + command.getUsername() + " has won the game!!!!\"}");
-//
-        notificationSender(String.valueOf(command.getGameID()), declareWinner);
+
     }
 
     public void loadGame(WsMessageContext ctx) throws DataAccessException {
@@ -245,9 +256,9 @@ public class WebsocketService {
             boolean gameIDfound = false;
             for (var game : games) {
                 if (game.gameID() == command.getGameID()) {
-                    String playerPosition = (Objects.equals(command.getUsername(), game.whiteUsername())) ? "white": (Objects.equals(command.getUsername(),game.blackUsername())) ? "black": "observer";
+                    String playerPosition = (Objects.equals(command.getUsername(), game.whiteUsername())) ? "white" : (Objects.equals(command.getUsername(), game.blackUsername())) ? "black" : "observer";
                     NotificationMessage serverMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                            "{\"notification\":\"" + playerName + " connected as "+playerPosition+"\"}");
+                            "{\"notification\":\"" + playerName + " connected as " + playerPosition + "\"}");
                     notificationSender(gameID, serverMessage);
                     notificationMap.get(gameID).add(ctx);
                     gson = new Gson();

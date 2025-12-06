@@ -99,6 +99,7 @@ public class ChessGame {
     }
 
     public Collection<ChessMove> allMoves(ChessGame.TeamColor teamColor) {
+//        isInCheckmate(teamColor);
         Collection<ChessMove> moves = new ArrayList<>();
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
@@ -120,6 +121,8 @@ public class ChessGame {
             ChessPiece.PieceType promotion = move.getPromotionPiece();
             ChessPiece movingPiece = board.getPiece(start);
             board.addPiece(start, null);
+//            isInCheckmate(TeamColor.BLACK);
+//            isInCheckmate(TeamColor.WHITE);
             if (promotion == null) {
                 board.addPiece(end, movingPiece);
             } else {
@@ -170,10 +173,16 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
 
         if (isInCheck(teamColor) && allMoves(teamColor).isEmpty()) {
-            switch (teamColor) {
-                case WHITE -> hasWon = TeamColor.BLACK;
-                case BLACK -> hasWon = TeamColor.WHITE;
+            if(teamColor == TeamColor.WHITE){
+                hasWon = TeamColor.BLACK;
             }
+            else {
+                hasWon=TeamColor.WHITE;
+            }
+//            switch (teamColor) {
+//                case WHITE -> hasWon = TeamColor.BLACK;
+//                case BLACK -> hasWon = TeamColor.WHITE;
+//            }
             return true;
         }
         return false;
