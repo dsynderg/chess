@@ -130,11 +130,10 @@ public class WebsocketService {
                         notificationSender(String.valueOf(game.gameID()), hasWonNotification);
                     } else if (updatedGame.isInCheck(ChessGame.TeamColor.WHITE) || updatedGame.isInCheck(ChessGame.TeamColor.BLACK)) {
 
-                        String opponentColor = (Objects.equals(moveCommand.getUsername(), newGameData.whiteUsername())) ? "Black" : "White";
+                        String opponentColor = (Objects.equals(moveCommand.getUsername(), newGameData.whiteUsername())) ? "b" : "w";
                         NotificationMessage hasWonNotification = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                                opponentColor + " is in check");
-                        String haswonJson = gson.toJson(hasWonNotification);
-                        ctx.send(haswonJson);
+                                "{\"notification\":\"" + opponentColor + " is in Check\"}");
+                        notificationSender(String.valueOf(moveCommand.getGameID()),hasWonNotification);
                     }
 
                     NotificationMessage notificationMessage = new NotificationMessage(ServerMessage.ServerMessageType.NOTIFICATION,
