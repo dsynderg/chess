@@ -1,55 +1,74 @@
-# ♕ BYU CS 240 Chess
+# BYU CS 240 Chess
 
-This project demonstrates mastery of proper software design, client/server architecture, networking using HTTP and WebSocket, database persistence, unit testing, serialization, and security.
-## link to my sequence diagram (presentable)
-https://sequencediagram.org/index.html?presentationMode=readOnly#initialData=C4S2BsFMAIGEAtIGcnQMqQI4FdIDsBjGAERAEMBzAJzIFtoAjAT2mMgA9hIr0m8ATbhTJkq-AFAAHUaAIhpeYNACqSblJkg5CpbHAh8wDVVnyyi9NwBu66Sa1mLACXP8oVY6Z2WqVrZE8Hb2IyYDIGMjVoMgIiFHV+UPDImESwiLVxcUMqJiRpOTwKaAAGADoADnFqAHtsSWgAYiZIcHAagHc4KFEm6jImcRjgGp5VdXGqAFoAPj0DRQAuYgBRABkVgBUV6AB6fgZoAG8AX3FJgB4pqfnDRYBBJABrVAAzUegCGrxXkCpaUIgb7iBhUSBkJ7QMEAK0gBGAqAIPQ8k1mtyWACVILD4YjkeYiNAOmB4NE8NAAHLidHAa4zSaLLH5b78VDE4CkmFw0DfaC0ZBISgBfASVFzfR3L4-P60RE1WgAgREknRaAATWpEossx8Nioy1akC4xzOoPBkIALCUStBuFRRpqFsArhhfNxFhzuDAOpFVRF+FCsLgkEo7R8DItoAAdRSIaDYNQ8STYJR2OhG7ioECKGrQT3QQRQY1gnDIIyXG5a4CLMiMMgBkvBpQ+1AAwTZAQgsEQ6AAVmtjsMLus7s9YKJvtrib10BAKFw50TVxpHsQ45bqun3Fn8+Fnddep1LgE7gNRZgp3Ex7c3FmB-8Z4zIXSKQAFABKcT3oizZ-JKIxHEiaLEi4JUJMH7iH+GQwIBAq3jMBZJDBixpGQAD6MHoaBoivpMn7QSk0SxPBVBXGhKFgsA2BUHgqAUURvr6CGUHIYxJHxNMMyEQBHHAXO6HZuhDFqB+0AALzibatCSMAgzfpAv5sbxQHujhVAAOLppBPGwXxCFIS+aioUkmEpNhyKvlp-IEcpemqWRUwiZAixUTRdGGf+sGoMxRi6cRDlKUZ9mkYsAlCc5YmSdJsnydY-hBV5AWhep9wpvAOl2clnE6s5JlhGZagWWBr5pRytnBdlS5OXZrlGu59FZUxc5+U1+lcf5cGcWFSCCXgwl2VFUmQDJcmsZVXWJolMFVe67w8OCBCkjUrx5ogUT8Lm+bOZ8yKfIgBBPAANLOq3mCwrxkCA4CBtRtFrTAYY8K4D15kwkgBDtzlZGaPZPWtoSvTtG54DUSjqZAEhZNe7hXFMnXtflSU+nR4PIpDMYAGJkOAAFKps70BDSVww+6ADa-YlAAusc0AAET8igQp05GdMrFQ9r6scckfScnkzSDYO7WBkPQEg2B8a82DgEwdPQGcFYrpsa7epO5L-ep2bFEcPOQHzzknZIPRRMAuTRMI2bQOAoTqCKWQIw55G1TjN0rUDdlsl6wuiKL4uS9LMuRjGbn3QwNQ1D0eBXq4sPXA7oUhx5ftATGmxUAuB7cHDpP6mTABM1o06cMaDoow5urnBfUyai5Z9cK78HORsDKgIyvQm24coD+Zh6IAYbhDAbJwKUsyx2UPVPa9RNKCnTkliFAtdu0B9DQgy11xK5cG0eJOgDShxijCJ5rmAJPLB5KAXUigb3DK6RC80DzQWRpXbjJ+vVf2A3125rQFkYoVwEAJK0VucZTbmEFPCIEeAS4VkrE6EC3xfj-DATAYBhBWjWx5OSEudtAFVkWAABQAPJoE2DGV89MO60XTCzOmdMTp02kCgDoox+D0MYfTEab9OHQE-DSO8I59RHGoYmPAdDFgMKYSwpAbCxCcKYTw66fDTTdktNaW0HMHTEymJnXOVpq6iIZgKZmrN2ac0jP6QMpYQxywVtVe+dYGxBjLBOVs9Y9wSF+pCSmpdnR6OEauL2G4pzCJ3OLAIitCFjlVqgMJFcIkLjtvo2YOdFjGJoRI-kij6ayPkRwqRXC6bKPAKo6OJ4EIKRAt2LgX9FCQQUtNdiDkQIHSeFk7SnSbLjSSpNBCeV2g1Efs-bpMBLbfV-j2MZ0RwDdn4CwMI58o69Jmv0xyeUnonXzDQ6A2TYJzPBAs207AWqInaWM18Yz3zQB1KbXA0Y8BhwjhUm8jl47dUTnmdORMqwkxjuTK0ABmIu9NGaCgoJAFm9MLGjEjDjeZiyIT4HsbfBBdwdniPTPvaATA6jfIMAGNuYJF4hm3OyUkCKjksA4Gc8eqyWmkSdsFSMCA4QdKxfyW5Mxsa4wCApK4HzgKXT5V+eKP4ZjVLPpASYJCGA4mAFczlkBDaRDkewk6pTPxNO4m1Vp9Z+A0OzO8JV3A5UKoqn09qsw8oGvbsq1VrCNVkgDKUj+mLtzfSFXXGqLKvm7J2pbeAkRSQAgaPNWgYrfD+Dht6-U-rEz8yIkGkNfIyDhtGJGnV1TJgAEk8C6VNVQc13JPw+IeuuSc0BJD2gYFAegFLoj8EbkUT+sRr5GCyNm8VLleWZBznDapIrMj6OzgC3OlNQUmKZpC6FbNtFcxrTUOtI0m0tuKDQ+xJddGBIrnVO6HknpopXHTWJ7jVRLpXfQA1WtcV1Geu27+wBDZQBNmbSgV1yTYO4HTelXae1COjUQRYhp+QWANb7CWQFR4sFmM88AUa-ASuqZCvA3AbboTIOlRpAHdUTURtKsq8A-xFv2e+SMqH0NcHiZfdKJ9lkurJNEOjaFoDLoVQylSpEbXO2bcxjkf4P5YYE0kJNmRdHpMTqgYeKBlQclpnTMZuS6bCfgJsYZKKiny2PYQ+4zbb14pogFDt56ZNIFHrdBq-H4AjGWfS2o09Gj9BYGsGoi9ySNDrTEJ4WQAFTXFIgyQNQQwxkXjYREYJBCKHIO-TJyrlP5PYeUwRkqglxe4PshLaqCnlPLYYrRnN-Hlz1MEyt8TnE2KbAVh00TEG1msY2NxG42xeKmb4gcuj9GlbiZucJc5Ik6cQWe0JYs+u7npakmY6T0u0JyUUmR2WktabODnQDSGXLtHc8GypVBXwEEi4YGLSBtW4bjYsSFwAILXM4yFHKMw8q-AEAAclQGM8QzkeMsqWuyrMq18z7chmh6LON4njktttOybXqs8AB1F0AIO9lCwmVlK0ABGLIH28NWtacOmAr5QbxnEQCcZ5JnKflebHeGeqE71VoqgI9Enx2LDJmjqd4KzEwoXZGb+qnRggAAF6Q1RbVu4D9XuJrbqbFgH7swnVh4dhHHQvbZisDjEAEgUk9rhnlKT9ruDGpqIhhKqWgMuSIYtsQ33DqvkS2IE6ND83vDLeo6AABIFnJRUds9MbO8xXP4wSPSnzwXHDtMDuKw+W3-A2WHW5U-EHvynT-J24sd3rOFPs995zyxAfedUAF0L+WcDHGEMMzDg7wP35K7B4QUYYJ4QTYA2tyPFvo-tLj-c-lWvd3rfO0aIj6nll4UTAbk7pvm-Ad1-UpQ+g8Dn37iqfMqn6P4GhuOiPwHNvZm24WbgH4dS65mS9VTtnV+M5T+7quU6lPzfpqpwfmmGHaZF0sRu+RrZ5FemoFAMC2N-bjP0gGNPidFPnRqflHHbA5g0I0JFtAK5hQHUEoE5mvFDsAGwmxrJDAq3LmMMCAKrsaByHOLaAIEFtmEoKsBsNsBvGiIQrgfgaLByFPBQKSNmHQWAIMOWtQQFncLso1iGB-JtmximG7nngLoCN8JGBcPfhpngDMPSnbCliuBQVsDsLsN-kgDAlDmjtDkVuiksB7l7hnj7lCn7jnjzkHvniHvYojtZivlHC-tWIZgWN8E9gfGQDYJ8BXvDu-G3IIYgfSooYQmCLQDUOFtZuAU-PaPQP9lWC9lbDUMAjdCGKMEKP4mtu6CaJYAIGgrOD8LmMkbAcwK9EiE6FoZogzn8j3uTJOkYTOiYdnnCtAK+MrCElWpevWi-EWAZvetZg-ngO+MLiXnVhVnwc2L6C1gEZUV1lXDXA4YsJtogWLFBiPNLHgp2FkFAU0MmFQEbDAGsC1NANZMgKvAMH5ghCuBpEaMHK4iGD5AccIIzDGK7qIfzuIXgJIdIcsnISll1s8RYWITgh8elH0XIVDn4p1kEhTIXLURCvUfOjnq+LmruFVLeluFQAMc-kMRiirOegkjOP1skvuMImkkzp8avqtibr3qrvoGkJAERs0TIWPuts0lxt1JcZdomK+GSf0TdrNFxHlEQUvulBEeDnGEankWJgEHlp7joRTj6gKXgNSeruETIYhnXOkgYd7nUXOrClzOYRyMHoXmcBCXuuob-sqUQSrmrgGIajAG3KwdAn4GNHMWqPisGh4QwJAPgPERQJCgGIgWUNAEQsbDAGCFMFvuSG3JNK9L5H-tAA8cgI3hXNrrVEqUAXRn0WqVxOkn8QaZYW8UCRyCCYxvmNIByHKdmUzgepVmWAmbkVGTWfwbrBWRPi5JtKMa+KMehM2TqmdhdkcUgJlPhoFPdrVPcPpKgAmY1MFPbNTpxCmX6rTh5HQTAFObkaqLjGAEbkQIKnOcBF8rGW7FORWRvi5F8seb5qOlMBqVfgplOdCmTEcHTAmbmsQNCqjnnEChaEwh0PAGADKvFrfnTF5odJMJlkBQmRSOmEUnzFTCcNulMZCbecYveZGI+c+emK+e+Z+d+fTL+f+WBZItIvTCBU8IRXNsRRhfyFBfyDBdAHBcXnXCuGoMcSufGemDRkSogH8OxVyuri9lkHbL5pscgV6eSLALUjAEcScYMAQogrmfAMHgWdAFIcCTIXIXMWLk-B8HWfslwSuGFscbpdiq7ihemDRSYU-saVWOkSIifjISdOmuwbzGUTaBUUnlUfqMNlWg1jcaGAuoNqLiMX5eehMXbOWuCYhXut5eVmiUklEliUsDFb1okgSa1pNtNvZcso5ZIM5QEBSdUmmTbKplycKYyduYpFjmsojBdtPqVRyOAZatVSOXlGoKIEtITtwKxs-FlavgKtcDrkuUSOCGOGxjwKDEoEKfJiKVmJGXGN9D4ieT3g+BuLjroTmZqTCRzvCY0fqYpZYUaYFUlTiaErRp6NFsAjgtDnLnUOAAGE4bsQjoIZbDLhAesd2qbn3mhjQFwEca+AmWRv+uPlVYyt1L3GIGxvKtyHsl6ayB-J6WLO4ZDLyesp9l5IsGgEja9ODQGAmSdHWa+XLrUqMI5UqHYF4OYAiEtctZPkNXWeriXFeRtchfTC+W+ZGB+V+dpiaSVpftCWZfyFhRzThZiUxYQixTkQTcQHeZhezdAJzRaPLIxlpSAP-jALsmwtLAGPoOfB-NCDUNmFDoKJ-i0EgPpYQoke-PrZbCKKQTfOFS7sbagKDEddWGoNkXetgHWLHm3IpVytIJCvIesRsVPNAfhcaNbeSHWcgacWcZvIQsmEoLsAmU8S8cpapUWepTGMYs3C0FQLABHKMPQgAOpOC5rbC7AABCaw9wsAAA0sUmzdhVzfBVHD8UEonXsCnXgApUpYCSpdyTMNnXkh-twAXe0FQCXWXRXdXbXQ3Uwk3cLS3TGCXJwTze6GnvzWCsYTqf7r5bYsAIMWLYFiGYGNmJ3WXrke8EmYeFNkzp3cnemKnf8a8f3RnWplnXgDnaPfnYXZPVIqXeXSsFXTXfXY3bLc3Yra3S2ZSQ+EVXUthr1Tyb2Xue6BduOV8E+vVTZuVXGmjShEQcvpbDQmhAAPz0qcEDq+ro3L4TXrnfTn5vKp6bXGKZ5wm6nc6B55kF6h4OLH3YmtE0bWaHaXW-5HpCUo3tQLno1fLT4VW7nDk07VnT6eQVUsm3bAT9naRs1NWg3+atVem-a8XjIBiWlzWpCQ6cFxrSMoT00Bh0PI4zlUNU6KOfJDVrU7oamGJamwm705771NhH2OQriX12M7i5Fpk30xoDW1TnnphqOwPAZqogAUD9S5177pMw5-343pjO5-zU3VK6646MBwhYZRCZOfB-24mHL1hIp2aeNM4e4gpbVZ47VcxUq1N5jIp4BBPLgxJxhfAT2e37TBY9YdPHJLKr6a7A19l4GQB-U6OSMtXOw-6pM5FoZdAVOikWMzn9WDXVl1nsbcgJPVICSZOYarNob8D-XphHSDOjB5M9gFM9o9R4CuHRCXPI0NMp5QlGLb3ammGNGviCBID7byBXVuxPQYl8PBP9OCMpUzjiOdjOOnPxKfMSDfNMP5z80wt9OIJOHukwCR0MFxh1lmajwyxAA
-## link to my sequence diagram (editable)
-https://sequencediagram.org/index.html#initialData=C4S2BsFMAIGEAtIGcnQMqQI4FdIDsBjGAERAEMBzAJzIFtoAjAT2mMgA9hIr0m8ATbhTJkq-AFAAHUaAIhpeYNACqSblJkg5CpbHAh8wDVVnyyi9NwBu66Sa1mLACXP8oVY6Z2WqVrZE8Hb2IyYDIGMjVoMgIiFHV+UPDImESwiLVxcUMqJiRpOTwKaAAGADoADnFqAHtsSWgAYiZIcHAagHc4KFEm6jImcRjgGp5VdXGqAFoAPj0DRQAuYgBRABkVgBUV6AB6fgZoAG8AX3FJgB4pqfnDRYBBJABrVAAzUegCGrxXkCpaUIgb7iBhUSBkJ7QMEAK0gBGAqAIPQ8k1mtyWACVILD4YjkeYiNAOmB4NE8NAAHLidHAa4zSaLLH5b78VDE4CkmFw0DfaC0ZBISgBfASVFzfR3L4-P60RE1WgAgREknRaAATWpEossx8Nioy1akC4xzOoPBkIALCUStBuFRRpqFsArhhfNxFhzuDAOpFVRF+FCsLgkEo7R8DItoAAdRSIaDYNQ8STYJR2OhG7ioECKGrQT3QQRQY1gnDIIyXG5a4CLMiMMgBkvBpQ+1AAwTZAQgsEQ6AAVmtjsMLus7s9YKJvtrib10BAKFw50TVxpHsQ45bqun3Fn8+Fnddep1LgE7gNRZgp3Ex7c3FmB-8Z4zIXSKQAFABKcT3oizZ-JKIxHEiaLEi4JUJMH7iH+GQwIBAq3jMBZJDBixpGQAD6MHoaBoivpMn7QSk0SxPBVBXGhKFgsA2BUHgqAUURvr6CGUHIYxJHxNMMyEQBHHAXO6HZuhDFqB+0AALzibatCSMAgzfpAv5sbxQHujhVAAOLppBPGwXxCFIS+aioUkmEpNhyKvlp-IEcpemqWRUwiZAixUTRdGGf+sGoMxRi6cRDlKUZ9mkYsAlCc5YmSdJsnydY-hBV5AWhep9wpvAOl2clnE6s5JlhGZagWWBr5pRytnBdlS5OXZrlGu59FZUxc5+U1+lcf5cGcWFSCCXgwl2VFUmQDJcmsZVXWJolMFVe67w8OCBCkjUrx5ogUT8Lm+bOZ8yKfIgBBPAANLOq3mCwrxkCA4CBtRtFrTAYY8K4D15kwkgBDtzlZGaPZPWtoSvTtG54DUSjqZAEhZNe7hXFMnXtflSU+nR4PIpDMYAGJkOAAFKps70BDSVww+6ADa-YlAAusc0AAET8igQp05GdMrFQ9r6scckfScnkzSDYO7WBkPQEg2B8a82DgEwdPQGcFYrpsa7epO5L-ep2bFEcPOQHzzknZIPRRMAuTRMI2bQOAoTqCKWQIw55G1TjN0rUDdlsl6wuiKL4uS9LMuRjGbn3QwNQ1D0eBXq4sPXA7oUhx5ftATGmxUAuB7cHDpP6mTABM1o06cMaDoow5urnBfUyai5Z9cK78HORsDKgIyvQm24coD+Zh6IAYbhDAbJwKUsyx2UPVPa9RNKCnTkliFAtdu0B9DQgy11xK5cG0eJOgDShxijCJ5rmAJPLB5KAXUigb3DK6RC80DzQWRpXbjJ+vVf2A3125rQFkYoVwEAJK0VucZTbmEFPCIEeAS4VkrE6EC3xfj-DATAYBhBWjWx5OSEudtAFVkWAABQAPJoE2DGV89MO60XTCzOmdMTp02kCgDoox+D0MYfTEab9OHQE-DSO8I59RHGoYmPAdDFgMKYSwpAbCxCcKYTw66fDTTdktNaW0HMHTEymJnXOVpq6iIZgKZmrN2ac0jP6QMpYQxywVtVe+dYGxBjLBOVs9Y9wSF+pCSmpdnR6OEauL2G4pzCJ3OLAIitCFjlVqgMJFcIkLjtvo2YOdFjGJoRI-kij6ayPkRwqRXC6bKPAKo6OJ4EIKRAt2LgX9FCQQUtNdiDkQIHSeFk7SnSbLjSSpNBCeV2g1Efs-bpMBLbfV-j2MZ0RwDdn4CwMI58o69Jmv0xyeUnonXzDQ6A2TYJzPBAs207AWqInaWM18Yz3zQB1KbXA0Y8BhwjhUm8jl47dUTnmdORMqwkxjuTK0ABmIu9NGaCgoJAFm9MLGjEjDjeZiyIT4HsbfBBdwdniPTPvaATA6jfIMAGNuYJF4hm3OyUkCKjksA4Gc8eqyWmkSdsFSMCA4QdKxfyW5Mxsa4wCApK4HzgKXT5V+eKP4ZjVLPpASYJCGA4mAFczlkBDaRDkewk6pTPxNO4m1Vp9Z+A0OzO8JV3A5UKoqn09qsw8oGvbsq1VrCNVkgDKUj+mLtzfSFXXGqLKvm7J2pbeAkRSQAgaPNWgYrfD+Dht6-U-rEz8yIkGkNfIyDhtGJGnV1TJgAEk8C6VNVQc13JPw+IeuuSc0BJD2gYFAegFLoj8EbkUT+sRr5GCyNm8VLleWZBznDapIrMj6OzgC3OlNQUmKZpC6FbNtFcxrTUOtI0m0tuKDQ+xJddGBIrnVO6HknpopXHTWJ7jVRLpXfQA1WtcV1Geu27+wBDZQBNmbSgV1yTYO4HTelXae1COjUQRYhp+QWANb7CWQFR4sFmM88AUa-ASuqZCvA3AbboTIOlRpAHdUTURtKsq8A-xFv2e+SMqH0NcHiZfdKJ9lkurJNEOjaFoDLoVQylSpEbXO2bcxjkf4P5YYE0kJNmRdHpMTqgYeKBlQclpnTMZuS6bCfgJsYZKKiny2PYQ+4zbb14pogFDt56ZNIFHrdBq-H4AjGWfS2o09Gj9BYGsGoi9ySNDrTEJ4WQAFTXFIgyQNQQwxkXjYREYJBCKHIO-TJyrlP5PYeUwRkqglxe4PshLaqCnlPLYYrRnN-Hlz1MEyt8TnE2KbAVh00TEG1msY2NxG42xeKmb4gcuj9GlbiZucJc5Ik6cQWe0JYs+u7npakmY6T0u0JyUUmR2WktabODnQDSGXLtHc8GypVBXwEEi4YGLSBtW4bjYsSFwAILXM4yFHKMw8q-AEAAclQGM8QzkeMsqWuyrMq18z7chmh6LON4njktttOybXqs8AB1F0AIO9lCwmVlK0ABGLIH28NWtacOmAr5QbxnEQCcZ5JnKflebHeGeqE71VoqgI9Enx2LDJmjqd4KzEwoXZGb+qnRggAAF6Q1RbVu4D9XuJrbqbFgH7swnVh4dhHHQvbZisDjEAEgUk9rhnlKT9ruDGpqIhhKqWgMuSIYtsQ33DqvkS2IE6ND83vDLeo6AABIFnJRUds9MbO8xXP4wSPSnzwXHDtMDuKw+W3-A2WHW5U-EHvynT-J24sd3rOFPs995zyxAfedUAF0L+WcDHGEMMzDg7wP35K7B4QUYYJ4QTYA2tyPFvo-tLj-c-lWvd3rfO0aIj6nll4UTAbk7pvm-Ad1-UpQ+g8Dn37iqfMqn6P4GhuOiPwHNvZm24WbgH4dS65mS9VTtnV+M5T+7quU6lPzfpqpwfmmGHaZF0sRu+RrZ5FemoFAMC2N-bjP0gGNPidFPnRqflHHbA5g0I0JFtAK5hQHUEoE5mvFDsAGwmxrJDAq3LmMMCAKrsaByHOLaAIEFtmEoKsBsNsBvGiIQrgfgaLByFPBQKSNmHQWAIMOWtQQFncLso1iGB-JtmximG7nngLoCN8JGBcPfhpngDMPSnbCliuBQVsDsLsN-kgDAlDmjtDkVuiksB7l7hnj7lCn7jnjzkHvniHvYojtZivlHC-tWIZgWN8E9gfGQDYJ8BXvDu-G3IIYgfSooYQmCLQDUOFtZuAU-PaPQP9lWC9lbDUMAjdCGKMEKP4mtu6CaJYAIGgrOD8LmMkbAcwK9EiE6FoZogzn8j3uTJOkYTOiYdnnCtAK+MrCElWpevWi-EWAZvetZg-ngO+MLiXnVhVnwc2L6C1gEZUV1lXDXA4YsJtogWLFBiPNLHgp2FkFAU0MmFQEbDAGsC1NANZMgKvAMH5ghCuBpEaMHK4iGD5AccIIzDGK7qIfzuIXgJIdIcsnISll1s8RYWITgh8elH0XIVDn4p1kEhTIXLURCvUfOjnq+LmruFVLeluFQAMc-kMRiirOegkjOP1skvuMImkkzp8avqtibr3qrvoGkJAERs0TIWPuts0lxt1JcZdomK+GSf0TdrNFxHlEQUvulBEeDnGEankWJgEHlp7joRTj6gKXgNSeruETIYhnXOkgYd7nUXOrClzOYRyMHoXmcBCXuuob-sqUQSrmrgGIajAG3KwdAn4GNHMWqPisGh4QwJAPgPERQJCgGIgWUNAEQsbDAGCFMFvuSG3JNK9L5H-tAA8cgI3hXNrrVEqUAXRn0WqVxOkn8QaZYW8UCRyCCYxvmNIByHKdmUzgepVmWAmbkVGTWfwbrBWRPi5JtKMa+KMehM2TqmdhdkcUgJlPhoFPdrVPcPpKgAmY1MFPbNTpxCmX6rTh5HQTAFObkaqLjGAEbkQIKnOcBF8rGW7FORWRvi5F8seb5qOlMBqVfgplOdCmTEcHTAmbmsQNCqjnnEChaEwh0PAGADKvFrfnTF5odJMJlkBQmRSOmEUnzFTCcNulMZCbecYveZGI+c+emK+e+Z+d+fTL+f+WBZItIvTCBU8IRXNsRRhfyFBfyDBdAHBcXnXCuGoMcSufGemDRkSogH8OxVyuri9lkHbL5pscgV6eSLALUjAEcScYMAQogrmfAMHgWdAFIcCTIXIXMWLk-B8HWfslwSuGFscbpdiq7ihemDRSYU-saVWOkSIifjISdOmuwbzGUTaBUUnlUfqMNlWg1jcaGAuoNqLiMX5eehMXbOWuCYhXut5eVmiUklEliUsDFb1okgSa1pNtNvZcso5ZIM5QEBSdUmmTbKplycKYyduYpFjmsojBdtPqVRyOAZatVSOXlGoKIEtITtwKxs-FlavgKtcDrkuUSOCGOGxjwKDEoEKfJiKVmJGXGN9D4ieT3g+BuLjroTmZqTCRzvCY0fqYpZYUaYFUlTiaErRp6NFsAjgtDnLnUOAAGE4bsQjoIZbDLhAesd2qbn3mhjQFwEca+AmWRv+uPlVYyt1L3GIGxvKtyHsl6ayB-J6WLO4ZDLyesp9l5IsGgEja9ODQGAmSdHWa+XLrUqMI5UqHYF4OYAiEtctZPkNXWeriXFeRtchfTC+W+ZGB+V+dpiaSVpftCWZfyFhRzThZiUxYQixTkQTcQHeZhezdAJzRaPLIxlpSAP-jALsmwtLAGPoOfB-NCDUNmFDoKJ-i0EgPpYQoke-PrZbCKKQTfOFS7sbagKDEddWGoNkXetgHWLHm3IpVytIJCvIesRsVPNAfhcaNbeSHWcgacWcZvIQsmEoLsAmU8S8cpapUWepTGMYs3C0FQLABHKMPQgAOpOC5rbC7AABCaw9wsAAA0sUmzdhVzfBVHD8UEonXsCnXgApUpYCSpdyTMNnXkh-twAXe0FQCXWXRXdXbXQ3Uwk3cLS3TGCXJwTze6GnvzWCsYTqf7r5bYsAIMWLYFiGYGNmJ3WXrke8EmYeFNkzp3cnemKnf8a8f3RnWplnXgDnaPfnYXZPVIqXeXSsFXTXfXY3bLc3Yra3S2ZSQ+EVXUthr1Tyb2Xue6BduOV8E+vVTZuVXGmjShEQcvpbDQmhAAPz0qcEDq+ro3L4TXrnfTn5vKp6bXGKZ5wm6nc6B55kF6h4OLH3YmtE0bWaHaXW-5HpCUo3tQLno1fLT4VW7nDk07VnT6eQVUsm3bAT9naRs1NWg3+atVem-a8XjIBiWlzWpCQ6cFxrSMoT00Bh0PI4zlUNU6KOfJDVrU7oamGJamwm705771NhH2OQriX12M7i5Fpk30xoDW1TnnphqOwPAZqogAUD9S5177pMw5-343pjO5-zU3VK6646MBwhYZRCZOfB-24mHL1hIp2aeNM4e4gpbVZ47VcxUq1N5jIp4BBPLgxJxhfAT2e37TBY9YdPHJLKr6a7A19l4GQB-U6OSMtXOw-6pM5FoZdAVOikWMzn9WDXVl1nsbcgJPVICSZOYarNob8D-XphHSDOjB5M9gFM9o9R4CuHRCXPI0NMp5QlGLb3ammGNGviCBID7byBXVuxPQYl8PBP9OCMpUzjiOdjOOnPxKfMSDfNMP5z80wt9OIJOHukwCR0MFxh1lmajwyxAA
-## 10k Architecture Overview
+A Java client/server chess application built for BYU CS 240. It demonstrates HTTP APIs, WebSocket gameplay, persistence, and shared game logic across modules.
 
-The application implements a multiplayer chess server and a command line chess client.
+## Overview
+- Command line client to register/login, list/create/join games, and play moves
+- Javalin-based server that exposes REST endpoints and a WebSocket for live play
+- Shared module contains chess rules, game state, and WebSocket message/command models
+- SQL-backed data access with in-memory implementations for testing
 
-[![Sequence Diagram](10k-architecture.png)](https://sequencediagram.org/index.html#initialData=C4S2BsFMAIGEAtIGckCh0AcCGAnUBjEbAO2DnBElIEZVs8RCSzYKrgAmO3AorU6AGVIOAG4jUAEyzAsAIyxIYAERnzFkdKgrFIuaKlaUa0ALQA+ISPE4AXNABWAexDFoAcywBbTcLEizS1VZBSVbbVc9HGgnADNYiN19QzZSDkCrfztHFzdPH1Q-Gwzg9TDEqJj4iuSjdmoMopF7LywAaxgvJ3FC6wCLaFLQyHCdSriEseSm6NMBurT7AFcMaWAYOSdcSRTjTka+7NaO6C6emZK1YdHI-Qma6N6ss3nU4Gpl1ZkNrZwdhfeByy9hwyBA7mIT2KAyGGhuSWi9wuc0sAI49nyMG6ElQQA)
+## Repo Structure
+- `client/` CLI app and client-side services
+- `server/` Javalin server, services, and data access layers
+- `shared/` chess engine and shared DTOs/messages
+- `starter-code/` course-provided phase scaffolding
+- `server/src/main/resources/web/` minimal static web assets
 
-## Modules
+## Build and Run (Maven)
+From the repo root:
 
-The application has three modules.
+```sh
+mvn compile
+mvn test
+```
 
-- **Client**: The command line program used to play a game of chess over the network.
-- **Server**: The command line program that listens for network requests from the client and manages users and games.
-- **Shared**: Code that is used by both the client and the server. This includes the rules of chess and tracking the state of a game.
+Run the apps:
 
-## Starter Code
+```sh
+mvn -pl server exec:java
+mvn -pl client exec:java
+```
 
-As you create your chess application you will move through specific phases of development. This starts with implementing the moves of chess and finishes with sending game moves over the network between your client and server. You will start each phase by copying course provided [starter-code](starter-code/) for that phase into the source code of the project. Do not copy a phases' starter code before you are ready to begin work on that phase.
+Package uber jars:
 
-## IntelliJ Support
+```sh
+mvn package
+# or
+mvn package -DskipTests
+```
 
-Open the project directory in IntelliJ in order to develop, run, and debug your code using an IDE.
-
-## Maven Support
-
-You can use the following commands to build, test, package, and run your code.
-
-| Command                    | Description                                     |
-| -------------------------- | ----------------------------------------------- |
-| `mvn compile`              | Builds the code                                 |
-| `mvn package`              | Run the tests and build an Uber jar file        |
-| `mvn package -DskipTests`  | Build an Uber jar file                          |
-| `mvn install`              | Installs the packages into the local repository |
-| `mvn test`                 | Run all the tests                               |
-| `mvn -pl shared test`      | Run all the shared tests                        |
-| `mvn -pl client exec:java` | Build and run the client `Main`                 |
-| `mvn -pl server exec:java` | Build and run the server `Main`                 |
-
-These commands are configured by the `pom.xml` (Project Object Model) files. There is a POM file in the root of the project, and one in each of the modules. The root POM defines any global dependencies and references the module POM files.
-
-## Running the program using Java
-
-Once you have compiled your project into an uber jar, you can execute it with the following command.
+Run a packaged client jar:
 
 ```sh
 java -jar client/target/client-jar-with-dependencies.jar
-
-♕ 240 Chess Client: chess.ChessPiece@7852e922
 ```
+
+## Key Concepts
+- **HTTP endpoints** for user and game management
+- **WebSocket** channel for live game actions and notifications
+- **Persistence** via SQL data access classes with a memory fallback
+- **Shared chess logic** with tests under `shared/src/test/java/`
+
+## API Summary
+Base paths are configured in `server/src/main/java/server/Server.java`.
+
+HTTP endpoints:
+- `POST /user` register a new user
+- `POST /session` login
+- `DELETE /session` logout
+- `GET /game` list games (requires `authorization` header)
+- `POST /game` create a game (requires `authorization` header)
+- `PUT /game` join a game as white/black (requires `authorization` header)
+- `DELETE /db` clear all server data (test/reset helper)
+
+WebSocket:
+- `WS /ws` live game channel (connect, load game, make move, resign, leave)
+
+## Tests
+- Shared chess rules and move validation tests live under `shared/src/test/java/`
+- Server and client tests live under `server/src/test/java/` and `client/src/test/java/`
+
+## Notes
+- The architecture diagram is stored in `10k-architecture.png`.
+- Course scaffolding lives in `starter-code/` and is meant to be copied in by phase.
